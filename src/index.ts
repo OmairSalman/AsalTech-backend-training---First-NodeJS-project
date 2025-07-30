@@ -1,8 +1,9 @@
 import express, { Request, Response } from 'express';
-import * as UsersService from './services/users';
+import UserRouter from './routers/userRouter';
+import AuthRouter from './routers/authRouter';
 
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
 
 app.use(express.json());
 
@@ -14,16 +15,6 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!')
 })
 
-app.get('/users', UsersService.getUsers);
+app.use('/users', UserRouter);
 
-app.get('/users/search', UsersService.searchUsers);
-
-app.get('/users/:id', UsersService.getUserById);
-
-app.post('/users', UsersService.createUser);
-
-app.put('/users/:id', UsersService.updateUser);
-
-app.delete('/users/:id', UsersService.deleteUser);
-
-app.post('/users/login', UsersService.loginUser);
+app.use('/login', AuthRouter);
