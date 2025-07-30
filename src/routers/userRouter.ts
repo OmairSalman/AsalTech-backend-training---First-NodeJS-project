@@ -7,6 +7,8 @@ const UserRouter = Router();
 
 UserRouter.get('/', usersController.getUsers);
 
+UserRouter.get('/view', usersController.renderUsers);
+
 UserRouter.get('/search', usersController.searchUsers);
 
 UserRouter.get('/:id', usersController.getUserById);

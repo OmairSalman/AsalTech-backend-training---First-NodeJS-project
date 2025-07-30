@@ -75,4 +75,11 @@ export default class UserController
         const filteredUsers = userService.searchUsers(searchTerm);
         response.status(200).json(filteredUsers);
     }
+
+    renderUsers(request: Request, response: Response)
+    {
+        const users = userService.readUsers();
+        if(!users) response.status(404).send('Users data not found');
+        response.render('users', {users});
+    }
 }
