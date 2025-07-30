@@ -1,0 +1,122 @@
+{{!-- filepath: c:\Users\omair\Desktop\Omair\coding projects\asal-train\nodejs-test\src\views\register.hbs --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <style>
+    body {
+      background: #f5f6fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .register-container {
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+      width: 350px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #2d3436;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #636e72;
+      font-weight: 500;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1.2rem;
+      box-sizing: border-box;
+      border: 1px solid #dfe6e9;
+      border-radius: 6px;
+      font-size: 1rem;
+      background: #f9f9f9;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      border-color: #0984e3;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background: #0984e3;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #74b9ff;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: #636e72;
+    }
+    .footer a {
+      color: #0984e3;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+        .home-btn {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    background: #00b894;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    }
+    .home-btn:hover {
+    background: #55efc4;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <form method="GET" action="/">
+        <button type="submit" class="home-btn">Home</button>
+    </form>
+    <h2>Register</h2>
+    <form method="POST" action="/auth/register">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required autocomplete="name">
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required autocomplete="username">
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required autocomplete="new-password">
+
+      <button type="submit">Sign Up</button>
+    </form>
+    <div class="footer">
+      Already have an account? <a href="/auth/login">Login</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -53,7 +53,7 @@ export default class UserService
         users.push(newUser);
         this.writeUsers(users);
         return newUser;
-}
+    }
 
     updateUser = (userId: number, updatedUser: User): User | null =>
     {

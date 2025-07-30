@@ -1,0 +1,70 @@
+{{!-- filepath: c:\Users\omair\Desktop\Omair\coding projects\asal-train\nodejs-test\src\views\index.hbs --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome | Node.js Project</title>
+  <style>
+    body {
+      background: #f5f6fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .home-container {
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+      width: 370px;
+      text-align: center;
+    }
+    h1 {
+      color: #2d3436;
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+    .subtitle {
+      color: #636e72;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+    .project-info {
+      color: #636e72;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 0.8rem;
+      box-sizing: border-box;
+      background: #0984e3;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover {
+      background: #74b9ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="home-container">
+    <h1>Omair Salman</h1>
+    <div class="subtitle">Node.js Project Task</div>
+    <div class="project-info">
+      This is a Node.js project as part of my internship at <strong>AsalTech</strong>.
+    </div>
+    <form method="GET" action="/auth/login">
+      <button type="submit" class="login-btn">Go to Login</button>
+    </form>
+  </div>
+</body>
+</html>
