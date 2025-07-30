@@ -4,7 +4,7 @@
   "description": "first nodejs project (part of field training, summer 2025)",
   "main": "index.js",
   "scripts": {
-    "start" : "ts-node src/index.ts",
+    "start": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Omair Salman",
@@ -15,6 +15,7 @@
   "devDependencies": {
     "@types/express": "^5.0.3",
     "@types/node": "^24.1.0",
+    "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
