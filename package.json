@@ -4,7 +4,9 @@
   "description": "first nodejs project (part of field training, summer 2025)",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon",
+    "dev": "nodemon",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Omair Salman",
