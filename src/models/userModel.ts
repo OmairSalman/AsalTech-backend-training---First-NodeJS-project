@@ -10,4 +10,4 @@ const userSchema = new Schema<UserDocument>(
     password: {type: String, required: true},
 });
 
-export const Kitten = mongoose.model('Kitten', userSchema);
+export const UserModel = mongoose.model('Users', userSchema);

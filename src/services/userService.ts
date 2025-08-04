@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import FileSystem, { read } from 'fs';
 import { User } from '../types/user';
 
