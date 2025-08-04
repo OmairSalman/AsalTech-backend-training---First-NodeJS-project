@@ -1,9 +1,13 @@
 import express, { Request, Response } from 'express';
 import UserRouter from './routers/userRouter';
 import AuthRouter from './routers/authRouter';
+import connectDB from './config/db';
 
 const app = express();
 const port = 3000;
+
+connectDB();
+
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 

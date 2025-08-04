@@ -17,7 +17,7 @@ export default class UserService
             const errorDate = new Date();
             const errorDateString = errorDate.toLocaleDateString();
             const errorTimeString = errorDate.toLocaleTimeString();
-            console.log(`[${errorDateString} @ ${errorTimeString}] Error fetching users data from file: `, error);
+            console.error(`[${errorDateString} @ ${errorTimeString}] Error fetching users data from file: `, error);
             return [];
         }
     }
@@ -33,7 +33,7 @@ export default class UserService
             const errorDate = new Date();
             const errorDateString = errorDate.toLocaleDateString();
             const errorTimeString = errorDate.toLocaleTimeString();
-            console.log(`[${errorDateString} @ ${errorTimeString}] Error saving users data to file: `, error);
+            console.error(`[${errorDateString} @ ${errorTimeString}] Error saving users data to file: `, error);
         }
     }
 
