@@ -1,93 +1,64 @@
-import FileSystem, { read } from 'fs';
-import { User } from '../types/user';
+import { User, Users } from '../models/userModel';
 
 export default class UserService
 {
-    readUsers(): User[]
+    async readUsers(): Promise<User[]>
     {
-        let data: User[] = [];
         try
         {
-            data = JSON.parse(FileSystem.readFileSync('src/data/users.json', 'utf8'));
-            return data;
+            return await Users.find({});
         }
         catch(error)
         {
             const errorDate = new Date();
             const errorDateString = errorDate.toLocaleDateString();
             const errorTimeString = errorDate.toLocaleTimeString();
-            console.error(`[${errorDateString} @ ${errorTimeString}] Error fetching users data from file: `, error);
+            console.error(`[${errorDateString} @ ${errorTimeString}] Error fetching users data from DB: `, error);
             return [];
         }
     }
 
-    writeUsers(users: User[])
+    async getUserById(userId: string): Promise<User | null>
     {
-        try
-        {
-            FileSystem.writeFileSync('src/data/users.json', JSON.stringify(users));
-        }
-        catch(error)
-        {
-            const errorDate = new Date();
-            const errorDateString = errorDate.toLocaleDateString();
-            const errorTimeString = errorDate.toLocaleTimeString();
-            console.error(`[${errorDateString} @ ${errorTimeString}] Error saving users data to file: `, error);
-        }
-    }
-
-    getUserById = (userId: number): User | null =>
-    {
-        const users = this.readUsers();
-        const user = users.find(u => u.id === userId);
+        const userDoc = await Users.findById(userId);
+        const user = userDoc?.toObject();
         if (!user) return null;
         else return user;
     }
 
-    createUser(newUser: User): User | null
+    async createUser(newUser: User): Promise<User | null>
     {
-        const users = this.readUsers();
-        if(!users) return null;
-        newUser.id = users.length + 1;
-        users.push(newUser);
-        this.writeUsers(users);
-        return newUser;
+        const user = new Users(newUser);
+        await user.save();
+        return user.toObject();
     }
 
-    updateUser = (userId: number, updatedUser: User): User | null =>
+    async updateUser(userId: string, updatedUser: User): Promise<User | null>
     {
-        const users = this.readUsers();
-        if(!users) return null;
-        let user = users.find(u => u.id === userId);
+        await Users.findByIdAndUpdate(userId, updatedUser);
+        const user = await Users.findById(userId);
         if (!user)
         {
             return null;
         }
-        user = { ...user, ...updatedUser };
-        users[userId] = user;
-        this.writeUsers(users);
+        return user.toObject();
+    }
+
+    async deleteUser(userId: string): Promise<User | null>
+    {
+        const userDoc = await Users.findByIdAndDelete(userId);
+        const user = userDoc?.toObject();
+        if(!user) return null;
         return user;
     }
 
-    deleteUser(userId: number): User | null
+    async searchUsers(searchTerm: string): Promise<User[]>
     {
-        const users = this.readUsers();
-        const user = users.find(u => u.id === userId);
-        if (!user)
-        {
-            return null;
-        }
-        const updatedUsers = users.filter(u => u.id !== userId);
-        this.writeUsers(updatedUsers);
-        return user;
-    }
-
-    searchUsers(searchTerm: string): User[]
-    {
-        const users = this.readUsers();
+        const users = await this.readUsers();
         const filteredUsers = users.filter(u =>
             (u.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
             (u.email.toLowerCase().includes(searchTerm.toLowerCase())));
         return filteredUsers;
     }
+
 }

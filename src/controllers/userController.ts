@@ -1,22 +1,21 @@
 import { Request, Response } from "express";
-import { User } from "../types/user";
 import UserService from "../services/userService";
 
 const userService = new UserService();
 
 export default class UserController
 {
-    getUsers(request: Request, response: Response)
+    async getUsers(request: Request, response: Response)
     {
-        const users = userService.readUsers();
+        const users = await userService.readUsers();
         if(!users) response.status(404).send('Users data not found');
         response.status(200).json(users);
     }
 
-    getUserById(request: Request, response: Response)
+    async getUserById(request: Request, response: Response)
     {
-        const userId = parseInt(request.params.id, 10);
-        const user = userService.getUserById(userId);
+        const userId = request.params.id;
+        const user = await userService.getUserById(userId);
         if(!user) response.status(404).send('User not found')
         else
         {
@@ -25,7 +24,7 @@ export default class UserController
         }
     }
 
-    createUser(request: Request, response: Response)
+    async createUser(request: Request, response: Response)
     {
         let newUser = request.body;
         if (!newUser || !newUser.name || !newUser.email || !newUser.password)
@@ -38,16 +37,16 @@ export default class UserController
             response.status(400).send('Password must be at least 6 characters long');
             return;
         }
-        newUser = userService.createUser(newUser);
+        newUser = await userService.createUser(newUser);
         const { password, ...newUserWithoutPassword } = newUser;
         response.status(201).json(newUserWithoutPassword);
     }
 
-    updateUser(request: Request, response: Response)
+    async updateUser(request: Request, response: Response)
     {
-        const userId = parseInt(request.params.id, 10);
-        const updatedUser: User = request.body;
-        const user = userService.updateUser(userId, updatedUser);
+        const userId = request.params.id;
+        const updatedUser = request.body;
+        const user = await userService.updateUser(userId, updatedUser);
         if(!user) response.status(404).send('User not found')
         else
         {
@@ -56,10 +55,10 @@ export default class UserController
         }
     }
 
-    deleteUser(request: Request, response: Response)
+    async deleteUser(request: Request, response: Response)
     {
-        const userId = parseInt(request.params.id, 10);
-        const deletedUser = userService.deleteUser(userId);
+        const userId = request.params.id;
+        const deletedUser = await userService.deleteUser(userId);
         if (!deletedUser) response.status(404).send('User not found');
         else
         {
@@ -68,18 +67,28 @@ export default class UserController
         }
     }
 
-    searchUsers(request: Request, response: Response)
+    async searchUsers(request: Request, response: Response)
     {
         const searchTerm = request.query.search as string;
         if (!searchTerm) response.status(400).send('Search query is required');
-        const filteredUsers = userService.searchUsers(searchTerm);
+        const filteredUsers = await userService.searchUsers(searchTerm);
         response.status(200).json(filteredUsers);
     }
 
-    renderUsers(request: Request, response: Response)
+    async renderUsers(request: Request, response: Response)
     {
-        const users = userService.readUsers();
-        if(!users) response.status(404).send('Users data not found');
-        response.render('users', {users});
+        try
+        {
+            const users = await userService.readUsers();
+            if(!users) response.status(404).send('Users data not found');
+            response.render('users', {users});
+        }
+        catch(error)
+        {
+            const errorDate = new Date();
+            const errorDateString = errorDate.toLocaleDateString();
+            const errorTimeString = errorDate.toLocaleTimeString();
+            console.error(`[${errorDateString} @ ${errorTimeString}] Error rendering users page: `, error);
+        }
     }
 }

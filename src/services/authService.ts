@@ -1,15 +1,15 @@
-import { User } from "../types/user";
 import UserService from "../services/userService";
+import { User } from "../models/userModel";
 
 const userService = new UserService();
 
 export default class AuthService
 {
-    loginUser(credentials: {email: string, password: string}): User | null
+    async loginUser(credentials: {email: string, password: string}): Promise<User | null>
     {
-        const users = userService.readUsers();
+        const users = await userService.readUsers();
         const user = users.find(u => u.email === credentials.email && u.password === credentials.password);
         if (!user) return null;
-        else return user;
+        else return user.toObject();
     }
 }
