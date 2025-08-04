@@ -40,6 +40,23 @@
     .login-btn {
       width: 100%;
       padding: 0.8rem;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      background: #0984e3;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .users-btn {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 10px;
+      margin-bottom: 10px;
       box-sizing: border-box;
       background: #0984e3;
       color: #fff;
@@ -64,6 +81,9 @@
     </div>
     <form method="GET" action="/auth/login">
       <button type="submit" class="login-btn">Go to Login</button>
+    </form>
+    <form method="GET" action="/users/view">
+      <button type="submit" class="users-btn">View all users</button>
     </form>
   </div>
 </body>

@@ -65,6 +65,19 @@
     .home-btn:hover {
       background: #55efc4;
     }
+    .profile-link {
+      color: #0984e3;
+      text-decoration: none;
+      font-weight: 500;
+      margin-left: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: text-decoration 0.2s, color 0.2s;
+    }
+    .profile-link:hover {
+      text-decoration: underline;
+      color: #2d3436;
+    }
   </style>
 </head>
 <body>
@@ -78,6 +91,7 @@
         <li>
           <span class="user-name">{{this.name}}</span><br>
           <span class="user-email">{{this.email}}</span>
+          <a href="/auth/profile/{{this._id}}" class="profile-link">Profile</a>
         </li>
       {{else}}
         <li>No users found.</li>

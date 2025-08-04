@@ -51,4 +51,15 @@ export default class AuthController
         const { password, ...newUserWithoutPassword } = newUser;
         response.render('profile', {user: newUserWithoutPassword});
     }
+
+    async showProfileById(request: Request, response: Response)
+    {
+        const userId = request.params.id;
+        const user = await userService.getUserById(userId);
+        if(user)
+        {
+            const { password, ...newUserWithoutPassword } = user;
+            response.render('profile', {user: newUserWithoutPassword});
+        }
+    }
 }
