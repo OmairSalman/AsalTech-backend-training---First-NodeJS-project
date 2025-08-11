@@ -1,4 +1,5 @@
-import { User, Users } from '../models/userModel';
+import { User } from '../interfaces/user';
+import { UserModel } from '../models/userModel';
 
 export default class UserService
 {
@@ -6,7 +7,7 @@ export default class UserService
     {
         try
         {
-            return await Users.find({});
+            return await UserModel.find({});
         }
         catch(error)
         {
@@ -20,7 +21,7 @@ export default class UserService
 
     async getUserById(userId: string): Promise<User | null>
     {
-        const userDoc = await Users.findById(userId);
+        const userDoc = await UserModel.findById(userId);
         const user = userDoc?.toObject();
         if (!user) return null;
         else return user;
@@ -28,15 +29,15 @@ export default class UserService
 
     async createUser(newUser: User): Promise<User | null>
     {
-        const user = new Users(newUser);
+        const user = new UserModel(newUser);
         await user.save();
         return user.toObject();
     }
 
     async updateUser(userId: string, updatedUser: User): Promise<User | null>
     {
-        await Users.findByIdAndUpdate(userId, updatedUser);
-        const user = await Users.findById(userId);
+        await UserModel.findByIdAndUpdate(userId, updatedUser);
+        const user = await UserModel.findById(userId);
         if (!user)
         {
             return null;
@@ -46,7 +47,7 @@ export default class UserService
 
     async deleteUser(userId: string): Promise<User | null>
     {
-        const userDoc = await Users.findByIdAndDelete(userId);
+        const userDoc = await UserModel.findByIdAndDelete(userId);
         const user = userDoc?.toObject();
         if(!user) return null;
         return user;

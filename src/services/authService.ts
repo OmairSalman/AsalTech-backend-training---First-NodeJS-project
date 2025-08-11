@@ -1,6 +1,7 @@
 import UserService from "../services/userService";
-import { User } from "../models/userModel";
-
+import { User
+    
+ } from "../interfaces/user";
 const userService = new UserService();
 
 export default class AuthService
