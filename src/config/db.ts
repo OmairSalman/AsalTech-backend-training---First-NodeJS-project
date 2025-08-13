@@ -13,7 +13,7 @@ const connectDB = async () =>
         const errorDate = new Date();
         const errorDateString = errorDate.toLocaleDateString();
         const errorTimeString = errorDate.toLocaleTimeString();
-        console.error(`[${errorDateString} @ ${errorTimeString}] MongoDB connection error:`, error);
+        console.error(`[${errorDateString} @ ${errorTimeString}] MongoDB connection error:\n`, error);
     }
 };
 

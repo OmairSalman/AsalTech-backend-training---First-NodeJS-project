@@ -14,7 +14,7 @@ export default class UserService
             const errorDate = new Date();
             const errorDateString = errorDate.toLocaleDateString();
             const errorTimeString = errorDate.toLocaleTimeString();
-            console.error(`[${errorDateString} @ ${errorTimeString}] Error fetching users data from DB: `, error);
+            console.error(`[${errorDateString} @ ${errorTimeString}] Error fetching users data from DB:\n`, error);
             return [];
         }
     }
