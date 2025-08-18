@@ -25,6 +25,41 @@ export default class PostController
         let newPost = request.body;
         const author = request.session!.user!.id.toString();
         newPost = await postService.savePost(newPost, author);
-        response.status(201).json(newPost);
+        response.status(201).json({message: "Post saved successfully", post: newPost});
+    }
+
+    async updatePost(request: Request, response: Response)
+    {
+        let postId = request.params.postId;
+        let post = request.body;
+        const updatedPost = await postService.updatePost(postId, post);
+        if(!updatedPost) return response.status(404).send("Post not found");
+        return response.status(200).json({message: "Post update successfully", post: updatedPost});
+    }
+
+    async deletePost(request: Request, response: Response)
+    {
+        let postId = request.params.postId;
+        const deletedPost = await postService.deletePost(postId);
+        if(!deletedPost) return response.status(404).send("Post not found");
+        return response.status(200).json({message: "Post deleted successfully", post: deletedPost});
+    }
+
+    async like(request: Request, response: Response)
+    {
+        let postId = request.params.postId;
+        let userId = request.session!.user!.id.toString();
+        const likedPost = await postService.like(postId, userId);
+        if(!likedPost) return response.status(404).send("Post not found");
+        return response.status(200).send({message: `Liked post ${postId} by ${userId} successfully.`, post: likedPost});
+    }
+
+    async unlike(request: Request, response: Response)
+    {
+        let postId = request.params.postId;
+        let userId = request.session!.user!.id.toString();
+        const likedPost = await postService.unlike(postId, userId);
+        if(!likedPost) return response.status(404).send("Post not found");
+        return response.status(200).send({message: `Unliked post ${postId} by ${userId} successfully.`, post: likedPost});
     }
 }

@@ -6,6 +6,5 @@ export default function PostValidator(request: Request, response: Response, next
 
     if(!post.title || !post.content)
         return response.status(400).send("Invalid post data");
-    
     next();
 }

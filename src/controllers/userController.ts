@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import UserService from "../services/userService";
+import PostService from "../services/postService";
 
 const userService = new UserService();
+const postService = new PostService();
 
 export default class UserController
 {
@@ -80,5 +82,13 @@ export default class UserController
             const errorTimeString = errorDate.toLocaleTimeString();
             console.error(`[${errorDateString} @ ${errorTimeString}] Error rendering users page: `, error);
         }
+    }
+
+    async getUserPosts(request: Request, response: Response)
+    {
+        let userId = request.params.userId;
+        const posts = await postService.getPostsByUserId(userId);
+        if(!posts) return response.status(404).send("No posts by user");
+        return response.status(200).send({message: `Found posts of user with id ${userId}`, posts: posts});
     }
 }
