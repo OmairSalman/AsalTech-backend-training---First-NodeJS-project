@@ -16,7 +16,7 @@ PostRouter.post('/', isAuthenticated, PostValidator, postController.savePost);
 
 PostRouter.put('/:postId', isAuthenticated, isPostAuthor, PostValidator, postController.updatePost);
 
-PostRouter.delete('/:postId', isAuthenticated, isPostAuthor, PostValidator, postController.deletePost);
+PostRouter.delete('/:postId', isAuthenticated, isPostAuthor, postController.deletePost);
 
 PostRouter.post('/:postId/like', isAuthenticated, postController.like)
 
