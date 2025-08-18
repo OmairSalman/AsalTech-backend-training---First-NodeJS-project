@@ -22,8 +22,9 @@ declare module 'express-session'
     {
         user?:
         {
-            id: Types.ObjectId;
-            username: string;
+          id: Types.ObjectId;
+          name: string;
+          email: string;
         };
     }
 }

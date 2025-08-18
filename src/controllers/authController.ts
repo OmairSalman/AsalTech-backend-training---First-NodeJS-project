@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Types } from "mongoose";
 import UserService from "../services/userService";
 import AuthService from "../services/authService";
 
@@ -25,6 +26,12 @@ export default class AuthController
         else
         {
             const { password, ...userWithoutPassword } = user;
+            request.session.user =
+            {
+                id: user._id as Types.ObjectId,
+                name: user.name,
+                email: user.email
+            };
             response.render('profile', {user: userWithoutPassword});
         }
     }
@@ -47,9 +54,18 @@ export default class AuthController
             response.status(400).send('Password must be at least 6 characters long');
             return;
         }
-        newUser = await userService.createUser(newUser);
+        newUser = await authService.registerUser(newUser);
         const { password, ...newUserWithoutPassword } = newUser;
         response.render('profile', {user: newUserWithoutPassword});
+    }
+
+    async logoutUser(request: Request, response: Response)
+    {
+        request.session.destroy(err => {
+            if (err) console.error(err);
+            response.clearCookie('connect.sid');
+            response.redirect('/login');
+        });
     }
 
     async showProfileById(request: Request, response: Response)

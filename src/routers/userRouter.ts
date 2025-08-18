@@ -13,7 +13,7 @@ UserRouter.get('/search', usersController.searchUsers);
 
 UserRouter.get('/:id', usersController.getUserById);
 
-UserRouter.post('/', usersController.createUser);
+//UserRouter.post('/', usersController.createUser);
 
 UserRouter.put('/:id', usersController.updateUser);
 

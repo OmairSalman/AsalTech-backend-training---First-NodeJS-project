@@ -24,23 +24,13 @@ export default class UserController
         }
     }
 
-    async createUser(request: Request, response: Response)
+    /*async createUser(request: Request, response: Response)
     {
         let newUser = request.body;
-        if (!newUser || !newUser.name || !newUser.email || !newUser.password)
-        {
-            response.status(400).send('Invalid or incomplete user data');
-            return;
-        }
-        if (newUser.password.length < 6)
-        {
-            response.status(400).send('Password must be at least 6 characters long');
-            return;
-        }
         newUser = await userService.createUser(newUser);
         const { password, ...newUserWithoutPassword } = newUser;
         response.status(201).json(newUserWithoutPassword);
-    }
+    }*/
 
     async updateUser(request: Request, response: Response)
     {

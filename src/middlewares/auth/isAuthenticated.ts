@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 
-export function isAuthenticated(req: Request, res: Response, next: NextFunction)
+export function isAuthenticated(request: Request, response: Response, next: NextFunction)
 {
-    if (req.session?.user)
-    {
-        return next();
-    }
+  if (request.session?.user)
+  {
+    return next();
+  }
 
-  res.redirect('/login');
+  response.redirect('/login');
 }
