@@ -7,7 +7,9 @@ export default class PostController
 {
     async getAllPosts(request: Request, response: Response)
     {
-        const posts = await postService.getPosts(1, 10);
+        const page = parseInt(request.query.page as string) || 1;
+        const limit = parseInt(request.query.limit as string) || 10;
+        const posts = await postService.getPosts(page, limit);
         if(!posts) return response.status(404).send('No posts yet');
         return response.status(200).json(posts);
     }
