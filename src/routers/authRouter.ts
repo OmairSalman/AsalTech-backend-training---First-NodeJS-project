@@ -15,4 +15,6 @@ AuthRouter.post('/register', authController.registerUser);
 
 AuthRouter.get('/profile/:id', authController.showProfileById);
 
+AuthRouter.get('/logout', authController.logoutUser)
+
 export default AuthRouter;

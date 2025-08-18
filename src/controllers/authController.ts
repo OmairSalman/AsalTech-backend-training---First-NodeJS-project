@@ -64,7 +64,7 @@ export default class AuthController
         request.session.destroy(err => {
             if (err) console.error(err);
             response.clearCookie('connect.sid');
-            response.redirect('/login');
+            response.redirect('/auth/login');
         });
     }
 

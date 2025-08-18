@@ -3,12 +3,12 @@ import { Post } from '../interfaces/post';
 
 const postSchema = new Schema<Post>(
 {
-    author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    title: {type: String, required: true},
-    content: {type: String, required: true},
-    likes: { type: [{ type: Schema.Types.ObjectId, ref: 'User' }], default: [] }
+  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  title: {type: String, required: true},
+  content: {type: String, required: true},
+  likes: { type: [{ type: Schema.Types.ObjectId, ref: 'User' }], default: [] }
 },
-{ timestamps: true });
+{ toObject: {virtuals: true}, toJSON: { virtuals: true }, timestamps: true });
 
 postSchema.virtual('comments', {
   ref: 'Comment',

@@ -1,8 +1,11 @@
 import express, { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import session from 'express-session';
+import MongoStore from "connect-mongo";
 import UserRouter from './routers/userRouter';
 import AuthRouter from './routers/authRouter';
+import PostRouter from './routers/postRouter';
+import CommentRouter from './routers/commentRouter';
 import connectDB from './config/db';
 
 const app = express();
@@ -33,6 +36,9 @@ app.use(session({
   secret: 'omairs-hard-secret-key',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: "mongodb://localhost:27017/usersconnect",
+  }),
   cookie: {
     httpOnly: true, 
     maxAge: 1000 * 60 * 60 * 24 * 30,
@@ -46,3 +52,7 @@ app.get('/', (req: Request, res: Response) => { res.render('index') })
 app.use('/users', UserRouter);
 
 app.use('/auth', AuthRouter);
+
+app.use('/posts', PostRouter);
+
+app.use('/comments', CommentRouter)

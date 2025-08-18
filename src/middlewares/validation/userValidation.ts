@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-export function UserValidator(request: Request, response: Response, next: NextFunction)
+export default function UserValidator(request: Request, response: Response, next: NextFunction)
 {
     let newUser = request.body;
     if (!newUser || !newUser.name || !newUser.email || !newUser.password)
