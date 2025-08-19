@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import AuthController from '../controllers/authController';
+import UserValidator from '../middlewares/validation/userValidation';
 
 const authController = new AuthController();
 
@@ -11,7 +12,7 @@ AuthRouter.post('/login', authController.loginUser);
 
 AuthRouter.get('/register', authController.register);
 
-AuthRouter.post('/register', authController.registerUser);
+AuthRouter.post('/register', UserValidator, authController.registerUser);
 
 AuthRouter.get('/profile/:id', authController.showProfileById);
 

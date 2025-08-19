@@ -44,18 +44,14 @@ export default class AuthController
     async registerUser(request: Request, response: Response)
     {
         let newUser = request.body;
-        if (!newUser || !newUser.name || !newUser.email || !newUser.password)
-        {
-            response.status(400).send('Invalid or incomplete user data');
-            return;
-        }
-        if (newUser.password.length < 6)
-        {
-            response.status(400).send('Password must be at least 6 characters long');
-            return;
-        }
         newUser = await authService.registerUser(newUser);
         const { password, ...newUserWithoutPassword } = newUser;
+        request.session.user =
+        {
+            id: newUser._id as Types.ObjectId,
+            name: newUser.name,
+            email: newUser.email
+        };
         response.render('profile', {user: newUserWithoutPassword});
     }
 
