@@ -1,9 +1,34 @@
 <h1 class="text-center my-4">Welcome to your feed, {{user.name}}</h1>
 
-<div class="feed-container">
+<div class="feed-container"
+  data-page="{{page}}" 
+  data-limit="{{limit}}" 
+  data-total-pages="{{totalPages}}">
   {{!-- Loop over posts --}}
   {{#each posts}}
-    <p>{{this._id}}</p>
-    {{> postCard this}}        {{!-- Include postCard partial, passing current post data --}}
+    {{> postCard post=this}}        {{!-- Include postCard partial, passing current post data --}}
   {{/each}}
 </div>
+
+<!-- pagination UI (server can render numbers; JS will hook to them) -->
+<nav id="pagination" aria-label="Page navigation" class="mt-3">
+  {{!-- optional server-side page links; you can render numeric pages or Prev/Next --}}
+  {{#if (gt totalPages 1)}}
+    <ul class="pagination justify-content-center">
+      {{#if (gt page 1)}}
+        <li class="page-item"><a class="page-link" href="/feed?page={{subtract page 1}}">Previous</a></li>
+      {{/if}}
+      {{#if (gt totalPages 2)}}
+        {{#each (range 1 totalPages)}}
+          <li class="page-item"><a class="page-link" href="/feed?page={{this}}">{{this}}</a></li>
+        {{/each}}
+      {{/if}}
+      {{#if (lt page totalPages)}}
+        <li class="page-item"><a class="page-link" href="/feed?page={{add page 1}}">Next</a></li>
+      {{/if}}
+    </ul>
+  {{/if}}
+</nav>
+
+<!-- include client script (defer so DOM exists) -->
+<script src="/js/feed.js" defer></script>

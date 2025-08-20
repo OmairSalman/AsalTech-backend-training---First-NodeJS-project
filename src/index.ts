@@ -1,5 +1,7 @@
 import express from 'express';
 import path from 'path';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 import { Types } from 'mongoose';
 import MongoStore from "connect-mongo";
@@ -15,6 +17,8 @@ import CommentRouter from './routers/api/commentRouter';
 
 import connectDB from './config/db';
 
+dayjs.extend(relativeTime);
+
 const app = express();
 const port = 3000;
 
@@ -24,7 +28,36 @@ app.engine('hbs', engine({
   extname: '.hbs',
   defaultLayout: 'main', 
   layoutsDir: path.join(__dirname, 'views/layouts'),
-  partialsDir: path.join(__dirname, 'views/partials')
+  partialsDir: path.join(__dirname, 'views/partials'),
+  helpers: {
+    // comparison helpers
+    eq: (a: number, b: number) => a === b,
+    gt: (a: number, b: number) => a > b,
+    lt: (a: number, b: number) => a < b,
+    add: (a: number, b: number) => a + b,
+    subtract: (a: number, b: number) => a - b,
+    range: (start: number, end: number) =>
+    {
+      const arr = [];
+      for (let i = start; i <= end; i++)
+      {
+        arr.push(i);
+      }
+      return arr;
+    },
+
+    // date formatting
+    formatDate: (date: Date) => dayjs(date).format("MMM D, YYYY h:mm A"),
+
+    // relative time (need dayjs/plugin/relativeTime)
+    fromNow: (date: string) => dayjs(date).fromNow(),
+
+    // pluralize likes or comments
+    pluralize: (count: number, singular: string, plural: string) => {
+      if (count === 1) return `${count} ${singular}`;
+      return `${count} ${plural}`;
+    },
+  }
 }));
 
 app.set('view engine', 'hbs');
@@ -40,12 +73,12 @@ declare module 'express-session'
 {
     interface SessionData
     {
-        user?:
-        {
-          id: Types.ObjectId;
-          name: string;
-          email: string;
-        };
+      user?:
+      {
+        id: Types.ObjectId;
+        name: string;
+        email: string;
+      };
     }
 }
 

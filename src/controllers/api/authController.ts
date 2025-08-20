@@ -27,7 +27,7 @@ export default class AuthController
                 name: user.name,
                 email: user.email
             };
-            response.redirect('/');
+            response.redirect('/feed?page=1');
         }
     }
 

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import PostService from "../../services/postService";
+import { PostModel } from "../../models/postModel";
 
 const postService = new PostService();
 
@@ -19,8 +20,11 @@ export default class WebController
             response.redirect('/');
         else
         {
-            const posts = await postService.getPosts(1, 10);
-            response.render('pages/feed', {user: request.session.user, posts: posts});
+            const page = parseInt(request.query.page as string) || 1;
+            const posts = await postService.getPosts(page, 10);
+            const totalPosts = await PostModel.countDocuments();
+            const totalPages = Math.ceil(totalPosts/10);
+            response.render('pages/feed', {user: request.session.user, posts: posts, page: page, limit: 10, totalPages: totalPages });
         }
     }
 

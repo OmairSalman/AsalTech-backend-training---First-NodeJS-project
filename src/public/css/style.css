@@ -58,6 +58,7 @@ body {
 }
 
 .btn-primary {
+  margin-top: 10px;
   background: var(--brand-gradient);
   border: none;
   color: #fff;
@@ -66,6 +67,7 @@ body {
   filter: brightness(0.9);
 }
 .btn-outline-primary {
+  margin-top: 10px;
   color: var(--brand-start);
   border-color: var(--brand-start);
 }
@@ -315,25 +317,33 @@ footer a:hover {
 
 /* ---------- Post Card ---------- */
 .post-card {
+  width: 100%;        /* Or a max-width like 600px if you want */
+  max-width: 600px;
+  min-height: 200px;  /* Adjust as needed */
+  margin: 1rem auto;
+  padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
-  background: #fff;
+  overflow-wrap: break-word; /* Ensure text wraps */
+  word-wrap: break-word;     /* Older browsers */
+  word-break: break-word;
+  background: #ffffff;
 }
+
 .post-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.08);
   border: 1px solid var(--brand-start);
 }
 .post-title {
-  font-size: 1.25rem;
+  font-size: 2rem;
   color: var(--text-dark);
 }
 .post-author {
   font-size: 0.875rem;
 }
 .post-content {
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: var(--text-dark);
 }
 
@@ -343,12 +353,14 @@ footer a:hover {
   padding: 0.25rem 0.75rem;
 }
 .post-card .like-count {
+  text-align: center;
   font-size: 0.875rem;
   color: var(--text-muted);
 }
 
 /* ---------- Comment Form ---------- */
 .comment-form input.form-control {
+  margin-top: 10px;
   border-radius: 50px;
 }
 .comment-form .btn-primary {
@@ -364,6 +376,21 @@ footer a:hover {
 }
 
 /* ---------- Comment Card ---------- */
+
+.comments-section {
+  padding: 0;           /* Remove extra padding if any */
+  margin-top: 0.5rem;   /* Optional: slight spacing from post content */
+  border-top: none;     /* Remove border separating comment form from comments */
+}
+
+.comment-card {
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #f8f9fa; /* Slight contrast from post card */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
 .comment-card {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
