@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import { Types } from 'mongoose';
+import { engine } from 'express-handlebars';
+import path from 'path';
 import session from 'express-session';
 import MongoStore from "connect-mongo";
 import UserRouter from './routers/userRouter';
@@ -13,8 +15,18 @@ const port = 3000;
 
 connectDB();
 
+app.engine('hbs', engine({
+  extname: '.hbs',
+  defaultLayout: 'main', 
+  layoutsDir: path.join(__dirname, 'views/layouts'),
+  partialsDir: path.join(__dirname, 'views/partials')
+}));
+
 app.set('view engine', 'hbs');
-app.set('views', __dirname + '/views');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.static(__dirname + '/public'));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -41,13 +53,13 @@ app.use(session({
   }),
   cookie: {
     httpOnly: true, 
-    maxAge: 1000 * 60 * 60 * 24 * 30,
+    maxAge: 1000 * 60 * 60,
   }
 }));
 
 app.listen(port, () => { console.log(`Server running at http://localhost:${port}/`) })
 
-app.get('/', (req: Request, res: Response) => { res.render('index') })
+app.get('/', (req: Request, res: Response) => { res.render('pages/home') })
 
 app.use('/users', UserRouter);
 

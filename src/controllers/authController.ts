@@ -10,7 +10,7 @@ export default class AuthController
 {
     login(request: Request, response: Response)
     {
-        response.render('login');
+        response.render('pages/login');
     }
 
     async loginUser(request: Request, response: Response)

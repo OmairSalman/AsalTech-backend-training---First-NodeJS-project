@@ -1,0 +1,100 @@
+/* General */
+body {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+/* Home page hero */
+.home-hero h1 {
+  font-size: 3rem;
+  color: #007bff;
+  margin-bottom: 1rem;
+}
+.home-hero p {
+  font-size: 1.25rem;
+  color: #6c757d;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(90deg, #007bff, #00c6ff);
+  border: none;
+}
+.btn-primary:hover {
+  background: linear-gradient(90deg, #0062cc, #0096c7);
+}
+.btn-outline-primary {
+  color: #007bff;
+  border-color: #007bff;
+}
+.btn-outline-primary:hover {
+  background: #007bff;
+  color: white;
+}
+
+/* Navbar */
+.navbar {
+  background: linear-gradient(90deg, #007bff, #6610f2);
+}
+.navbar-brand, .navbar-nav .nav-link {
+  color: white !important;
+  font-weight: 500;
+}
+.navbar-nav .nav-link:hover {
+  color: #ffe082 !important;
+}
+
+/* Footer */
+footer {
+  background: #343a40;
+  color: #dee2e6;
+  text-align: center;
+  padding: 1rem 0;
+}
+footer a {
+  color: #ffc107;
+  text-decoration: none;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Cards */
+.card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.1s ease-in-out;
+}
+.card:hover {
+  transform: translateY(-3px);
+}
+
+/* Pagination */
+.pagination .page-link {
+  border-radius: 50px !important;
+  margin: 0 4px;
+  color: #007bff;
+}
+.pagination .page-link:hover {
+  background: #007bff;
+  color: white;
+}
+
+/* Profile page */
+.profile-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.profile-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #343a40;
+}
+.profile-header p {
+  color: #6c757d;
+}
+
+/* Like popups (modal) */
+.modal-content {
+  border-radius: 15px;
+}

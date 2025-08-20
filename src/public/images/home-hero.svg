@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" width="420" height="120" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">UsersConnect logo</title>
+  <desc id="logoDesc">A simple mark showing interlocking U and C and the word UsersConnect</desc>
+  <defs>
+    <linearGradient id="lg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0d6efd"/>
+      <stop offset="1" stop-color="#4dabf7"/>
+    </linearGradient>
+    <style type="text/css"><![CDATA[
+      .brand-text { font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-weight:700; fill:#08306b; }
+      .brand-accent { font-weight:700; fill:url(#lg); }
+      .mark-bg { fill:url(#lg); }
+      .mark-stroke { fill:none; stroke:white; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+    ]]></style>
+  </defs>
+
+  <!-- circular mark with interlocking U + C -->
+  <g transform="translate(34,60)">
+    <circle cx="0" cy="0" r="34" class="mark-bg" />
+    <!-- U shape (white stroke) -->
+    <path d="M -18 -6 L -18 6 A 18 18 0 0 0 18 6 L 18 -6" class="mark-stroke" />
+    <!-- C shape (white stroke, slightly offset) -->
+    <path d="M 22 -14 A 26 26 0 1 0 22 14" class="mark-stroke" transform="translate(-6,0) scale(0.92)" />
+  </g>
+
+  <!-- Text -->
+  <g transform="translate(88,76)">
+    <text x="0" y="0" class="brand-text" font-size="28px">Users</text>
+    <text x="83" y="0" class="brand-accent" font-size="28px">Connect</text>
+    <text x="0" y="22" class="brand-text" font-size="12px" fill="#6c757d">Share posts • Comment • Connect</text>
+  </g>
+</svg>
