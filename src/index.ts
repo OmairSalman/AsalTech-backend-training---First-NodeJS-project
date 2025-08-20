@@ -1,13 +1,18 @@
-import express, { Request, Response } from 'express';
-import { Types } from 'mongoose';
-import { engine } from 'express-handlebars';
+import express from 'express';
 import path from 'path';
-import session from 'express-session';
+
+import { Types } from 'mongoose';
 import MongoStore from "connect-mongo";
-import UserRouter from './routers/userRouter';
-import AuthRouter from './routers/authRouter';
-import PostRouter from './routers/postRouter';
-import CommentRouter from './routers/commentRouter';
+import { engine } from 'express-handlebars';
+
+import session from 'express-session';
+
+import WebRouter from './routers/web/webRouter';
+import UserRouter from './routers/api/userRouter';
+import AuthRouter from './routers/api/authRouter';
+import PostRouter from './routers/api/postRouter';
+import CommentRouter from './routers/api/commentRouter';
+
 import connectDB from './config/db';
 
 const app = express();
@@ -59,7 +64,7 @@ app.use(session({
 
 app.listen(port, () => { console.log(`Server running at http://localhost:${port}/`) })
 
-app.get('/', (req: Request, res: Response) => { res.render('pages/home') })
+app.use('/', WebRouter);
 
 app.use('/users', UserRouter);
 

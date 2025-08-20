@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import mongoose from "mongoose";
-import CommentService from "../services/commentService";
+import CommentService from "../../services/commentService";
 
 const commentService = new CommentService();
 

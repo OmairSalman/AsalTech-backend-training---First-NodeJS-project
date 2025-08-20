@@ -1,16 +1,12 @@
 import { Router } from 'express';
-import AuthController from '../controllers/authController';
-import UserValidator from '../middlewares/validation/userValidation';
+import AuthController from '../../controllers/api/authController';
+import UserValidator from '../../middlewares/validation/userValidation';
 
 const authController = new AuthController();
 
 const AuthRouter = Router();
 
-AuthRouter.get('/login', authController.login);
-
 AuthRouter.post('/login', authController.loginUser);
-
-AuthRouter.get('/register', authController.register);
 
 AuthRouter.post('/register', UserValidator, authController.registerUser);
 

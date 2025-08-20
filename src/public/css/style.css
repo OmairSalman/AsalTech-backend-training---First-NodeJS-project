@@ -1,65 +1,136 @@
+/* ============================
+   GLOBAL THEME - UsersConnect
+   ============================ */
+
+/* Colors (brand system) */
+:root {
+  --brand-start: #007bff;  /* Blue */
+  --brand-end: #6610f2;    /* Purple */
+  --brand-gradient: linear-gradient(90deg, var(--brand-start), var(--brand-end));
+  --brand-accent: #ffc107; /* Gold for contrast */
+  --text-dark: #343a40;
+  --text-muted: #6c757d;
+  --bg-light: #f8f9fa;
+  --bg-dark: #343a40;
+}
+
 /* General */
 body {
   font-family: 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+  background: linear-gradient(180deg, var(--bg-light) 0%, #ffffff 100%);
+  color: var(--text-dark);
 }
 
-/* Home page hero */
+/* ============================
+   HERO SECTION
+   ============================ */
+
+.home-hero-wrapper {
+  min-height: 80vh; /* takes up most of the viewport */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* vertical center */
+  align-items: center;     /* horizontal center */
+  text-align: center;
+}
+
 .home-hero h1 {
   font-size: 3rem;
-  color: #007bff;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 1rem;
 }
 .home-hero p {
   font-size: 1.25rem;
-  color: #6c757d;
+  color: var(--text-muted);
 }
 
-/* Buttons */
+/* ============================
+   BUTTONS
+   ============================ */
+
+/* Make Login & Register buttons uniform */
+.btn-lg {
+  min-width: 160px; /* ensures same width */
+  padding: 0.75rem 1.5rem; /* equal padding */
+  font-weight: 600;
+}
+
 .btn-primary {
-  background: linear-gradient(90deg, #007bff, #00c6ff);
+  background: var(--brand-gradient);
   border: none;
+  color: #fff;
 }
 .btn-primary:hover {
-  background: linear-gradient(90deg, #0062cc, #0096c7);
+  filter: brightness(0.9);
 }
 .btn-outline-primary {
-  color: #007bff;
-  border-color: #007bff;
+  color: var(--brand-start);
+  border-color: var(--brand-start);
 }
 .btn-outline-primary:hover {
-  background: #007bff;
+  background: var(--brand-gradient);
   color: white;
+  border: none;
 }
 
-/* Navbar */
+/* ============================
+   NAVBAR
+   ============================ */
 .navbar {
-  background: linear-gradient(90deg, #007bff, #6610f2);
+  background: var(--brand-gradient);
 }
 .navbar-brand, .navbar-nav .nav-link {
   color: white !important;
   font-weight: 500;
 }
 .navbar-nav .nav-link:hover {
-  color: #ffe082 !important;
+  color: var(--brand-accent) !important;
 }
 
-/* Footer */
+/* ============================
+   FOOTER
+   ============================ */
 footer {
-  background: #343a40;
+  background: var(--bg-dark);
   color: #dee2e6;
   text-align: center;
   padding: 1rem 0;
 }
 footer a {
-  color: #ffc107;
+  color: var(--brand-accent);
   text-decoration: none;
 }
 footer a:hover {
   text-decoration: underline;
 }
 
-/* Cards */
+/* Footer brand - gradient text like logo */
+.footer-brand {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.25rem;
+}
+
+/* Footer links - blue/purple gradient on hover */
+.footer-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* ============================
+   CARDS
+   ============================ */
 .card {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -67,20 +138,25 @@ footer a:hover {
 }
 .card:hover {
   transform: translateY(-3px);
+  border: 1px solid var(--brand-start);
 }
 
-/* Pagination */
+/* ============================
+   PAGINATION
+   ============================ */
 .pagination .page-link {
   border-radius: 50px !important;
   margin: 0 4px;
-  color: #007bff;
+  color: var(--brand-start);
 }
 .pagination .page-link:hover {
-  background: #007bff;
+  background: var(--brand-gradient);
   color: white;
 }
 
-/* Profile page */
+/* ============================
+   PROFILE PAGE
+   ============================ */
 .profile-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -88,13 +164,18 @@ footer a:hover {
 .profile-header h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #343a40;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .profile-header p {
-  color: #6c757d;
+  color: var(--text-muted);
 }
 
-/* Like popups (modal) */
+/* ============================
+   MODALS
+   ============================ */
 .modal-content {
   border-radius: 15px;
+  border: 2px solid var(--brand-start);
 }

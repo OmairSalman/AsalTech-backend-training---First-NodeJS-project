@@ -1,18 +1,13 @@
 import { Request, Response } from "express";
 import { Types } from "mongoose";
-import UserService from "../services/userService";
-import AuthService from "../services/authService";
+import UserService from "../../services/userService";
+import AuthService from "../../services/authService";
 
 const userService = new UserService();
 const authService = new AuthService();
 
 export default class AuthController
 {
-    login(request: Request, response: Response)
-    {
-        response.render('pages/login');
-    }
-
     async loginUser(request: Request, response: Response)
     {
         const credentials: {email: string, password: string} = request.body;
@@ -34,11 +29,6 @@ export default class AuthController
             };
             response.render('profile', {user: userWithoutPassword});
         }
-    }
-
-    register(request: Request, response: Response)
-    {
-        response.render('register');
     }
 
     async registerUser(request: Request, response: Response)

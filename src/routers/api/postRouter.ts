@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import PostController from '../controllers/postController';
-import PostValidator from '../middlewares/validation/postValidation';
-import { isAuthenticated } from '../middlewares/auth/isAuthenticated';
-import { isPostAuthor } from '../middlewares/auth/isPostAuthor';
+import PostController from '../../controllers/api/postController';
+import PostValidator from '../../middlewares/validation/postValidation';
+import { isAuthenticated } from '../../middlewares/auth/isAuthenticated';
+import { isPostAuthor } from '../../middlewares/auth/isPostAuthor';
 
 const postController = new PostController();
 

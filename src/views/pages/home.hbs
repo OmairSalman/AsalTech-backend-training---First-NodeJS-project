@@ -1,16 +1,17 @@
-<div class="text-center mt-5">
-  <img src="/images/home-hero.svg" alt="UsersConnect Hero" class="img-fluid" style="max-width: 400px;">
-</div>
-
-<div class="home-hero text-center my-5">
-  <h1 class="display-4 fw-bold text-primary">Welcome to UsersConnect</h1>
-  <p class="lead text-muted">Connect with friends, share posts, and join the conversation!</p>
-
-  <!-- If user is NOT logged in -->
-  <!-- {{#unless user}} -->
-  <div class="mt-4">
-    <a href="/login" class="btn btn-lg btn-primary me-3">Login</a>
-    <a href="/register" class="btn btn-lg btn-outline-primary">Register</a>
+<div class="home-hero-wrapper">
+  <div>
+    <img src="/images/home-hero.svg" alt="UsersConnect Hero" class="img-fluid" style="max-width: 400px;">
   </div>
-  <!-- {{/unless}} -->
+
+  <div class="home-hero mt-5">
+    <h1 class="display-4 fw-bold text-primary">Welcome to UsersConnect</h1>
+    <p class="lead text-muted">Connect with friends, share posts, and join the conversation!</p>
+
+    <!-- {{#unless user}} -->
+    <div class="mt-4">
+      <a href="/login" class="btn btn-lg btn-primary me-3">Login</a>
+      <a href="/register" class="btn btn-lg btn-outline-primary">Register</a>
+    </div>
+    <!-- {{/unless}} -->
+  </div>
 </div>

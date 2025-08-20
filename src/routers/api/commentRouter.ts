@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import CommentController from '../controllers/commentController';
-import CommentValidator from '../middlewares/validation/commentValidation';
-import { isAuthenticated } from '../middlewares/auth/isAuthenticated';
-import { isCommentAuthor } from '../middlewares/auth/isCommentAuthor';
+import CommentController from '../../controllers/api/commentController';
+import CommentValidator from '../../middlewares/validation/commentValidation';
+import { isAuthenticated } from '../../middlewares/auth/isAuthenticated';
+import { isCommentAuthor } from '../../middlewares/auth/isCommentAuthor';
 
 const commentController = new CommentController();
 

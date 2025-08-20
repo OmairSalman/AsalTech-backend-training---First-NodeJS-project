@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import UserService from "../services/userService";
-import PostService from "../services/postService";
+import UserService from "../../services/userService";
+import PostService from "../../services/postService";
 
 const userService = new UserService();
 const postService = new PostService();
