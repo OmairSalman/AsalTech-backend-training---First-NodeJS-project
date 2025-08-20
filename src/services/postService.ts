@@ -17,7 +17,8 @@ export default class PostService
                 .populate({
                     path: 'comments',
                     populate: { path: 'author', select: 'name' }
-                });
+                })
+                .lean();
         }
         catch (error)
         {

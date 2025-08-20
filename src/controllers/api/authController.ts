@@ -27,7 +27,7 @@ export default class AuthController
                 name: user.name,
                 email: user.email
             };
-            response.render('profile', {user: userWithoutPassword});
+            response.redirect('/');
         }
     }
 
@@ -50,7 +50,7 @@ export default class AuthController
         request.session.destroy(err => {
             if (err) console.error(err);
             response.clearCookie('connect.sid');
-            response.redirect('/auth/login');
+            response.redirect('/');
         });
     }
 

@@ -7,6 +7,8 @@ const WebRouter = Router();
 
 WebRouter.get('/', webController.home);
 
+WebRouter.get('/feed', webController.feed);
+
 WebRouter.get('/login', webController.login);
 
 WebRouter.get('/register', webController.register);

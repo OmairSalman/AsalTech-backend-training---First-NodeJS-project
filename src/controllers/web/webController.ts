@@ -1,4 +1,7 @@
 import { Request, Response } from "express";
+import PostService from "../../services/postService";
+
+const postService = new PostService();
 
 export default class WebController
 {
@@ -7,7 +10,18 @@ export default class WebController
         if(!request.session.user)
             response.render('pages/home');
         else
-            response.render('pages/feed');
+            response.redirect('/feed');
+    }
+
+    async feed(request: Request, response: Response)
+    {
+        if(!request.session.user)
+            response.redirect('/');
+        else
+        {
+            const posts = await postService.getPosts(1, 10);
+            response.render('pages/feed', {user: request.session.user, posts: posts});
+        }
     }
 
     login(request: Request, response: Response)

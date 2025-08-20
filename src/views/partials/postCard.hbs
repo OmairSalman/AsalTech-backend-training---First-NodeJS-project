@@ -1,0 +1,35 @@
+<div class="post-card card mb-4">
+  <div class="card-body">
+    <!-- Post author & title -->
+    <h5 class="post-title fw-bold">{{post.title}}</h5>
+    <p class="post-author text-muted mb-2">by {{post.author.name}}</p>
+
+    <!-- Post content -->
+    <p class="post-content mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+
+    <!-- Like button and count -->
+    <div class="d-flex align-items-center mb-3">
+      <button class="btn btn-sm btn-outline-primary me-2">Like</button>
+      <span class="like-count">23 likes</span>
+    </div>
+
+    <!-- Comment form -->
+    <form action="/comments/new" method="POST" class="comment-form mb-3">
+      <div class="input-group">
+        <input type="text" name="content" class="form-control" placeholder="Write a comment..." required>
+        <button class="btn btn-primary" type="submit">Comment</button>
+      </div>
+    </form>
+
+    <!-- Comments -->
+    <div class="comments">
+      <div class="comment-card card p-2 mb-2">
+        <div class="d-flex justify-content-between align-items-center">
+            {{#each comments}}
+                {{> commentCard this}}   {{!-- Include commentCard partial, passing current comment data --}}
+            {{/each}}
+      </div>
+      <!-- More comments go here -->
+    </div>
+  </div>
+</div>

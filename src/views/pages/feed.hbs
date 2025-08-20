@@ -1,1 +1,9 @@
-<p>hi {{user}}, this is the feed :P</p>
+<h1 class="text-center my-4">Welcome to your feed, {{user.name}}</h1>
+
+<div class="feed-container">
+  {{!-- Loop over posts --}}
+  {{#each posts}}
+    <p>{{this._id}}</p>
+    {{> postCard this}}        {{!-- Include postCard partial, passing current post data --}}
+  {{/each}}
+</div>
