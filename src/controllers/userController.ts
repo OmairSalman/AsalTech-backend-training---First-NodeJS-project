@@ -26,14 +26,6 @@ export default class UserController
         }
     }
 
-    /*async createUser(request: Request, response: Response)
-    {
-        let newUser = request.body;
-        newUser = await userService.createUser(newUser);
-        const { password, ...newUserWithoutPassword } = newUser;
-        response.status(201).json(newUserWithoutPassword);
-    }*/
-
     async updateUser(request: Request, response: Response)
     {
         const userId = request.params.id;

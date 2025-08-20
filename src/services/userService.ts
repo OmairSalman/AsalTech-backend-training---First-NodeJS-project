@@ -27,13 +27,6 @@ export default class UserService
         else return user;
     }
 
-    /*async createUser(newUser: User): Promise<User | null>
-    {
-        const user = new UserModel(newUser);
-        await user.save();
-        return user.toObject();
-    }*/
-
     async updateUser(userId: string, updatedUser: User): Promise<User | null>
     {
         await UserModel.findByIdAndUpdate(userId, updatedUser);
