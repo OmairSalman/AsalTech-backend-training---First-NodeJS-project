@@ -1,103 +1,21 @@
-{{!-- filepath: c:\Users\omair\Desktop\Omair\coding projects\asal-train\nodejs-test\src\views\profile.hbs --}}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Profile</title>
-  <style>
-    body {
-      background: #f5f6fa;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .profile-container {
-      background: #fff;
-      padding: 2rem 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
-      width: 350px;
-      text-align: center;
-    }
-    .avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: #dfe6e9;
-      display: inline-block;
-      margin-bottom: 1rem;
-      font-size: 2.5rem;
-      color: #636e72;
-      line-height: 80px;
-      text-align: center;
-      font-weight: 600;
-    }
-    h2 {
-      margin-bottom: 0.5rem;
-      color: #2d3436;
-    }
-    .info {
-      margin-bottom: 1.5rem;
-      color: #636e72;
-      font-size: 1.05rem;
-    }
-    .logout-btn {
-      width: 100%;
-      padding: 0.8rem;
-      box-sizing: border-box;
-      background: #0984e3;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 1rem;
-    }
-    .logout-btn:hover {
-      background: #74b9ff;
-    }
-        .home-btn {
-    width: 100%;
-    padding: 0.8rem;
-    margin-bottom: 1rem;
-    background: #00b894;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-    }
-    .home-btn:hover {
-    background: #55efc4;
-    }
-  </style>
-</head>
-<body>
-  <div class="profile-container">
-    <form method="GET" action="/">
-        <button type="submit" class="home-btn">Home</button>
-    </form>
-    <div class="avatar">
-      {{#if user.avatar}}
-        <img src="{{user.avatar}}" alt="Avatar" style="width:80px;height:80px;border-radius:50%;">
-      {{else}}
-        {{user.name.[0]}}
-      {{/if}}
-    </div>
-    <h2>{{user.name}}</h2>
-    <div class="info">
-      <div><strong>Email:</strong> {{user.email}}</div>
-    </div>
-    <form method="GET" action="/auth/login">
-      <button type="submit" class="logout-btn">Logout</button>
-    </form>
+<div class="profile-header">
+  <h1>{{user.name}}</h1>
+  <p>{{user.email}}</p>
+</div>
+
+<div class="profile-stats d-flex justify-content-center gap-4 mb-4">
+  <div class="stat-card">
+    <h3>{{postLikes}}</h3>
+    <p>Likes on Posts</p>
   </div>
-</body>
-</html>
+  <div class="stat-card">
+    <h3>{{commentLikes}}</h3>
+    <p>Likes on Comments</p>
+  </div>
+</div>
+
+<div class="user-posts">
+  {{#each posts}}
+    {{> postCard post=this user=../user}}
+  {{/each}}
+</div>

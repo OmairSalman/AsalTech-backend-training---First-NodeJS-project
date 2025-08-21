@@ -22,7 +22,7 @@
       {{/if}}
       {{#if (gt totalPages 2)}}
         {{#each (range 1 totalPages)}}
-          <li class="page-item"><a class="page-link" href="/feed?page={{this}}">{{this}}</a></li>
+          <li class="page-item"><a class="page-link {{#if (eq ../page this)}}active{{/if}}" href="/feed?page={{this}}">{{this}}</a></li>
         {{/each}}
       {{/if}}
       {{#if (lt page totalPages)}}

@@ -11,34 +11,20 @@
     <!-- Navbar items -->
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        
-        <!-- If NOT logged in -->
-        <!-- {{#unless user}} -->
-        <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/register">Register</a>
-        </li>
-        <!-- {{/unless}} -->
-
-        <!-- If logged in -->
-        <!-- {{#if user}} -->
         <li class="nav-item">
           <a class="nav-link" href="/feed?page=1">Feed</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/profile/{{user.id}}">Profile</a>
+          <a class="nav-link" href="/profile">Profile</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/posts/new">Create Post</a>
+          <a class="nav-link" href="/create">Create Post</a>
         </li>
         <li class="nav-item">
           <form action="/auth/logout" method="GET" class="d-inline">
             <button type="submit" class="btn btn-link nav-link">Logout</button>
           </form>
         </li>
-        <!-- {{/if}} -->
 
       </ul>
     </div>

@@ -79,7 +79,8 @@ export default class UserController
     async getUserPosts(request: Request, response: Response)
     {
         let userId = request.params.userId;
-        const posts = await postService.getPostsByUserId(userId);
+        const page = parseInt(request.query.page as string) || 1;
+        const posts = await postService.getPostsByUserId(userId, page, 10);
         if(!posts) return response.status(404).send("No posts by user");
         return response.status(200).send({message: `Found posts of user with id ${userId}`, posts: posts});
     }

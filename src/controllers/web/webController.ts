@@ -37,4 +37,21 @@ export default class WebController
     {
         response.render('pages/register');
     }
+
+    create(request: Request, response: Response)
+    {
+        response.render('pages/createPost', {user: request.session.user});
+    }
+
+    async profile(request: Request, response: Response)
+    {
+        const user = request.session.user;
+        let posts;
+        if(user)
+        {
+            const page = parseInt(request.query.page as string) || 1;
+            posts = await postService.getPostsByUserId(user?.id.toString(), page, 10);
+        }
+        response.render('pages/profile', {user: user, posts: posts});
+    }
 }

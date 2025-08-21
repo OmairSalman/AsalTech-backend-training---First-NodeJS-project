@@ -98,17 +98,23 @@ export default class PostService
         }
     }
 
-    async getPostsByUserId(userId: string): Promise<Post[] | null>
+    async getPostsByUserId(userId: string, page: number, limit: number): Promise<Post[] | null>
     {
         try
         {
+            const skip = (page - 1) * limit;
             const posts = await PostModel.find({ author: userId })
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
                 .populate('author', 'name')
                 .populate('likes', 'name')
                 .populate({
                     path: 'comments',
+                    options: { sort: { createdAt: -1 } },
                     populate: { path: 'author', select: 'name' }
-                });
+                })
+                .lean();
             return posts ?? null;
         }
         catch (error)
