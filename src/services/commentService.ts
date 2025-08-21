@@ -23,6 +23,19 @@ export default class CommentService
         }
     }
 
+    async countUserCommentsLikes(userId: string)
+    {
+        const comments = await CommentModel.find({author: userId});
+        if(comments)
+        {
+            let commentsLikes = 0;
+            comments.forEach(comment =>{
+                commentsLikes += comment.likes.length;
+            });
+            return commentsLikes;
+        }
+    }
+
     async updateComment(commentId: string, updatedComment: Comment): Promise<Comment | null>
     {
         try

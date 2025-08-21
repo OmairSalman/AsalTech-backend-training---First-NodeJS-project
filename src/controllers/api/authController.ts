@@ -17,7 +17,11 @@ export default class AuthController
             return;
         }
         const user = await authService.loginUser(credentials);
-        if(!user) response.status(401).json({ "message": "Invalid email or password" });
+        if(typeof user === 'string')
+            if(user === 'DNE')
+                response.status(401).json({ error: "Account doesn't exist, please register" });
+            else
+                response.status(401).json({ error: "Invalid email or password" });
         else
         {
             const { password, ...userWithoutPassword } = user;

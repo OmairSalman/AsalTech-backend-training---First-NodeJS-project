@@ -6,15 +6,17 @@ const userService = new UserService();
 
 export default class AuthService
 {
-    async loginUser(credentials: {email: string, password: string}): Promise<User | null>
+    async loginUser(credentials: {email: string, password: string}): Promise<User | string>
     {
         try
         {
             const user = await UserModel.findOne({ email: credentials.email });
-            if (!user) return null;
+            if (!user) return 'DNE';
             const match = await bcrypt.compare(credentials.password, user?.password);
             if(match)
                 return user.toObject();
+            else
+                return 'ICR';
         }
         catch(error)
         {
@@ -23,7 +25,7 @@ export default class AuthService
             const errorTimeString = errorDate.toLocaleTimeString();
             console.error(`[${errorDateString} @ ${errorTimeString}] Error logging in: `, error);
         }
-        return null;
+        return 'error';
     }
 
     async registerUser(newUser: User): Promise<User | null>

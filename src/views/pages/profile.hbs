@@ -5,17 +5,44 @@
 
 <div class="profile-stats d-flex justify-content-center gap-4 mb-4">
   <div class="stat-card">
-    <h3>{{postLikes}}</h3>
-    <p>Likes on Posts</p>
+    <h3>{{postsLikes}}</h3>
+    <p>Likes on posts</p>
   </div>
   <div class="stat-card">
-    <h3>{{commentLikes}}</h3>
-    <p>Likes on Comments</p>
+    <h3>{{commentsLikes}}</h3>
+    <p>Likes on comments</p>
   </div>
 </div>
 
-<div class="user-posts">
-  {{#each posts}}
-    {{> postCard post=this user=../user}}
-  {{/each}}
+<div class="user-posts" id="feed-container"
+  data-page="{{postsPage}}" 
+  data-limit="{{limit}}" 
+  data-total-pages="{{totalPages}}">
+  {{#if (gt posts.length 0)}}
+    {{#each posts}}
+      {{> postCard post=this user=../user}}
+    {{/each}}
+  {{else}}
+    <p>You didn't make any posts yet, how about you <a href="/create">create a new one?</a></p>
+  {{/if}}
 </div>
+
+<!-- pagination UI (server can render numbers; JS will hook to them) -->
+<nav id="pagination" aria-label="Page navigation" class="mt-3">
+  {{!-- optional server-side page links; you can render numeric pages or Prev/Next --}}
+  {{#if (gt totalPages 1)}}
+    <ul class="pagination justify-content-center">
+      {{#if (gt postsPage 1)}}
+        <li class="page-item"><a class="page-link" href="/profile?postsPage={{subtract postsPage 1}}">Previous</a></li>
+      {{/if}}
+      {{#if (gt totalPages 2)}}
+        {{#each (range 1 totalPages)}}
+          <li class="page-item"><a class="page-link {{#if (eq ../postsPage this)}}active{{/if}}" href="/profile?postsPage={{this}}">{{this}}</a></li>
+        {{/each}}
+      {{/if}}
+      {{#if (lt postsPage totalPages)}}
+        <li class="page-item"><a class="page-link" href="/profile?postsPage={{add postsPage 1}}">Next</a></li>
+      {{/if}}
+    </ul>
+  {{/if}}
+</nav>

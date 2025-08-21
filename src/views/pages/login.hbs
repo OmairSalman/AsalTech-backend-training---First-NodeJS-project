@@ -9,7 +9,7 @@
     </div>
 
     <!-- Login Form -->
-    <form action="/auth/login" method="POST">
+    <form id="login-form" action="/auth/login" method="POST">
       <!-- Email -->
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
@@ -22,6 +22,8 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
       </div>
+
+      <div id="login-error" class="text-center text-danger mb-2" style="display:none;"></div>
 
       <!-- Submit -->
       <div class="d-grid mb-3">

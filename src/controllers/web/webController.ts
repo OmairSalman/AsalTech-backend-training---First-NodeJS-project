@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import PostService from "../../services/postService";
+import CommentService from "../../services/commentService";
 import { PostModel } from "../../models/postModel";
 
 const postService = new PostService();
+const commentService = new CommentService();
 
 export default class WebController
 {
@@ -49,9 +51,15 @@ export default class WebController
         let posts;
         if(user)
         {
-            const page = parseInt(request.query.page as string) || 1;
+            const page = parseInt(request.query.postsPage as string) || 1;
             posts = await postService.getPostsByUserId(user?.id.toString(), page, 10);
+            if(posts)
+            {
+                const totalPages = Math.ceil(posts.length/10);
+                const postsLikes = await postService.countUserPostsLikes(user?.id.toString());
+                const commentsLikes = await commentService.countUserCommentsLikes(user?.id.toString());
+                response.render('pages/profile', {user: user, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
+            }
         }
-        response.render('pages/profile', {user: user, posts: posts});
     }
 }

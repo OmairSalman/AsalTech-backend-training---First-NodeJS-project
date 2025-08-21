@@ -125,6 +125,19 @@ export default class PostService
         }
     }
 
+    async countUserPostsLikes(userId: string)
+    {
+        const posts = await PostModel.find({author: userId});
+        if(posts)
+        {
+            let postsLikes = 0;
+            posts.forEach(comment =>{
+                postsLikes += comment.likes.length;
+            });
+            return postsLikes;
+        }
+    }
+
     async like(postId: string, userId: string): Promise<Post | null>
     {
         try
