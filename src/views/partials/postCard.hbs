@@ -8,25 +8,25 @@
     <p class="post-content mb-3">{{post.content}}</p>
 
     <!-- Like button and count -->
-    <div class="d-flex align-items-center mb-3">
-      <form action="/posts/{{post._id}}/like" method="POST">
-        <button class="btn btn-sm btn-outline-primary me-2" data-post-id="{{post._id}}">Like</button>
+    <div class="d-flex align-items-center mb-3 like-wrapper">
+      <form action="/posts/{{post._id}}/like" method="POST" data-post-id="{{post._id}}">
+        <button class="btn btn-sm btn-outline-primary me-2 like-btn" data-liked="{{isLiked post.likes user.id}}">{{#if (isLiked post.likes user.id)}} Unlike {{else}} Like {{/if}}</button>
       </form>
-      <span class="like-count" id="like-count-{{post._id}}">{{post.likes.length}} likes</span>
+      <span class="like-count" id="like-count-{{post._id}}">{{pluralize post.likes.length "like" "likes"}}</span>
     </div>
 
     <!-- Comment form -->
-    <form action="/comments/{{post._id}}" method="POST" class="comment-form mb-3" >
+    <form action="/comments/{{post._id}}" method="POST" class="comment-form mb-3" data-post-id="{{post._id}}">
       <div class="input-group">
-        <input type="text" name="content" class="form-control" placeholder="Write a comment..." required>
-        <button class="btn btn-primary" type="submit" data-post-id="{{post._id}}">Comment</button>
+        <input type="text" name="content" id="content" class="form-control" placeholder="Write a comment..." required>
+        <button class="btn btn-primary" type="submit">Comment</button>
       </div>
     </form>
 
     <!-- Comments list -->
     <div class="comments-section" id="comments-{{post._id}}">
       {{#each post.comments}}
-        {{> commentCard comment=this}}
+        {{> commentCard comment=this user=../user}}
       {{/each}}
     </div>
   </div>

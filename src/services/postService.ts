@@ -10,12 +10,14 @@ export default class PostService
         {
             const skip = (page - 1) * limit;
             return await PostModel.find()
+                .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .populate('author', 'name')
                 .populate('likes', 'name')
                 .populate({
                     path: 'comments',
+                    options: { sort: { createdAt: -1 } },
                     populate: { path: 'author', select: 'name' }
                 })
                 .lean();

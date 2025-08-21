@@ -10,7 +10,10 @@ export default class CommentService
         {
             const comment = new CommentModel({...newComment, author: userId, post: postId});
             await comment.save();
-            return comment.toObject();
+            const populatedComment = await CommentModel.findById(comment._id).populate('author');
+            if(populatedComment)
+                return populatedComment.toObject()
+            return null;
         }
         catch(error)
         {

@@ -53,15 +53,15 @@ export default class PostController
         let userId = request.session!.user!.id.toString();
         const likedPost = await postService.like(postId, userId);
         if(!likedPost) return response.status(404).send("Post not found");
-        return response.status(200).send({message: `Liked post ${postId} by ${userId} successfully.`, post: likedPost});
+        return response.status(200).json({message: `Liked post ${postId} by ${userId} successfully.`, liked: true, likeCount: likedPost.likes.length});
     }
 
     async unlike(request: Request, response: Response)
     {
         let postId = request.params.postId;
         let userId = request.session!.user!.id.toString();
-        const likedPost = await postService.unlike(postId, userId);
-        if(!likedPost) return response.status(404).send("Post not found");
-        return response.status(200).send({message: `Unliked post ${postId} by ${userId} successfully.`, post: likedPost});
+        const unlikedPost = await postService.unlike(postId, userId);
+        if(!unlikedPost) return response.status(404).send("Post not found");
+        return response.status(200).json({message: `Unliked post ${postId} by ${userId} successfully.`, liked: false, likeCount: unlikedPost.likes.length});
     }
 }

@@ -57,6 +57,17 @@ app.engine('hbs', engine({
       if (count === 1) return `${count} ${singular}`;
       return `${count} ${plural}`;
     },
+
+    isLiked: (likes: {_id: Types.ObjectId, name: string}[], userId: Types.ObjectId) =>
+      {
+        if(!likes || likes.length === 0)
+          return false;
+        const liked = likes.find(like => like._id.equals(userId));
+        if(liked)
+          return true;
+        else
+          return false;
+      },
   }
 }));
 
@@ -64,7 +75,6 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(__dirname + '/public'));
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

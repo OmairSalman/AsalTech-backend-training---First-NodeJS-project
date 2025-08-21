@@ -42,7 +42,7 @@ export default class AuthController
             name: newUser.name,
             email: newUser.email
         };
-        response.render('profile', {user: newUserWithoutPassword});
+        response.redirect('/feed?page=1');
     }
 
     async logoutUser(request: Request, response: Response)

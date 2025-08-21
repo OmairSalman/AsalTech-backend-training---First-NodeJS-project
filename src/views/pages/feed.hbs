@@ -1,12 +1,14 @@
+{{#if (gt 2 page)}}
 <h1 class="text-center my-4">Welcome to your feed, {{user.name}}</h1>
+{{/if}}
 
-<div class="feed-container"
+<div class="feed-container" id="feed-container"
   data-page="{{page}}" 
   data-limit="{{limit}}" 
   data-total-pages="{{totalPages}}">
   {{!-- Loop over posts --}}
   {{#each posts}}
-    {{> postCard post=this}}        {{!-- Include postCard partial, passing current post data --}}
+    {{> postCard post=this user=../user}}
   {{/each}}
 </div>
 
@@ -29,6 +31,3 @@
     </ul>
   {{/if}}
 </nav>
-
-<!-- include client script (defer so DOM exists) -->
-<script src="/js/feed.js" defer></script>

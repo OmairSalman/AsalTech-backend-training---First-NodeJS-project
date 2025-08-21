@@ -348,6 +348,9 @@ footer a:hover {
 }
 
 /* ---------- Like Button ---------- */
+.like-count{
+  margin-top: 10px;
+}
 .post-card .btn-outline-primary {
   font-size: 0.875rem;
   padding: 0.25rem 0.75rem;
