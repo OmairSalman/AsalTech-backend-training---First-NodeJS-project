@@ -481,6 +481,10 @@ footer a:hover {
   margin-top: 0.25rem;
 }
 
+.comment-actions .edit-comment{
+  margin-top: 5px;
+}
+
 .comment-actions a,
 .comment-actions button {
   font-size: 0.8rem;

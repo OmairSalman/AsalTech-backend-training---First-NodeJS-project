@@ -15,7 +15,7 @@
         <!-- Edit & delete labels right -->
         {{#if (isAuthor comment.author._id user.id)}}
         <div class="comment-actions d-flex align-items-center">
-          <a href="/comments/{{comment._id}}/edit" class="text-decoration-none me-2">
+          <a href="/comments/{{comment._id}}/edit" class="text-decoration-none me-2 edit-comment">
             <i class="fa-solid fa-pen"></i>
           </a>
           <form action="/comments/{{comment._id}}?_method=DELETE" method="POST" class="d-inline m-0 p-0">
