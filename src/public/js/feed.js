@@ -33,18 +33,20 @@
 
       if (likeCount && typeof data.likeCount !== 'undefined')
       {
-        likeCount.textContent = `${data.likeCount} ${data.likeCount === 1 ? 'like' : 'likes'}`;
+        likeCount.textContent = `${data.likeCount}`;
       }
 
-      // 6. Update button text based on liked/unliked
-      if (data.liked)
-      {
-        button.textContent = "Unlike";
+      const icon = button.querySelector("i");
+
+      if (data.liked) {
+        // Switch to thumbs-down
+        icon.classList.remove("fa-thumbs-up");
+        icon.classList.add("fa-thumbs-down");
         button.dataset.liked = "true";
-      }
-      else
-      {
-        button.textContent = "Like";
+      } else {
+        // Switch back to thumbs-up
+        icon.classList.remove("fa-thumbs-down");
+        icon.classList.add("fa-thumbs-up");
         button.dataset.liked = "false";
       }
 
@@ -58,8 +60,8 @@
 async function handleAddComment(form)
 {
   const postId = form.dataset.postId;
-  const input = form.querySelector('input[name="content"]');
-  const content = input.value.trim();
+  const textarea = form.querySelector('textarea[name="content"]');
+  const content = textarea.value.trim();
   if (!content) return;
 
   try
@@ -78,10 +80,11 @@ async function handleAddComment(form)
       commentsSection.insertAdjacentHTML('afterbegin', data.html);
 
       // Clear input
-      input.value = '';
+      textarea.value = '';
     } else {
       alert('Failed to add comment.');
     }
+    textarea.style.height = "auto"; // reset
 
   } catch (err) {
     console.error(err);
@@ -90,6 +93,12 @@ async function handleAddComment(form)
 }
 
   async function init() {
+    document.querySelectorAll(".comment-form textarea").forEach(textarea => {
+      textarea.addEventListener("input", () => {
+        textarea.style.height = "auto"; // reset
+        textarea.style.height = textarea.scrollHeight + "px"; // adjust
+      });
+    });
     // Make sure feed exists
     const feed = document.getElementById('feed-container');
     if (!feed) return;

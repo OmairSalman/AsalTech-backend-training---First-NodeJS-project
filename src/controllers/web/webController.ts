@@ -55,7 +55,8 @@ export default class WebController
             posts = await postService.getPostsByUserId(user?.id.toString(), page, 10);
             if(posts)
             {
-                const totalPages = Math.ceil(posts.length/10);
+                const totalUserPosts = await PostModel.countDocuments({author: user.id});
+                const totalPages = Math.ceil(totalUserPosts/10);
                 const postsLikes = await postService.countUserPostsLikes(user?.id.toString());
                 const commentsLikes = await commentService.countUserCommentsLikes(user?.id.toString());
                 response.render('pages/profile', {user: user, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });

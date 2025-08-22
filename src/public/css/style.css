@@ -343,29 +343,39 @@ footer a:hover {
   font-size: 0.875rem;
 }
 .post-content {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: var(--text-dark);
 }
 
 /* ---------- Like Button ---------- */
-.like-count{
-  margin-top: 10px;
-}
+
 .post-card .btn-outline-primary {
   font-size: 0.875rem;
   padding: 0.25rem 0.75rem;
 }
 .post-card .like-count {
   text-align: center;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--text-muted);
 }
 
 /* ---------- Comment Form ---------- */
-.comment-form input.form-control {
-  margin-top: 10px;
-  border-radius: 50px;
+.comment-input-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem; /* spacing between textarea and button */
 }
+
+.comment-form textarea.form-control {
+  margin-top: 10px;
+  border-radius: 20px;
+  resize: none;          /* prevent manual dragging resize */
+  overflow: hidden;      /* hide scrollbars */
+  min-height: 40px;
+  max-height: 200px;     /* don’t let it grow forever */
+  flex: 1;               /* expand to fill available width */
+}
+
 .comment-form .btn-primary {
   border-radius: 50px;
   padding-left: 1rem;
@@ -373,10 +383,14 @@ footer a:hover {
   background: var(--brand-gradient);
   color: white;
   border: none;
+  height: fit-content;
+  margin-top: 17.5px;
 }
+
 .comment-form .btn-primary:hover {
   filter: brightness(0.9);
 }
+
 
 /* ---------- Comment Card ---------- */
 
@@ -386,30 +400,141 @@ footer a:hover {
   border-top: none;     /* Remove border separating comment form from comments */
 }
 
+/* ---------- Comment Card Redesign ---------- */
 .comment-card {
-  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
   padding: 0.75rem 1rem;
   border-radius: 10px;
-  background: #f8f9fa; /* Slight contrast from post card */
+  background: #f8f9fa;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  width: fit-content;        /* shrink to fit content */
+  max-width: 100%;           /* but don't overflow */
 }
 
-.comment-card {
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  background: #f8f9fa;
+.comment-header,
+.comment-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.comment-card .comment-author {
-  font-size: 0.875rem;
+
+.comment-content {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
   color: var(--text-dark);
 }
-.comment-card .comment-date {
-  font-size: 0.75rem;
-  color: var(--text-muted);
+
+.comment-actions .icon-btn {
+  font-size: 0.85rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
 }
-.comment-card .comment-content {
-  font-size: 0.875rem;
-  color: var(--text-dark);
+
+.comment-card .icon-btn {
+  border: 1px solid var(--brand-start);
+  color: var(--brand-start);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 0.9rem;
+}
+
+.comment-card .icon-btn:hover {
+  background: var(--brand-gradient);
+  color: #fff;
+}
+
+.comment-card .icon-btn.danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+.comment-card .icon-btn.danger:hover {
+  background: #dc3545;
+  color: #fff;
+}
+
+.comment-wrapper {
+  padding-bottom: 0.75rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-bubble {
+  background: #dee2e6; /* slightly darker gray */
+  border-radius: 10px;
+  min-width: 220px; /* wide enough for footer */
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+}
+
+.comment-footer {
+  font-size: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.comment-actions a,
+.comment-actions button {
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.icon-btn.like-btn {
+  border: 1px solid var(--brand-start);
+  color: var(--brand-start);
+  background: transparent;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn.like-btn:hover {
+  background: var(--brand-gradient);
+  color: #fff;
+}
+
+/* Align like button + count vertically with bubble */
+.comment-wrapper > .d-flex.align-items-center {
+  align-items: flex-start; /* overall container */
+}
+
+.comment-wrapper > .d-flex.align-items-center > .d-flex.align-items-center {
+  flex-direction: column; /* stack like btn + count if needed on small screens */
+  justify-content: center; /* vertical center with bubble */
+}
+
+/* Spacing between comments */
+.comment-wrapper + .comment-wrapper {
+  margin-top: 0.75rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 576px) {
+  .comment-wrapper > .d-flex.align-items-center {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .comment-wrapper > .d-flex.align-items-center > .d-flex.align-items-center {
+    flex-direction: row;
+    margin-top: 0.25rem;
+  }
 }
 
 /* ---------- General Feed Layout ---------- */
@@ -541,4 +666,124 @@ footer a:hover {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+}
+
+.post-actions .btn {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+}
+
+.post-actions .btn-outline-primary:hover {
+  background: var(--brand-gradient);
+  color: white;
+}
+
+.post-actions .btn-outline-danger:hover {
+  background: #dc3545;
+  color: white;
+}
+
+.post-actions-icons .btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.post-actions-icons .btn-outline-primary:hover {
+  background: var(--brand-gradient);
+  color: white;
+}
+
+.post-actions-icons .btn-outline-danger:hover {
+  background: #dc3545;
+  color: white;
+}
+
+/* Layout: main content + slim rail of icons */
+.post-card .post-grid {
+  display: grid;
+  grid-template-columns: 1fr 44px; /* content | rail */
+  gap: 12px;
+  align-items: start; /* top-align both columns */
+}
+
+/* Vertical rail */
+.post-card .post-actions-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  padding-top: 2px; /* tiny nudge to align with title baseline */
+}
+
+/* Icon buttons (anchor + button look identical) */
+.post-card .icon-btn {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--brand-start);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--brand-start);
+  line-height: 1; /* avoid baseline weirdness */
+  padding: 0;     /* unify button/anchor sizing */
+  cursor: pointer;
+}
+
+.post-card .icon-btn:hover {
+  background: var(--brand-gradient);
+  border-color: transparent;
+  color: #fff;
+}
+
+.post-card .icon-btn.danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+.post-card .icon-btn.danger:hover {
+  background: #dc3545;
+  color: #fff;
+}
+
+/* Mobile: stack rail below content, inline */
+@media (max-width: 576px) {
+  .post-card .post-grid {
+    grid-template-columns: 1fr; /* single column */
+  }
+  .post-card .post-actions-rail {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+.post-actions-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* keep icons aligned */
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1.1rem;
+}
+
+.icon-btn:hover {
+  color: #0d6efd; /* bootstrap primary blue */
+}
+
+.icon-btn.danger:hover {
+  color: #dc3545; /* bootstrap red */
 }

@@ -59,15 +59,17 @@ app.engine('hbs', engine({
     },
 
     isLiked: (likes: {_id: Types.ObjectId, name: string}[], userId: Types.ObjectId) =>
-      {
-        if(!likes || likes.length === 0)
-          return false;
-        const liked = likes.find(like => like._id.equals(userId));
-        if(liked)
-          return true;
-        else
-          return false;
-      },
+    {
+      if(!likes || likes.length === 0)
+        return false;
+      const liked = likes.find(like => like._id.equals(userId));
+      if(liked)
+        return true;
+      else
+        return false;
+    },
+
+    isAuthor: (postAuthorId: Types.ObjectId, userId: Types.ObjectId) => postAuthorId.equals(userId),
   }
 }));
 
@@ -101,7 +103,7 @@ app.use(session({
   }),
   cookie: {
     httpOnly: true, 
-    maxAge: 1000 * 60 * 60,
+    maxAge: 1000 * 60 * 60 * 24,
   }
 }));
 

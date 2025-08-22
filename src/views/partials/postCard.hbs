@@ -1,25 +1,53 @@
-<div class="post-card card mb-4" data-post-id="{{post._id}}">
+<div class="card post-card shadow-sm mb-4">
   <div class="card-body">
-    <!-- Post author & title -->
-    <h5 class="post-title fw-bold">{{post.title}}</h5>
-    <p class="post-author text-muted mb-2">by {{post.author.name}}, {{fromNow post.createdAt}}</p>
+    <!-- GRID: main content + action rail -->
+    <div class="post-grid">
+      <div class="post-main">
+        <h5 class="post-title mb-1">{{post.title}}</h5>
+        <div class="post-author text-muted mb-2">
+          by {{post.author.name}}, {{fromNow post.createdAt}}
+        </div>
 
-    <!-- Post content -->
-    <p class="post-content mb-3">{{post.content}}</p>
+        <p class="post-content mb-3">{{post.content}}</p>
+      </div>
 
-    <!-- Like button and count -->
-    <div class="d-flex align-items-center mb-3 like-wrapper">
-      <form action="/posts/{{post._id}}/like" method="POST" data-post-id="{{post._id}}">
-        <button class="btn btn-sm btn-outline-primary me-2 like-btn" data-liked="{{isLiked post.likes user.id}}">{{#if (isLiked post.likes user.id)}} Unlike {{else}} Like {{/if}}</button>
-      </form>
-      <span class="like-count" id="like-count-{{post._id}}">{{pluralize post.likes.length "like" "likes"}}</span>
-    </div>
+      <!-- RIGHT rail -->
+      <div class="post-actions-rail">
+        {{#if (isAuthor post.author._id user.id)}}
+          <a href="/posts/{{post._id}}/edit" class="icon-btn" title="Edit">
+            <i class="fa-solid fa-pen"></i>
+          </a>
+          <form action="/posts/{{post._id}}?_method=DELETE" method="POST" class="m-0">
+            <button type="submit" class="icon-btn danger" title="Delete">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </form>
+        {{/if}}
+
+        <!-- Like button moved here -->
+        <form action="/posts/{{post._id}}/like" method="POST" data-post-id="{{post._id}}" class="m-0">
+          <button class="icon-btn like-btn" data-liked="{{isLiked post.likes user.id}}" title="Like/Unlike">
+            {{#if (isLiked post.likes user.id)}}
+              <i class="fa-solid fa-thumbs-down"></i>
+            {{else}}
+              <i class="fa-solid fa-thumbs-up"></i>
+            {{/if}}
+          </button>
+        </form>
+        <span class="like-count mt-1 small text-muted" id="like-count-{{post._id}}">
+          {{post.likes.length}}
+        </span>
+      </div>
+    </div> <!-- end post-grid -->
 
     <!-- Comment form -->
-    <form action="/comments/{{post._id}}" method="POST" class="comment-form mb-3" data-post-id="{{post._id}}">
-      <div class="input-group">
-        <input type="text" name="content" id="content" class="form-control" placeholder="Write a comment..." required>
-        <button class="btn btn-primary" type="submit">Comment</button>
+    <form action="/comments/{{post._id}}" method="POST" 
+          class="comment-form mb-3" data-post-id="{{post._id}}">
+      <div class="comment-input-wrapper d-flex">
+        <textarea name="content" id="content" 
+                  class="form-control" 
+                  placeholder="Write a comment..." required></textarea>
+        <button class="btn btn-primary ms-2" type="submit">Comment</button>
       </div>
     </form>
 

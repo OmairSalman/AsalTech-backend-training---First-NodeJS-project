@@ -17,8 +17,12 @@ export default class PostService
                 .populate('likes', 'name')
                 .populate({
                     path: 'comments',
-                    options: { sort: { createdAt: -1 } },
                     populate: { path: 'author', select: 'name' }
+                })
+                .populate({
+                    path: 'comments',
+                    options: { sort: { createdAt: -1 } },
+                    populate: { path: 'likes', select: 'name' }
                 })
                 .lean();
         }
@@ -40,8 +44,14 @@ export default class PostService
                 .populate({
                     path: 'comments',
                     populate: { path: 'author', select: 'name' }
-                });
-            return post?.toObject() ?? null;
+                })
+                .populate({
+                    path: 'comments',
+                    options: { sort: { createdAt: -1 } },
+                    populate: { path: 'likes', select: 'name' }
+                })
+                .lean()
+            return post ?? null;
         }
         catch
         (error)
@@ -111,8 +121,12 @@ export default class PostService
                 .populate('likes', 'name')
                 .populate({
                     path: 'comments',
-                    options: { sort: { createdAt: -1 } },
                     populate: { path: 'author', select: 'name' }
+                })
+                .populate({
+                    path: 'comments',
+                    options: { sort: { createdAt: -1 } },
+                    populate: { path: 'likes', select: 'name' }
                 })
                 .lean();
             return posts ?? null;

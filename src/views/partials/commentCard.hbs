@@ -1,13 +1,45 @@
-<div class="comment-card card p-2 mb-2" data-comment-id="{{comment._id}}">
-  <div class="d-flex justify-content-between align-items-center">
-    <span class="comment-author fw-bold">{{comment.author.name}}</span>
-    <span class="comment-date text-muted small">{{fromNow comment.createdAt}}</span>
-  </div>
-  <p class="comment-content mb-0">{{comment.content}}</p>
-  <div class="d-flex align-items-center mb-3">
-      <form action="/comments/{{comment._id}}/like" method="POST" data-comment-id="{{comment._id}}">
-        <button class="btn btn-sm btn-outline-primary me-2 like-btn" data-liked="{{isLiked comment.likes user.id}}">{{#if (isLiked comment.likes user.id)}} Unlike {{else}} Like {{/if}}</button>
+<div class="comment-wrapper mb-3" data-comment-id="{{comment._id}}">
+  <div class="d-flex align-items-center">
+    <!-- Bubble + footer -->
+    <div class="d-flex flex-column">
+      <div class="comment-bubble p-2 mb-1">
+        <div class="comment-author fw-bold mb-1">{{comment.author.name}}</div>
+        <div class="comment-content">{{comment.content}}</div>
+      </div>
+
+      <!-- Footer directly below bubble -->
+      <div class="comment-footer d-flex justify-content-between align-items-center small mt-1">
+        <!-- Time ago left -->
+        <span class="comment-date text-muted">{{fromNow comment.createdAt}}</span>
+
+        <!-- Edit & delete labels right -->
+        {{#if (isAuthor comment.author._id user.id)}}
+        <div class="comment-actions d-flex align-items-center">
+          <a href="/comments/{{comment._id}}/edit" class="text-decoration-none me-2">
+            <i class="fa-solid fa-pen"></i>
+          </a>
+          <form action="/comments/{{comment._id}}?_method=DELETE" method="POST" class="d-inline m-0 p-0">
+            <button type="submit" class="btn btn-link p-0 m-0 text-danger text-decoration-none">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </form>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+
+    <!-- Like button + count vertically centered with bubble -->
+    <div class="d-flex align-items-center ms-2">
+      <form action="/comments/{{comment._id}}/like" method="POST" data-comment-id="{{comment._id}}" class="d-flex align-items-center">
+        <button class="icon-btn like-btn me-1"
+                data-liked="{{isLiked comment.likes user.id}}"
+                title="Like/Unlike">
+          <i class="fa-solid {{#if (isLiked comment.likes user.id)}}fa-thumbs-down{{else}}fa-thumbs-up{{/if}}"></i>
+        </button>
+        <span class="like-count small" id="like-count-{{comment._id}}">
+          {{comment.likes.length}}
+        </span>
       </form>
-      <span class="like-count" id="like-count-{{comment._id}}">{{comment.likes.length}} likes</span>
+    </div>
   </div>
 </div>
