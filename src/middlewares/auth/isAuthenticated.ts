@@ -7,5 +7,5 @@ export function isAuthenticated(request: Request, response: Response, next: Next
     return next();
   }
 
-  response.redirect('/auth/login');
+  response.redirect('/login');
 }
