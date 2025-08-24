@@ -45,7 +45,7 @@
                 title="Like/Unlike">
           <i class="fa-solid {{#if (isLiked comment.likes user.id)}}fa-thumbs-down{{else}}fa-thumbs-up{{/if}}"></i>
         </button>
-        <span 
+        <span style="cursor: pointer;"
           class="like-count small"
           id="like-count-{{comment._id}}"
           data-comment-id="{{comment._id}}"
