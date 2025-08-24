@@ -485,7 +485,6 @@ footer a:hover {
   margin-top: 5px;
 }
 
-.comment-actions a,
 .comment-actions button {
   font-size: 0.8rem;
   display: inline-flex;
@@ -511,6 +510,22 @@ footer a:hover {
 .icon-btn.like-btn:hover {
   background: var(--brand-gradient);
   color: #fff;
+}
+
+/* For post like button */
+.post-card .icon-btn.like-btn.liked,
+.post-card .icon-btn.like-btn.liked:hover {
+  background: var(--brand-gradient);
+  border-color: transparent;
+  color: #fff;
+}
+
+/* For comment like button */
+.comment-card .icon-btn.like-btn.liked,
+.comment-card .icon-btn.like-btn.liked:hover {
+  background: var(--brand-gradient);
+  color: #fff;
+  border-color: transparent;
 }
 
 /* Align like button + count vertically with bubble */
@@ -849,4 +864,25 @@ footer a:hover {
 
 .btn-secondary:hover {
   background: #e0e0e0;
+}
+
+/* Ensure edit form buttons are the same height and aligned */
+.edit-btn-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.edit-btn-row .btn {
+  min-width: 90px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  padding: 0 1rem;
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin: 0;
+  line-height: 1.2;
 }

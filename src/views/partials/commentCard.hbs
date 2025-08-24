@@ -7,6 +7,15 @@
         <div class="comment-content">{{comment.content}}</div>
       </div>
 
+      <!-- Edit mode (hidden by default) -->
+      <form class="edit-comment-form" style="display:none;">
+        <textarea class="edit-comment-textarea form-control" required>{{comment.content}}</textarea>
+        <div class="edit-btn-row d-flex gap-2 mt-2">
+          <button type="submit" class="btn btn-primary btn-sm">Save</button>
+          <button type="button" class="btn btn-danger btn-sm cancel-edit-comment-btn">Cancel</button>
+        </div>
+      </form>
+
       <!-- Footer directly below bubble -->
       <div class="comment-footer d-flex justify-content-between align-items-center small mt-1">
         <!-- Time ago left -->
@@ -15,9 +24,9 @@
         <!-- Edit & delete labels right -->
         {{#if (isAuthor comment.author._id user.id)}}
         <div class="comment-actions d-flex align-items-center">
-          <a href="/comments/{{comment._id}}/edit" class="text-decoration-none me-2 edit-comment">
+          <button class="btn btn-link text-decoration-none me-2 edit-comment-btn">
             <i class="fa-solid fa-pen"></i>
-          </a>
+          </button>
           <form action="/comments/{{comment._id}}" method="POST" class="d-inline m-0 p-0">
             <button type="submit" class="btn btn-link delete-comment-btn p-0 m-0 text-danger text-decoration-none" data-comment-id="{{comment._id}}">
               <i class="fa-solid fa-trash"></i>

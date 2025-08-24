@@ -2,7 +2,7 @@
   <div class="card-body">
     <!-- GRID: main content + action rail -->
     <div class="post-grid">
-      <div class="post-main">
+      <div class="post-content-view">
         <h5 class="post-title mb-1">{{post.title}}</h5>
         <div class="post-author text-muted mb-2">
           by {{post.author.name}}, {{fromNow post.createdAt}}
@@ -11,20 +11,28 @@
         <p class="post-content mb-3">{{post.content}}</p>
       </div>
 
+      <form class="edit-post-form" style="display:none;">
+        <input type="text" class="edit-post-title form-control" value="{{post.title}}" maxlength="100" required>
+        <textarea class="edit-post-textarea form-control" required>{{post.content}}</textarea>
+        <div class="edit-btn-row d-flex gap-2 mt-2">
+          <button type="submit" class="btn btn-primary btn-sm">Save</button>
+          <button type="button" class="btn btn-danger btn-sm cancel-edit-post-btn">Cancel</button>
+        </div>
+      </form>
+
       <!-- RIGHT rail -->
       <div class="post-actions-rail">
         {{#if (isAuthor post.author._id user.id)}}
-          <a href="/posts/{{post._id}}/edit" class="icon-btn" title="Edit">
-            <i class="fa-solid fa-pen"></i>
-          </a>
-          <form action="/posts/{{post._id}}?_method=DELETE" method="POST" class="m-0">
+          <button type="button" class="icon-btn edit-post-btn" title="Edit" data-post-id="{{post._id}}">
+              <i class="fa-solid fa-pen"></i>
+          </button>
+          <form action="/posts/{{post._id}}" method="POST" class="m-0">
             <button type="submit" class="icon-btn danger delete-post-btn" title="Delete" data-post-id="{{post._id}}">
               <i class="fa-solid fa-trash"></i>
             </button>
           </form>
         {{/if}}
 
-        <!-- Like button moved here -->
         <form action="/posts/{{post._id}}/like" method="POST" data-post-id="{{post._id}}" class="m-0">
           <button class="icon-btn like-btn" data-liked="{{isLiked post.likes user.id}}" title="Like/Unlike">
             {{#if (isLiked post.likes user.id)}}

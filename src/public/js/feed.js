@@ -68,11 +68,13 @@ function customConfirm(message) {
         icon.classList.remove("fa-thumbs-up");
         icon.classList.add("fa-thumbs-down");
         button.dataset.liked = "true";
+        button.classList.add('liked');
       } else {
         // Switch back to thumbs-up
         icon.classList.remove("fa-thumbs-down");
         icon.classList.add("fa-thumbs-up");
         button.dataset.liked = "false";
+        button.classList.remove('liked');
       }
 
     }
@@ -153,6 +155,52 @@ async function handleDeletePost(button)
   }
 }
 
+async function handleEditPost(form)
+{
+  const postCard = form.closest('.post-card');
+  const postId = postCard.querySelector('.edit-post-btn').dataset.postId;
+  const title = form.querySelector('.edit-post-title').value.trim();
+  const newContent = form.querySelector('.edit-post-textarea').value.trim();
+
+  const res = await fetch(`/posts/${postId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title: title, content: newContent })
+  });
+
+  if (res.ok) {
+    postCard.querySelector('.post-content-view').querySelector('.post-title').textContent = title;
+    postCard.querySelector('.post-content-view').querySelector('.post-content').textContent = newContent;
+    form.style.display = 'none';
+    postCard.querySelector('.post-actions-rail').querySelector('.edit-post-btn').style.display = '';
+    postCard.querySelector('.post-content-view').style.display = '';
+  } else {
+    alert('Failed to update post.');
+  }
+}
+
+async function handleEditComment(form)
+{
+  const commentCard = form.closest('.comment-wrapper');
+  const commentId = commentCard.dataset.commentId;
+  const newContent = form.querySelector('.edit-comment-textarea').value.trim();
+
+  const res = await fetch(`/comments/${commentId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content: newContent })
+  });
+
+  if (res.ok) {
+    commentCard.querySelector('.comment-bubble').querySelector('.comment-content').textContent = newContent;
+    form.style.display = 'none';
+    commentCard.querySelector('.comment-bubble').style.display = '';
+    commentCard.querySelector('.comment-actions').style.setProperty('display', 'inline-flex', 'important');
+  } else {
+    alert('Failed to update comment.');
+  }
+}
+
   async function init() {
     document.querySelectorAll(".comment-form textarea").forEach(textarea => {
       textarea.addEventListener("input", () => {
@@ -191,15 +239,69 @@ async function handleDeletePost(button)
         await handleDeletePost(btn);
         document.location.reload();
       }
+
+      // --- Edit Post ---
+      if (e.target.closest('button.edit-post-btn'))
+      {
+        const btn = e.target.closest('.edit-post-btn');
+        const postCard = btn.closest('.post-card');
+        postCard.querySelector('.post-actions-rail').querySelector('.edit-post-btn').style.display = 'none';
+        postCard.querySelector('.post-content-view').style.display = 'none';
+        postCard.querySelector('.edit-post-form').style.display = '';
+        postCard.querySelector('.edit-post-textarea').focus();
+      }
+
+      // --- Cancel Edit Post ---
+      if (e.target.closest('.cancel-edit-post-btn')) {
+        const postCard = e.target.closest('.post-card');
+        postCard.querySelector('.edit-post-form').style.display = 'none';
+        postCard.querySelector('.post-actions-rail').querySelector('.edit-post-btn').style.display = '';
+        postCard.querySelector('.post-content-view').style.display = '';
+      }
+
+      // --- Edit Comment ---
+      if (e.target.closest('button.edit-comment-btn')) {
+        const btn = e.target.closest('.edit-comment-btn');
+        const commentCard = btn.closest('.comment-wrapper');
+        commentCard.querySelector('.comment-actions').style.setProperty('display', 'none', 'important');
+        commentCard.querySelector('.comment-bubble').style.display = 'none';
+        commentCard.querySelector('.edit-comment-form').style.display = '';
+        commentCard.querySelector('.edit-comment-textarea').focus();
+      }
+
+      // --- Cancel Edit Comment ---
+      if (e.target.closest('.cancel-edit-comment-btn')) {
+        const commentCard = e.target.closest('.comment-wrapper');
+        commentCard.querySelector('.comment-actions').style.setProperty('display', 'inline-flex', 'important');
+        commentCard.querySelector('.edit-comment-form').style.display = 'none';
+        commentCard.querySelector('.comment-bubble').style.display = '';
+      }
     });
 
-    // ---- 2. Comment forms ----
-    document.body.addEventListener('submit', (e) => {
-      const form = e.target.closest('form.comment-form');
-      if (!form) return;
+    document.body.addEventListener('submit', async (e) => {
+      if (e.target.classList.contains('edit-post-form'))
+      {
+        e.preventDefault();
+        const form = e.target;
+        await handleEditPost(form);
+      }
 
-      e.preventDefault();
-      handleAddComment(form);
+      // --- Save Edited Comment ---
+      if (e.target.classList.contains('edit-comment-form'))
+      {
+        e.preventDefault();
+        const form = e.target;
+        await handleEditComment(form);
+      }
+
+      if(e.target.closest('form.comment-form'))
+      {
+        const form = e.target.closest('form.comment-form');
+        if (!form) return;
+
+        e.preventDefault();
+        handleAddComment(form);
+      }
     });
   }
 
