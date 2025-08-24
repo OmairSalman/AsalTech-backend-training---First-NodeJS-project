@@ -1,3 +1,28 @@
+// Custom confirm modal utility
+function customConfirm(message) {
+  return new Promise((resolve) => {
+    const modal = document.getElementById('custom-confirm-modal');
+    const msg = document.getElementById('custom-confirm-message');
+    const yesBtn = document.getElementById('custom-confirm-yes');
+    const noBtn = document.getElementById('custom-confirm-no');
+
+    msg.textContent = message;
+    modal.style.display = 'flex';
+
+    function cleanup(result) {
+      modal.style.display = 'none';
+      yesBtn.removeEventListener('click', onYes);
+      noBtn.removeEventListener('click', onNo);
+      resolve(result);
+    }
+    function onYes() { cleanup(true); }
+    function onNo() { cleanup(false); }
+
+    yesBtn.addEventListener('click', onYes);
+    noBtn.addEventListener('click', onNo);
+  });
+}
+
 (() => {
   async function handleLikeForm(form, button)
   {
@@ -92,6 +117,42 @@ async function handleAddComment(form)
   }
 }
 
+async function handleDeleteComment(button)
+{
+  const commentId = button.dataset.commentId;
+  const confirmed = await customConfirm('Are you sure you want to delete this comment? This action cannot be undone!');
+  if (confirmed)
+  {
+    const res = await fetch(`/comments/${commentId}`, { method: 'DELETE' });
+    if (res.ok)
+    {
+      button.closest('.comment-wrapper').remove();
+    }
+    else
+    {
+      alert('Failed to delete comment.');
+    }
+  }
+}
+
+async function handleDeletePost(button)
+{
+  const postId = button.dataset.postId;
+  const confirmed = await customConfirm('Are you sure you want to delete this post? This action cannot be undone!');
+  if (confirmed)
+  {
+    const res = await fetch(`/posts/${postId}`, { method: 'DELETE' });
+    if (res.ok)
+    {
+      button.closest('.post-card').remove();
+    }
+    else
+    {
+      alert('Failed to delete post.');
+    }
+  }
+}
+
   async function init() {
     document.querySelectorAll(".comment-form textarea").forEach(textarea => {
       textarea.addEventListener("input", () => {
@@ -105,28 +166,31 @@ async function handleAddComment(form)
 
     // ---- 1. Like buttons (posts + comments) ----
     document.body.addEventListener('click', async (e) => {
-      const btn = e.target.closest('button.like-btn');
-      if (!btn) return;
-
-      const form = btn.closest('form[action$="/like"]');
-      if (!form) return;
-
-      e.preventDefault();
-      await handleLikeForm(form, btn);
-      if(form.dataset.commentId)
+      if(e.target.closest('button.like-btn'))
       {
-        /*console.log("Like button clicked for comment:", form.dataset.commentId);
-        const likeCnt = document.getElementById(`like-count-${form.dataset.commentId}`);
-        console.log("ID of like section for comment:",likeCnt.id);*/
+        const btn = e.target.closest('button.like-btn');
+        if (!btn) return;
+
+        const form = btn.closest('form[action$="/like"]');
+        if (!form) return;
+        e.preventDefault();
+        await handleLikeForm(form, btn);
       }
-      else if(form.dataset.postId)
+
+      if (e.target.closest('button.delete-comment-btn'))
       {
-        /*console.log("Like button clicked for post:", form.dataset.postId);
-        const likeCnt = document.getElementById(`like-count-${form.dataset.postId}`);
-        console.log("ID of like section for post:",likeCnt.id);*/
+        e.preventDefault();
+        const btn = e.target.closest('button.delete-comment-btn');
+        await handleDeleteComment(btn);
       }
-      //console.log("Action: POST", form.getAttribute('action'));
-      // For now, just log — we’ll implement AJAX later
+
+      if (e.target.closest('button.delete-post-btn'))
+      {
+        e.preventDefault();
+        const btn = e.target.closest('button.delete-post-btn');
+        await handleDeletePost(btn);
+        document.location.reload();
+      }
     });
 
     // ---- 2. Comment forms ----
@@ -136,9 +200,6 @@ async function handleAddComment(form)
 
       e.preventDefault();
       handleAddComment(form);
-      //console.log("Comment form submitted for post:", form.dataset.postId);
-      //console.log("Action: POST", form.getAttribute('action'));
-      // For now, just log — we’ll implement AJAX later
     });
   }
 

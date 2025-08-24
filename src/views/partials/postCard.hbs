@@ -18,7 +18,7 @@
             <i class="fa-solid fa-pen"></i>
           </a>
           <form action="/posts/{{post._id}}?_method=DELETE" method="POST" class="m-0">
-            <button type="submit" class="icon-btn danger" title="Delete">
+            <button type="submit" class="icon-btn danger delete-post-btn" title="Delete" data-post-id="{{post._id}}">
               <i class="fa-solid fa-trash"></i>
             </button>
           </form>
