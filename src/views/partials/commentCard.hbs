@@ -40,12 +40,16 @@
     <!-- Like button + count vertically centered with bubble -->
     <div class="d-flex align-items-center ms-2">
       <form action="/comments/{{comment._id}}/like" method="POST" data-comment-id="{{comment._id}}" class="d-flex align-items-center">
-        <button class="icon-btn like-btn me-1"
+        <button class="icon-btn like-btn me-1 {{#if (isLiked comment.likes user.id)}}liked{{/if}}"
                 data-liked="{{isLiked comment.likes user.id}}"
                 title="Like/Unlike">
           <i class="fa-solid {{#if (isLiked comment.likes user.id)}}fa-thumbs-down{{else}}fa-thumbs-up{{/if}}"></i>
         </button>
-        <span class="like-count small" id="like-count-{{comment._id}}">
+        <span 
+          class="like-count small"
+          id="like-count-{{comment._id}}"
+          data-comment-id="{{comment._id}}"
+          data-likes='[{{#each comment.likes}}"{{this.name}}"{{#unless @last}},{{/unless}}{{/each}}]'>
           {{comment.likes.length}}
         </span>
       </form>

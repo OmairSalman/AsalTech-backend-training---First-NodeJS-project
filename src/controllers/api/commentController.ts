@@ -45,7 +45,7 @@ export default class CommentController
         let userId = request.session!.user!.id.toString();
         const likedComment = await commentService.like(commentId, userId);
         if(!likedComment) return response.status(404).send("Comment not found");
-        return response.status(200).json({message: `Liked comment ${commentId} by ${userId} successfully.`, liked: true, likeCount: likedComment.likes.length});
+        return response.status(200).json({message: `Liked comment ${commentId} by ${userId} successfully.`, liked: true, likeCount: likedComment.likes.length, likes: likedComment.likes});
     }
 
     async unlike(request: Request, response: Response)
@@ -54,6 +54,6 @@ export default class CommentController
         let userId = request.session!.user!.id.toString();
         const unlikedComment = await commentService.unlike(commentId, userId);
         if(!unlikedComment) return response.status(404).send("Comment not found");
-        return response.status(200).json({message: `Unliked comment ${commentId} by ${userId} successfully.`, liked: false, likeCount: unlikedComment.likes.length});
+        return response.status(200).json({message: `Unliked comment ${commentId} by ${userId} successfully.`, liked: false, likeCount: unlikedComment.likes.length, likes: unlikedComment.likes});
     }
 }

@@ -160,7 +160,7 @@ export default class PostService
                 postId,
                 { $addToSet: { likes: new mongoose.Types.ObjectId(userId) } },
                 { new: true }
-            );
+            ).populate('likes', 'name');
             return post?.toObject() ?? null;
         }
         catch (error)
@@ -179,7 +179,7 @@ export default class PostService
                 postId,
                 { $pull: { likes: new mongoose.Types.ObjectId(userId) } },
                 { new: true }
-            );
+            ).populate('likes', 'name');
             return post?.toObject() ?? null;
         }
         catch (error)

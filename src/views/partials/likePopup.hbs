@@ -1,0 +1,11 @@
+<div id="like-popup" class="like-popup" style="display:none;">
+  <div class="like-popup-content">
+    <h5 class="like-popup-title">Liked by</h5>
+    <ul class="like-popup-list">
+      {{#each likes}}
+        <li class="like-popup-user">{{this.name}}</li>
+      {{/each}}
+    </ul>
+    <button class="btn btn-secondary btn-sm like-popup-close">Close</button>
+  </div>
+</div>

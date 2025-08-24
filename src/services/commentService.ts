@@ -74,7 +74,7 @@ export default class CommentService
                 commentId,
                 { $addToSet: { likes: new mongoose.Types.ObjectId(userId) } },
                 { new: true }
-            );
+            ).populate('likes', 'name');;
             return comment?.toObject() ?? null;
         }
         catch (error)
@@ -93,7 +93,7 @@ export default class CommentService
                 commentId,
                 { $pull: { likes: new mongoose.Types.ObjectId(userId) } },
                 { new: true }
-            );
+            ).populate('likes', 'name');;
             return comment?.toObject() ?? null;
         }
         catch (error)

@@ -53,7 +53,7 @@ export default class PostController
         let userId = request.session!.user!.id.toString();
         const likedPost = await postService.like(postId, userId);
         if(!likedPost) return response.status(404).send("Post not found");
-        return response.status(200).json({message: `Liked post ${postId} by ${userId} successfully.`, liked: true, likeCount: likedPost.likes.length});
+        return response.status(200).json({message: `Liked post ${postId} by ${userId} successfully.`, liked: true, likeCount: likedPost.likes.length, likes: likedPost.likes});
     }
 
     async unlike(request: Request, response: Response)
@@ -62,6 +62,6 @@ export default class PostController
         let userId = request.session!.user!.id.toString();
         const unlikedPost = await postService.unlike(postId, userId);
         if(!unlikedPost) return response.status(404).send("Post not found");
-        return response.status(200).json({message: `Unliked post ${postId} by ${userId} successfully.`, liked: false, likeCount: unlikedPost.likes.length});
+        return response.status(200).json({message: `Unliked post ${postId} by ${userId} successfully.`, liked: false, likeCount: unlikedPost.likes.length, likes: unlikedPost.likes});
     }
 }

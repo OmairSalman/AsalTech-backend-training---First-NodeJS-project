@@ -23,6 +23,29 @@ function customConfirm(message) {
   });
 }
 
+// Utility to show the like popup with a list of names
+function showLikePopup(names) {
+  const popup = document.getElementById('like-popup');
+  const list = popup.querySelector('.like-popup-list');
+  list.innerHTML = '';
+  if (names.length === 0) {
+    list.innerHTML = '<li class="like-popup-user text-muted">No likes yet.</li>';
+  } else {
+    names.forEach(name => {
+      const li = document.createElement('li');
+      li.className = 'like-popup-user';
+      li.textContent = name;
+      list.appendChild(li);
+    });
+  }
+  popup.style.display = 'flex';
+}
+
+// Hide the popup
+function hideLikePopup() {
+  document.getElementById('like-popup').style.display = 'none';
+}
+
 (() => {
   async function handleLikeForm(form, button)
   {
@@ -69,12 +92,16 @@ function customConfirm(message) {
         icon.classList.add("fa-thumbs-down");
         button.dataset.liked = "true";
         button.classList.add('liked');
+        const names = data.likes.map(u => u.name);
+        likeCount.dataset.likes = JSON.stringify(names);
       } else {
         // Switch back to thumbs-up
         icon.classList.remove("fa-thumbs-down");
         icon.classList.add("fa-thumbs-up");
         button.dataset.liked = "false";
         button.classList.remove('liked');
+        const names = data.likes.map(u => u.name);
+        likeCount.dataset.likes = JSON.stringify(names);
       }
 
     }
@@ -275,6 +302,31 @@ async function handleEditComment(form)
         commentCard.querySelector('.comment-actions').style.setProperty('display', 'inline-flex', 'important');
         commentCard.querySelector('.edit-comment-form').style.display = 'none';
         commentCard.querySelector('.comment-bubble').style.display = '';
+      }
+
+      if(e.target.closest('.like-count'))
+      {
+        const likeCount = e.target.closest('.like-count');
+        if (likeCount) {
+          // Get the names from the data-likes attribute
+          let names = [];
+          try {
+            names = JSON.parse(likeCount.dataset.likes || "[]");
+          } catch (err) {
+            names = [];
+          }
+          showLikePopup(names);
+        }
+      }
+
+      // Hide popup when close button is clicked
+      if (e.target.classList.contains('like-popup-close')) {
+        hideLikePopup();
+      }
+
+      // Hide popup when clicking outside the popup content
+      if (e.target.id === 'like-popup') {
+        hideLikePopup();
       }
     });
 
