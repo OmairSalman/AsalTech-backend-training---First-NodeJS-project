@@ -24,17 +24,17 @@ function customConfirm(message) {
 }
 
 // Utility to show the like popup with a list of names
-function showLikePopup(names) {
+function showLikePopup(likes) {
   const popup = document.getElementById('like-popup');
   const list = popup.querySelector('.like-popup-list');
   list.innerHTML = '';
-  if (names.length === 0) {
+  if (likes.length === 0) {
     list.innerHTML = '<li class="like-popup-user text-muted">No likes yet.</li>';
   } else {
-    names.forEach(name => {
+    likes.forEach(like => {
       const li = document.createElement('li');
       li.className = 'like-popup-user';
-      li.textContent = name;
+      li.innerHTML = `<li class="like-popup-user"><a href="/profile/${like._id}">${like.name}</a></li>`;
       list.appendChild(li);
     });
   }
@@ -315,6 +315,7 @@ async function handleEditComment(form)
           } catch (err) {
             names = [];
           }
+          console.log(names);
           showLikePopup(names);
         }
       }

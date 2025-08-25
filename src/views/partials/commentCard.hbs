@@ -49,7 +49,7 @@
           class="like-count small"
           id="like-count-{{comment._id}}"
           data-comment-id="{{comment._id}}"
-          data-likes='[{{#each comment.likes}}"{{this.name}}"{{#unless @last}},{{/unless}}{{/each}}]'>
+          data-likes='[{{#each comment.likes}}{"_id": "{{this._id}}", "name": "{{this.name}}"}{{#unless @last}},{{/unless}}{{/each}}]'>
           {{comment.likes.length}}
         </span>
       </form>

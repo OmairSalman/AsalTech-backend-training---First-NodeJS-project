@@ -46,7 +46,7 @@
           class="like-count mt-1 small text-muted"
           id="like-count-{{post._id}}"
           data-post-id="{{post._id}}"
-          data-likes='[{{#each post.likes}}"{{this.name}}"{{#unless @last}},{{/unless}}{{/each}}]'>
+          data-likes='[{{#each post.likes}}{"_id": "{{this._id}}", "name": "{{this.name}}"}{{#unless @last}},{{/unless}}{{/each}}]'>
           {{post.likes.length}}
         </span>
       </div>
