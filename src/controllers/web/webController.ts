@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import PostService from "../../services/postService";
 import CommentService from "../../services/commentService";
 import { PostModel } from "../../models/postModel";
+import jwt from "jsonwebtoken";
+import UserPayload from "../../interfaces/express";
 
 const postService = new PostService();
 const commentService = new CommentService();
@@ -10,10 +12,19 @@ export default class WebController
 {
     home(request: Request, response: Response)
     {
-        if(!request.user)
-            response.render('pages/home');
-        else
+        const token = request.cookies.token;
+        try
+        {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as UserPayload;
+        
+            request.user = decoded;
+
             response.redirect('/feed');
+        }
+        catch (error)
+        {
+            response.render('pages/home');
+        }
     }
 
     async feed(request: Request, response: Response)
