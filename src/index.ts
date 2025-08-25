@@ -70,6 +70,8 @@ app.engine('hbs', engine({
     },
 
     isAuthor: (postAuthorId: Types.ObjectId, userId: Types.ObjectId) => postAuthorId.equals(userId),
+
+    isOwner: (currentUserId: string, profileUserId: Types.ObjectId) => new Types.ObjectId(profileUserId).equals(currentUserId),
   }
 }));
 

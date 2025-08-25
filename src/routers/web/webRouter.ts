@@ -18,4 +18,6 @@ WebRouter.get('/create', isAuthenticated, webController.create);
 
 WebRouter.get('/profile', isAuthenticated, webController.profile);
 
+WebRouter.get('/profile/:userId', isAuthenticated, webController.showUserProfile);
+
 export default WebRouter;

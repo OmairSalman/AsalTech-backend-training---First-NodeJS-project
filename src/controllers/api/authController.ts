@@ -24,7 +24,7 @@ export default class AuthController
         else
         {
             const payload = {
-                id: user._id,
+                _id: user._id as Types.ObjectId,
                 name: user.name,
                 email: user.email
             };
@@ -49,7 +49,7 @@ export default class AuthController
         newUser = await authService.registerUser(newUser);
         
         const payload = {
-            id: newUser._id,
+            _id: newUser._id,
             name: newUser.name,
             email: newUser.email
         };

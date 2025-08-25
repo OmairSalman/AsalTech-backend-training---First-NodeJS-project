@@ -6,17 +6,17 @@ const usersController = new UserController();
 
 const UserRouter = Router();
 
-UserRouter.get('/', usersController.getUsers);
+UserRouter.get('/', isAuthenticated, usersController.getUsers);
 
-UserRouter.get('/view', usersController.renderUsers);
+UserRouter.get('/view', isAuthenticated, usersController.renderUsers);
 
-UserRouter.get('/search', usersController.searchUsers);
+UserRouter.get('/search', isAuthenticated, usersController.searchUsers);
 
-UserRouter.get('/:id', usersController.getUserById);
+UserRouter.get('/:id', isAuthenticated, usersController.getUserById);
 
-UserRouter.put('/:id', usersController.updateUser);
+UserRouter.put('/:id', isAuthenticated, usersController.updateUser);
 
-UserRouter.delete('/:id', usersController.deleteUser);
+UserRouter.delete('/:id', isAuthenticated, usersController.deleteUser);
 
 UserRouter.get('/posts/:userId', isAuthenticated, usersController.getUserPosts)
 

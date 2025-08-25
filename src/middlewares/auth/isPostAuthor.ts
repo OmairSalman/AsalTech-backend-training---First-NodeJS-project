@@ -3,7 +3,7 @@ import { PostModel } from '../../models/postModel';
 
 export async function isPostAuthor(request: Request, response: Response, next: NextFunction)
 {
-    const userId = request.user?.id;
+    const userId = request.user?._id;
     const postId = request.params.postId;
 
     const post = await PostModel.findById(postId);

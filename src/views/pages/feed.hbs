@@ -8,7 +8,7 @@
   data-total-pages="{{totalPages}}">
   {{!-- Loop over posts --}}
   {{#each posts}}
-    {{> postCard post=this user=../user}}
+    {{> postCard post=this currentUserId=../currentUserId}}
   {{/each}}
 </div>
 
