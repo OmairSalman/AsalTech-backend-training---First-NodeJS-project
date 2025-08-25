@@ -89,13 +89,11 @@ function hideLikePopup() {
       if (data.liked) {
         button.dataset.liked = "true";
         button.classList.add('liked');
-        const names = data.likes.map(u => u.name);
-        likeCount.dataset.likes = JSON.stringify(names);
+        likeCount.dataset.likes = JSON.stringify(data.likes);
       } else {
         button.dataset.liked = "false";
         button.classList.remove('liked');
-        const names = data.likes.map(u => u.name);
-        likeCount.dataset.likes = JSON.stringify(names);
+        likeCount.dataset.likes = JSON.stringify(data.likes);
       }
 
     }
