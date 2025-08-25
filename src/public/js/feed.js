@@ -87,17 +87,11 @@ function hideLikePopup() {
       const icon = button.querySelector("i");
 
       if (data.liked) {
-        // Switch to thumbs-down
-        icon.classList.remove("fa-thumbs-up");
-        icon.classList.add("fa-thumbs-down");
         button.dataset.liked = "true";
         button.classList.add('liked');
         const names = data.likes.map(u => u.name);
         likeCount.dataset.likes = JSON.stringify(names);
       } else {
-        // Switch back to thumbs-up
-        icon.classList.remove("fa-thumbs-down");
-        icon.classList.add("fa-thumbs-up");
         button.dataset.liked = "false";
         button.classList.remove('liked');
         const names = data.likes.map(u => u.name);

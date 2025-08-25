@@ -35,11 +35,7 @@
 
         <form action="/posts/{{post._id}}/like" method="POST" data-post-id="{{post._id}}" class="m-0">
           <button class="icon-btn like-btn {{#if (isLiked post.likes currentUserId)}}liked{{/if}}" data-liked="{{isLiked post.likes currentUserId}}" title="Like/Unlike">
-            {{#if (isLiked post.likes currentUserId)}}
-              <i class="fa-solid fa-thumbs-down"></i>
-            {{else}}
-              <i class="fa-solid fa-thumbs-up"></i>
-            {{/if}}
+            <i class="fa-solid fa-thumbs-up"></i>
           </button>
         </form>
         <span style="cursor: pointer;"

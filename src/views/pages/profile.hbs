@@ -38,15 +38,15 @@
   {{#if (gt totalPages 1)}}
     <ul class="pagination justify-content-center">
       {{#if (gt postsPage 1)}}
-        <li class="page-item"><a class="page-link" href="/profile?postsPage={{subtract postsPage 1}}">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="/profile{{#unless (isOwner currentUserId user._id)}}/{{user._id}}{{/unless}}?postsPage={{subtract postsPage 1}}">Previous</a></li>
       {{/if}}
       {{#if (gt totalPages 2)}}
         {{#each (range 1 totalPages)}}
-          <li class="page-item"><a class="page-link {{#if (eq ../postsPage this)}}active{{/if}}" href="/profile?postsPage={{this}}">{{this}}</a></li>
+          <li class="page-item"><a class="page-link {{#if (eq ../postsPage this)}}active{{/if}}" href="/profile{{#unless (isOwner ../currentUserId ../user._id)}}/{{../user._id}}{{/unless}}?postsPage={{this}}">{{this}}</a></li>
         {{/each}}
       {{/if}}
       {{#if (lt postsPage totalPages)}}
-        <li class="page-item"><a class="page-link" href="/profile?postsPage={{add postsPage 1}}">Next</a></li>
+        <li class="page-item"><a class="page-link" href="/profile{{#unless (isOwner currentUserId user._id)}}/{{user._id}}{{/unless}}?postsPage={{add postsPage 1}}">Next</a></li>
       {{/if}}
     </ul>
   {{/if}}
