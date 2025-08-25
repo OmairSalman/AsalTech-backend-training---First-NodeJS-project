@@ -1,21 +1,36 @@
-<div class="profile-header">
-  <h1>{{user.name}}</h1>
-  <p>{{user.email}}</p>
-  {{#if (isOwner currentUserId user._id)}}
-    <button class="btn btn-link text-decoration-none me-2 edit-comment-btn">
-      <i class="fa-solid fa-pen"> Edit profile (coming soon)</i>
-    </button>
-  {{/if}}
-</div>
-
-<div class="profile-stats d-flex justify-content-center gap-4 mb-4">
-  <div class="stat-card">
-    <h3>{{postsLikes}}</h3>
-    <p>Likes on posts</p>
+<div class="profile-card">
+  <div class="profile-avatar">
+    <img 
+      src="https://www.gravatar.com/avatar/{{gravatarHash user.email}}?s=200&d=initials" 
+      alt="{{user.name}}'s avatar"
+    >
+    {{#if (isOwner currentUserId user._id)}}
+      <a href="https://gravatar.com" target="_blank" class="avatar-overlay">
+        Change your avatar on Gravatar.com!
+      </a>
+    {{/if}}
   </div>
-  <div class="stat-card">
-    <h3>{{commentsLikes}}</h3>
-    <p>Likes on comments</p>
+
+  <div class="profile-info">
+    <h1>{{user.name}}</h1>
+    <p>{{user.email}}</p>
+
+    {{#if (isOwner currentUserId user._id)}}
+      <button class="btn btn-outline-primary edit-profile-btn">
+        <i class="fa-solid fa-pen"></i> Edit profile (coming soon)
+      </button>
+    {{/if}}
+
+    <div class="profile-stats">
+      <div class="stat">
+        <span class="stat-value">{{postsLikes}}</span>
+        <span class="stat-label">{{pluralize postsLikes "Like" "Likes"}} on posts</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{commentsLikes}}</span>
+        <span class="stat-label">{{pluralize commentsLikes "Like" "Likes"}} on comments</span>
+      </div>
+    </div>
   </div>
 </div>
 

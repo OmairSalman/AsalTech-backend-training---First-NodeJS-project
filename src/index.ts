@@ -13,6 +13,7 @@ import AuthRouter from './routers/api/authRouter';
 import PostRouter from './routers/api/postRouter';
 import CommentRouter from './routers/api/commentRouter';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 
 import connectDB from './config/db';
 
@@ -54,8 +55,8 @@ app.engine('hbs', engine({
 
     // pluralize likes or comments
     pluralize: (count: number, singular: string, plural: string) => {
-      if (count === 1) return `${count} ${singular}`;
-      return `${count} ${plural}`;
+      if (count === 1) return `${singular}`;
+      return `${plural}`;
     },
 
     isLiked: (likes: {_id: Types.ObjectId, name: string}[], userId: Types.ObjectId) =>
@@ -72,6 +73,12 @@ app.engine('hbs', engine({
     isAuthor: (postAuthorId: Types.ObjectId, userId: Types.ObjectId) => postAuthorId.equals(userId),
 
     isOwner: (currentUserId: string, profileUserId: Types.ObjectId) => new Types.ObjectId(profileUserId).equals(currentUserId),
+
+    gravatarHash: (email: string) =>
+    {
+      email = email.trim().toLowerCase();
+      return crypto.createHash('sha256').update(email).digest('hex');
+    }
   }
 }));
 
