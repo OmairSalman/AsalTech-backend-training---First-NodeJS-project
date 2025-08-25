@@ -5,6 +5,7 @@ import UserService from "../../services/userService";
 import { PostModel } from "../../models/postModel";
 import jwt from 'jsonwebtoken';
 import UserPayload from "../../interfaces/express";
+import crypto from 'crypto';
 
 const postService = new PostService();
 const commentService = new CommentService();
@@ -64,6 +65,11 @@ export default class WebController
         let posts;
         if(user)
         {
+            const email = user.email.trim().toLowerCase();
+            const hash =  crypto.createHash('sha256').update(email).digest('hex');
+            const res = await fetch(`https://www.gravatar.com/avatar/${hash}?s=200&d=404`);
+            user.hasCustomAvatar =  res.status !== 404;
+
             const page = parseInt(request.query.postsPage as string) || 1;
             posts = await postService.getPostsByUserId(user._id.toString(), page, 10);
             if(posts)

@@ -1075,3 +1075,19 @@ footer a:hover {
     gap: 1rem; /* tighter vertical spacing */
   }
 }
+
+/* Badge for mobile / default avatar */
+.avatar-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: var(--brand-gradient);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}

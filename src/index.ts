@@ -30,8 +30,8 @@ app.engine('hbs', engine({
   defaultLayout: 'main', 
   layoutsDir: path.join(__dirname, 'views/layouts'),
   partialsDir: path.join(__dirname, 'views/partials'),
-  helpers: {
-    // comparison helpers
+  helpers:
+  {
     eq: (a: number, b: number) => a === b,
     gt: (a: number, b: number) => a > b,
     lt: (a: number, b: number) => a < b,
@@ -78,7 +78,7 @@ app.engine('hbs', engine({
     {
       email = email.trim().toLowerCase();
       return crypto.createHash('sha256').update(email).digest('hex');
-    }
+    },
   }
 }));
 

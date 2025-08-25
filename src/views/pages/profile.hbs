@@ -8,6 +8,9 @@
       <a href="https://gravatar.com" target="_blank" class="avatar-overlay">
         Change your avatar on Gravatar.com!
       </a>
+      {{#unless user.hasCustomAvatar}}
+        <a href="https://gravatar.com" target="_blank" class="avatar-badge">Set Avatar</a>
+      {{/unless}}
     {{/if}}
   </div>
 

@@ -5,6 +5,7 @@ export default interface UserPayload {
   _id: Types.ObjectId;
   name: string;
   email: string;
+  hasCustomAvatar?: boolean;
 }
 
 declare global {
