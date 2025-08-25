@@ -4,11 +4,8 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 import { Types } from 'mongoose';
-import MongoStore from "connect-mongo";
 import { engine } from 'express-handlebars';
 import cookieParser from "cookie-parser";
-
-import session from 'express-session';
 
 import WebRouter from './routers/web/webRouter';
 import UserRouter from './routers/api/userRouter';
@@ -84,32 +81,6 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-declare module 'express-session'
-{
-    interface SessionData
-    {
-      user?:
-      {
-        id: Types.ObjectId;
-        name: string;
-        email: string;
-      };
-    }
-}
-
-app.use(session({
-  secret: process.env.SESSION_SECRET!,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: "mongodb://localhost:27017/usersconnect",
-  }),
-  cookie: {
-    httpOnly: true, 
-    maxAge: 1000 * 60 * 60 * 24,
-  }
-}));
 
 app.listen(process.env.PORT, () => { console.log(`Server running at http://localhost:${process.env.PORT}/`) })
 
