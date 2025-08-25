@@ -3,7 +3,7 @@
     <!-- Bubble + footer -->
     <div class="d-flex flex-column">
       <div class="comment-bubble p-2 mb-1">
-        <div class="comment-author fw-bold mb-1">{{comment.author.name}}</div>
+        <div class="comment-author fw-bold mb-1"><a href="/profile/{{comment.author._id}}">{{comment.author.name}}</a></div>
         <div class="comment-content">{{comment.content}}</div>
       </div>
 
@@ -22,7 +22,7 @@
         <span class="comment-date text-muted">{{fromNow comment.createdAt}}</span>
 
         <!-- Edit & delete labels right -->
-        {{#if (isAuthor comment.author._id user.id)}}
+        {{#if (isAuthor comment.author._id currentUserId)}}
         <div class="comment-actions d-flex align-items-center">
           <button class="btn btn-link text-decoration-none me-2 edit-comment-btn">
             <i class="fa-solid fa-pen"></i>
@@ -40,10 +40,10 @@
     <!-- Like button + count vertically centered with bubble -->
     <div class="d-flex align-items-center ms-2">
       <form action="/comments/{{comment._id}}/like" method="POST" data-comment-id="{{comment._id}}" class="d-flex align-items-center">
-        <button class="icon-btn like-btn me-1 {{#if (isLiked comment.likes user.id)}}liked{{/if}}"
-                data-liked="{{isLiked comment.likes user.id}}"
+        <button class="icon-btn like-btn me-1 {{#if (isLiked comment.likes currentUserId)}}liked{{/if}}"
+                data-liked="{{isLiked comment.likes currentUserId}}"
                 title="Like/Unlike">
-          <i class="fa-solid {{#if (isLiked comment.likes user.id)}}fa-thumbs-down{{else}}fa-thumbs-up{{/if}}"></i>
+          <i class="fa-solid {{#if (isLiked comment.likes currentUserId)}}fa-thumbs-down{{else}}fa-thumbs-up{{/if}}"></i>
         </button>
         <span style="cursor: pointer;"
           class="like-count small"

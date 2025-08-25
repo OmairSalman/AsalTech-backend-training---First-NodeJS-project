@@ -1,19 +1,32 @@
 import { Request, Response } from "express";
 import PostService from "../../services/postService";
 import CommentService from "../../services/commentService";
+import UserService from "../../services/userService";
 import { PostModel } from "../../models/postModel";
+import jwt from 'jsonwebtoken';
+import UserPayload from "../../interfaces/express";
 
 const postService = new PostService();
 const commentService = new CommentService();
+const userService = new UserService();
 
 export default class WebController
 {
     home(request: Request, response: Response)
     {
-        if(!request.user)
-            response.render('pages/home');
-        else
+        const token = request.cookies.token;
+        try
+        {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as UserPayload;
+        
+            request.user = decoded;
+
             response.redirect('/feed');
+        }
+        catch (error)
+        {
+            response.render('pages/home');
+        }
     }
 
     async feed(request: Request, response: Response)
@@ -26,7 +39,7 @@ export default class WebController
             const posts = await postService.getPosts(page, 10);
             const totalPosts = await PostModel.countDocuments();
             const totalPages = Math.ceil(totalPosts/10);
-            response.render('pages/feed', {user: request.user, posts: posts, page: page, limit: 10, totalPages: totalPages });
+            response.render('pages/feed', {user: request.user, currentUserId: request.user._id, posts: posts, page: page, limit: 10, totalPages: totalPages });
         }
     }
 
@@ -52,14 +65,33 @@ export default class WebController
         if(user)
         {
             const page = parseInt(request.query.postsPage as string) || 1;
-            posts = await postService.getPostsByUserId(user.id.toString(), page, 10);
+            posts = await postService.getPostsByUserId(user._id.toString(), page, 10);
+            if(posts)
+            {
+                const totalUserPosts = await PostModel.countDocuments({author: user._id});
+                const totalPages = Math.ceil(totalUserPosts/10);
+                const postsLikes = await postService.countUserPostsLikes(user._id.toString());
+                const commentsLikes = await commentService.countUserCommentsLikes(user._id.toString());
+                response.render('pages/profile', {user: user, currentUserId: request.user?._id,posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
+            }
+        }
+    }
+
+    async showUserProfile(request: Request, response: Response)
+    {
+        const userId = request.params.userId;
+        const page = parseInt(request.query.postsPage as string) || 1;
+        const user = await userService.getUserById(userId);
+        if(user)
+        {
+            const posts = await postService.getPostsByUserId(userId.toString(), page, 10);
             if(posts)
             {
                 const totalUserPosts = await PostModel.countDocuments({author: user.id});
                 const totalPages = Math.ceil(totalUserPosts/10);
-                const postsLikes = await postService.countUserPostsLikes(user.id.toString());
-                const commentsLikes = await commentService.countUserCommentsLikes(user.id.toString());
-                response.render('pages/profile', {user: user, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
+                const postsLikes = await postService.countUserPostsLikes(userId.toString());
+                const commentsLikes = await commentService.countUserCommentsLikes(userId.toString());
+                response.render('pages/profile', {user: user, currentUserId: request.user?._id, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
             }
         }
     }

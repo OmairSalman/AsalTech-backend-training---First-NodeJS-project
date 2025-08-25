@@ -1,6 +1,11 @@
 <div class="profile-header">
   <h1>{{user.name}}</h1>
   <p>{{user.email}}</p>
+  {{#if (isOwner currentUserId user._id)}}
+    <button class="btn btn-link text-decoration-none me-2 edit-comment-btn">
+      <i class="fa-solid fa-pen"> Edit profile (coming soon)</i>
+    </button>
+  {{/if}}
 </div>
 
 <div class="profile-stats d-flex justify-content-center gap-4 mb-4">
@@ -20,7 +25,7 @@
   data-total-pages="{{totalPages}}">
   {{#if (gt posts.length 0)}}
     {{#each posts}}
-      {{> postCard post=this user=../user}}
+      {{> postCard post=this currentUserId=../currentUserId}}
     {{/each}}
   {{else}}
     <p>You didn't make any posts yet, how about you <a href="/create">create a new one?</a></p>
