@@ -6,6 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { Types } from 'mongoose';
 import MongoStore from "connect-mongo";
 import { engine } from 'express-handlebars';
+import cookieParser from "cookie-parser";
 
 import session from 'express-session';
 
@@ -14,13 +15,15 @@ import UserRouter from './routers/api/userRouter';
 import AuthRouter from './routers/api/authRouter';
 import PostRouter from './routers/api/postRouter';
 import CommentRouter from './routers/api/commentRouter';
+import dotenv from 'dotenv';
 
 import connectDB from './config/db';
 
 dayjs.extend(relativeTime);
 
+dotenv.config();
+
 const app = express();
-const port = 3000;
 
 connectDB();
 
@@ -80,6 +83,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 declare module 'express-session'
 {
@@ -95,7 +99,7 @@ declare module 'express-session'
 }
 
 app.use(session({
-  secret: 'omairs-hard-secret-key',
+  secret: process.env.SESSION_SECRET!,
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
@@ -107,7 +111,7 @@ app.use(session({
   }
 }));
 
-app.listen(port, () => { console.log(`Server running at http://localhost:${port}/`) })
+app.listen(process.env.PORT, () => { console.log(`Server running at http://localhost:${process.env.PORT}/`) })
 
 app.use('/', WebRouter);
 

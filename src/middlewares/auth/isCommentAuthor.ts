@@ -3,7 +3,7 @@ import { CommentModel } from '../../models/commentModel';
 
 export async function isCommentAuthor(request: Request, response: Response, next: NextFunction)
 {
-    const userId = request.session.user?.id;
+    const userId = request.user?.id;
     const commentId = request.params.commentId;
 
     const comment = await CommentModel.findById(commentId);

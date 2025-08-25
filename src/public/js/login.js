@@ -9,9 +9,9 @@
       password: form.password.value.trim(),
     };
 
-    try {
-        console.log(formData);
-        const res = await fetch('/auth/login', {
+    try
+    {
+      const res = await fetch('/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -20,21 +20,25 @@
         body: JSON.stringify(formData)
       });
 
-        if (res.redirected)
-        {
-            window.location.href = res.url;
-            return;
-        }
+      if (res.redirected)
+      {
+        console.log("redirected, url: ", res.url);
+        window.location.href = res.url;
+        return;
+      }
 
       const data = await res.json();
 
       if (res.ok) {
+        console.log("res ok, redirected, url: ", res.url);
         window.location.href = '/feed?page=1';
       } else {
         errorDiv.style.display = 'block';
         errorDiv.textContent = data.error || 'Account doesn\'t exist, please register.';
       }
-    } catch (err) {
+    }
+    catch (err)
+    {
       console.error('Login AJAX error:', err);
       errorDiv.style.display = 'block';
       errorDiv.textContent = 'Something went wrong. Please try again.';

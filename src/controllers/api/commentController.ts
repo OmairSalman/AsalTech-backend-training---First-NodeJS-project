@@ -9,9 +9,9 @@ export default class CommentController
     {
         const postId = request.params.postId;
         const comment = request.body;
-        const author = request.session!.user!.id.toString();
+        const author = request.user!.id.toString();
         const savedComment = await commentService.saveComment(postId, comment, author);
-        response.render('partials/commentCard', { comment: savedComment, user: request.session.user, layout: false }, (err, html) => {
+        response.render('partials/commentCard', { comment: savedComment, user: request.user, layout: false }, (err, html) => {
             if (err)
             {
                 console.error(err);
@@ -42,7 +42,7 @@ export default class CommentController
     async like(request: Request, response: Response)
     {
         let commentId = request.params.commentId;
-        let userId = request.session!.user!.id.toString();
+        let userId = request.user!.id.toString();
         const likedComment = await commentService.like(commentId, userId);
         if(!likedComment) return response.status(404).send("Comment not found");
         return response.status(200).json({message: `Liked comment ${commentId} by ${userId} successfully.`, liked: true, likeCount: likedComment.likes.length, likes: likedComment.likes});
@@ -51,7 +51,7 @@ export default class CommentController
     async unlike(request: Request, response: Response)
     {
         let commentId = request.params.commentId;
-        let userId = request.session!.user!.id.toString();
+        let userId = request.user!.id.toString();
         const unlikedComment = await commentService.unlike(commentId, userId);
         if(!unlikedComment) return response.status(404).send("Comment not found");
         return response.status(200).json({message: `Unliked comment ${commentId} by ${userId} successfully.`, liked: false, likeCount: unlikedComment.likes.length, likes: unlikedComment.likes});

@@ -5,9 +5,8 @@ const connectDB = async () =>
 {
     try
     {
-        const DB_NAME = 'usersconnect';
-        await mongoose.connect(`mongodb://localhost:27017/${DB_NAME}`);
-        console.log(`Connected successfully to MongoDB, databse: ${DB_NAME}`);
+        await mongoose.connect(process.env.DATABASE_URL!);
+        console.log(`Connected successfully to MongoDB, databse: ${process.env.DATABASE_NAME}`);
     }
     catch(error)
     {

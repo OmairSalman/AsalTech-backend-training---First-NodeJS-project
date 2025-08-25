@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { Types } from "mongoose";
-import UserService from "../../services/userService";
 import AuthService from "../../services/authService";
+import jwt from 'jsonwebtoken';
 
-const userService = new UserService();
 const authService = new AuthService();
 
 export default class AuthController
@@ -24,13 +23,22 @@ export default class AuthController
                 response.status(401).json({ error: "Invalid email or password" });
         else
         {
-            const { password, ...userWithoutPassword } = user;
-            request.session.user =
-            {
-                id: user._id as Types.ObjectId,
+            const payload = {
+                id: user._id,
                 name: user.name,
                 email: user.email
             };
+
+            
+            const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '1h' });
+            
+            response.cookie("token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // only HTTPS in prod
+                sameSite: "lax",
+                maxAge: 1000 * 60 * 60 // 1 hour
+            });
+
             response.redirect('/feed?page=1');
         }
     }
@@ -39,33 +47,33 @@ export default class AuthController
     {
         let newUser = request.body;
         newUser = await authService.registerUser(newUser);
-        const { password, ...newUserWithoutPassword } = newUser;
-        request.session.user =
-        {
-            id: newUser._id as Types.ObjectId,
+        
+        const payload = {
+            id: newUser._id,
             name: newUser.name,
             email: newUser.email
         };
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '1h' });
+        
+        response.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // only HTTPS in prod
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60 // 1 hour
+        });
+
         response.redirect('/feed?page=1');
     }
 
     async logoutUser(request: Request, response: Response)
     {
-        request.session.destroy(err => {
-            if (err) console.error(err);
-            response.clearCookie('connect.sid');
-            response.redirect('/');
+        response.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/", // must match the path used when setting the cookie
         });
-    }
-
-    async showProfileById(request: Request, response: Response)
-    {
-        const userId = request.params.id;
-        const user = await userService.getUserById(userId);
-        if(user)
-        {
-            const { password, ...newUserWithoutPassword } = user;
-            response.render('profile', {user: newUserWithoutPassword});
-        }
+        response.redirect('/');
     }
 }

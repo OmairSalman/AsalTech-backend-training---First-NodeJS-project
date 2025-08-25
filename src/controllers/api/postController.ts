@@ -25,7 +25,7 @@ export default class PostController
     async savePost(request: Request, response: Response)
     {
         let newPost = request.body;
-        const author = request.session!.user!.id.toString();
+        const author = request.user!.id.toString();
         newPost = await postService.savePost(newPost, author);
         response.status(201).json({message: "Post saved successfully", post: newPost});
     }
@@ -50,7 +50,7 @@ export default class PostController
     async like(request: Request, response: Response)
     {
         let postId = request.params.postId;
-        let userId = request.session!.user!.id.toString();
+        let userId = request.user!.id.toString();
         const likedPost = await postService.like(postId, userId);
         if(!likedPost) return response.status(404).send("Post not found");
         return response.status(200).json({message: `Liked post ${postId} by ${userId} successfully.`, liked: true, likeCount: likedPost.likes.length, likes: likedPost.likes});
@@ -59,7 +59,7 @@ export default class PostController
     async unlike(request: Request, response: Response)
     {
         let postId = request.params.postId;
-        let userId = request.session!.user!.id.toString();
+        let userId = request.user!.id.toString();
         const unlikedPost = await postService.unlike(postId, userId);
         if(!unlikedPost) return response.status(404).send("Post not found");
         return response.status(200).json({message: `Unliked post ${postId} by ${userId} successfully.`, liked: false, likeCount: unlikedPost.likes.length, likes: unlikedPost.likes});

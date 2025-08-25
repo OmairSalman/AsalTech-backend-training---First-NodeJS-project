@@ -10,7 +10,7 @@ export default class WebController
 {
     home(request: Request, response: Response)
     {
-        if(!request.session.user)
+        if(!request.user)
             response.render('pages/home');
         else
             response.redirect('/feed');
@@ -18,7 +18,7 @@ export default class WebController
 
     async feed(request: Request, response: Response)
     {
-        if(!request.session.user)
+        if(!request.user)
             response.redirect('/');
         else
         {
@@ -26,7 +26,7 @@ export default class WebController
             const posts = await postService.getPosts(page, 10);
             const totalPosts = await PostModel.countDocuments();
             const totalPages = Math.ceil(totalPosts/10);
-            response.render('pages/feed', {user: request.session.user, posts: posts, page: page, limit: 10, totalPages: totalPages });
+            response.render('pages/feed', {user: request.user, posts: posts, page: page, limit: 10, totalPages: totalPages });
         }
     }
 
@@ -42,23 +42,23 @@ export default class WebController
 
     create(request: Request, response: Response)
     {
-        response.render('pages/createPost', {user: request.session.user});
+        response.render('pages/createPost', {user: request.user});
     }
 
     async profile(request: Request, response: Response)
     {
-        const user = request.session.user;
+        const user = request.user;
         let posts;
         if(user)
         {
             const page = parseInt(request.query.postsPage as string) || 1;
-            posts = await postService.getPostsByUserId(user?.id.toString(), page, 10);
+            posts = await postService.getPostsByUserId(user.id.toString(), page, 10);
             if(posts)
             {
                 const totalUserPosts = await PostModel.countDocuments({author: user.id});
                 const totalPages = Math.ceil(totalUserPosts/10);
-                const postsLikes = await postService.countUserPostsLikes(user?.id.toString());
-                const commentsLikes = await commentService.countUserCommentsLikes(user?.id.toString());
+                const postsLikes = await postService.countUserPostsLikes(user.id.toString());
+                const commentsLikes = await commentService.countUserCommentsLikes(user.id.toString());
                 response.render('pages/profile', {user: user, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
             }
         }
