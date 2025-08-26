@@ -3,11 +3,14 @@
     <!-- GRID: main content + action rail -->
     <div class="post-grid">
       <div class="post-content-view">
-        <h5 class="post-title mb-1">{{post.title}}</h5>
         <div class="post-author text-muted mb-2">
-          by <a href="/profile/{{post.author._id}}">{{post.author.name}}</a>, {{fromNow post.createdAt}}
+          <img src="https://www.gravatar.com/avatar/{{gravatarHash post.author.email}}?d=initials&s=32"
+            alt="{{post.author.name}}'s avatar"
+            class="rounded-circle me-2"
+            width="32"
+            height="32"><a href="/profile/{{post.author._id}}">{{post.author.name}}</a>, {{fromNow post.createdAt}}
         </div>
-
+        <h5 class="post-title mb-1">{{post.title}}</h5>
         <p class="post-content mb-3">{{post.content}}</p>
       </div>
 
@@ -42,7 +45,7 @@
           class="like-count mt-1 small text-muted"
           id="like-count-{{post._id}}"
           data-post-id="{{post._id}}"
-          data-likes='[{{#each post.likes}}{"_id": "{{this._id}}", "name": "{{this.name}}"}{{#unless @last}},{{/unless}}{{/each}}]'>
+          data-likes='[{{#each post.likes}}{"_id": "{{this._id}}", "name": "{{this.name}}", "email": "{{this.email}}"}{{#unless @last}},{{/unless}}{{/each}}]'>
           {{post.likes.length}}
         </span>
       </div>

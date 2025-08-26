@@ -4,5 +4,6 @@ export interface User extends Document
 {
     name: string,
     email: string,
-    password: string
+    password: string,
+    hasCustomAvatar: boolean,
 };

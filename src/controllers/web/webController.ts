@@ -90,6 +90,11 @@ export default class WebController
         const user = await userService.getUserById(userId);
         if(user)
         {
+            const email = user.email.trim().toLowerCase();
+            const hash =  crypto.createHash('sha256').update(email).digest('hex');
+            const res = await fetch(`https://www.gravatar.com/avatar/${hash}?s=200&d=404`);
+            user.hasCustomAvatar =  res.status !== 404;
+            
             const posts = await postService.getPostsByUserId(userId.toString(), page, 10);
             if(posts)
             {

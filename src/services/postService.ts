@@ -13,16 +13,22 @@ export default class PostService
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
-                .populate('author', 'name')
-                .populate('likes', 'name')
+                .populate({
+                    path: 'author',
+                    select: 'name email'
+                })
+                .populate({
+                    path: 'likes',
+                    select: 'name email'
+                })
                 .populate({
                     path: 'comments',
-                    populate: { path: 'author', select: 'name' }
+                    populate: { path: 'author', select: 'name email' }
                 })
                 .populate({
                     path: 'comments',
                     options: { sort: { createdAt: -1 } },
-                    populate: { path: 'likes', select: 'name' }
+                    populate: { path: 'likes', select: 'name email' }
                 })
                 .lean();
         }
@@ -39,16 +45,22 @@ export default class PostService
         try
         {
             const post = await PostModel.findById(postId)
-                .populate('author', 'name')
-                .populate('likes', 'name')
+                .populate({
+                    path: 'author',
+                    select: 'name email'
+                })
+                .populate({
+                    path: 'likes',
+                    select: 'name email'
+                })
                 .populate({
                     path: 'comments',
-                    populate: { path: 'author', select: 'name' }
+                    populate: { path: 'author', select: 'name email' }
                 })
                 .populate({
                     path: 'comments',
                     options: { sort: { createdAt: -1 } },
-                    populate: { path: 'likes', select: 'name' }
+                    populate: { path: 'likes', select: 'name email' }
                 })
                 .lean()
             return post ?? null;
@@ -117,16 +129,22 @@ export default class PostService
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
-                .populate('author', 'name')
-                .populate('likes', 'name')
+                .populate({
+                    path: 'author',
+                    select: 'name email'
+                })
+                .populate({
+                    path: 'likes',
+                    select: 'name email'
+                })
                 .populate({
                     path: 'comments',
-                    populate: { path: 'author', select: 'name' }
+                    populate: { path: 'author', select: 'name email' }
                 })
                 .populate({
                     path: 'comments',
                     options: { sort: { createdAt: -1 } },
-                    populate: { path: 'likes', select: 'name' }
+                    populate: { path: 'likes', select: 'name email' }
                 })
                 .lean();
             return posts ?? null;
@@ -160,7 +178,10 @@ export default class PostService
                 postId,
                 { $addToSet: { likes: new mongoose.Types.ObjectId(userId) } },
                 { new: true }
-            ).populate('likes', 'name');
+            ).populate({
+                    path: 'likes',
+                    select: 'name email'
+                })
             return post?.toObject() ?? null;
         }
         catch (error)
@@ -179,7 +200,10 @@ export default class PostService
                 postId,
                 { $pull: { likes: new mongoose.Types.ObjectId(userId) } },
                 { new: true }
-            ).populate('likes', 'name');
+            ).populate({
+                    path: 'likes',
+                    select: 'name email'
+                })
             return post?.toObject() ?? null;
         }
         catch (error)
