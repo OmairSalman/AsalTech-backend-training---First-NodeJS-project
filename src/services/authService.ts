@@ -9,7 +9,7 @@ export default class AuthService
     {
         try
         {
-            const user = await User.findOneByOrFail({email: credentials.email});
+            const user = await User.findOneBy({email: credentials.email});
             if (!user) return 'DNE';
             const match = await bcrypt.compare(credentials.password, user?.password);
             if(match)

@@ -2,8 +2,7 @@ import express from 'express';
 import path from 'path';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-
-import { Types } from 'mongoose';
+;
 import { engine } from 'express-handlebars';
 import cookieParser from "cookie-parser";
 
@@ -71,12 +70,6 @@ app.engine('hbs', engine({
     isAuthor: (postAuthorId: string, userId: string) => postAuthorId === userId,
 
     isOwner: (currentUserId: string, profileUserId: string) => profileUserId === currentUserId,
-
-    gravatarHash: (email: string) =>
-    {
-      email = email.trim().toLowerCase();
-      return crypto.createHash('sha256').update(email).digest('hex');
-    },
   }
 }));
 

@@ -11,7 +11,7 @@ const AppDataSource = new DataSource({
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
     entities: [User, Post, Comment],
-    synchronize: true,
+    synchronize: false,
     logging: false,
 });
 

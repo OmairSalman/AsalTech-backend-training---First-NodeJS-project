@@ -74,8 +74,8 @@ export default class WebController
             {
                 const totalPages = Math.ceil(posts.length/10);
                 const postsLikes = await postService.countUserPostsLikes(user._id.toString());
-                //const commentsLikes = await commentService.countUserCommentsLikes(user._id.toString());
-                response.render('pages/profile', {user: user, currentUserId: request.user?._id, hasCustomAvatar: res.status !== 404, posts: posts, postsLikes: postsLikes, /*commentsLikes: commentsLikes,*/ postsPage: page, limit: 10, totalPages: totalPages });
+                const commentsLikes = await commentService.countUserCommentsLikes(user._id.toString());
+                response.render('pages/profile', {user: user, currentUserId: request.user?._id, hasCustomAvatar: res.status !== 404, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
             }
         }
     }
@@ -90,7 +90,6 @@ export default class WebController
             const email = user.email.trim().toLowerCase();
             const hash =  crypto.createHash('sha256').update(email).digest('hex');
             const res = await fetch(`https://www.gravatar.com/avatar/${hash}?s=200&d=404`);
-            //user.hasCustomAvatar =  ;
             
             const posts = await postService.getPostsByUserId(userId.toString(), page, 10);
             if(posts)
