@@ -345,6 +345,7 @@ footer a:hover {
 .post-content {
   font-size: 1.25rem;
   color: var(--text-dark);
+  white-space: pre-line;
 }
 
 /* ---------- Like Button ---------- */

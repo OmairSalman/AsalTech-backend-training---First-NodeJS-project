@@ -8,7 +8,8 @@
     "build": "tsc && shx cp -r src/views dist/views && shx cp -r src/public dist/public",
     "copy:views": "cpx \"src/views/**/*\" dist/views",
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typeorm": "typeorm-ts-node-commonjs"
   },
   "author": "Omair Salman",
   "license": "ISC",
@@ -24,8 +25,10 @@
     "express-validator": "^7.2.1",
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
+    "mariadb": "^3.4.5",
     "mongoose": "^8.17.0",
     "mysql2": "^3.14.3",
+    "redis": "^5.8.2",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.26"
   },

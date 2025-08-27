@@ -26,7 +26,6 @@ function customConfirm(message) {
 // Utility to show the like popup with a list of names
 function showLikePopup(likes)
 {
-  console.log(likes);
   const popup = document.getElementById('like-popup');
   const list = popup.querySelector('.like-popup-list');
   list.innerHTML = '';
@@ -89,8 +88,6 @@ function hideLikePopup() {
       {
         likeCount.textContent = `${data.likeCount}`;
       }
-
-      const icon = button.querySelector("i");
 
       if (data.liked) {
         button.dataset.liked = "true";
@@ -313,7 +310,6 @@ async function handleEditComment(form)
           } catch (err) {
             names = [];
           }
-          console.log(names);
           showLikePopup(names);
         }
       }
