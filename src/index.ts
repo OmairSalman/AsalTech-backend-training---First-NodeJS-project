@@ -15,15 +15,13 @@ import CommentRouter from './routers/api/commentRouter';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 
-import connectDB from './config/db';
+dotenv.config();
+
+import AppDataSource from './config/dataSource';
 
 dayjs.extend(relativeTime);
 
-dotenv.config();
-
 const app = express();
-
-connectDB();
 
 app.engine('hbs', engine({
   extname: '.hbs',
@@ -59,20 +57,20 @@ app.engine('hbs', engine({
       return `${plural}`;
     },
 
-    isLiked: (likes: {_id: Types.ObjectId, name: string}[], userId: Types.ObjectId) =>
+    isLiked: (likes: {_id: string, name: string}[], userId: string) =>
     {
       if(!likes || likes.length === 0)
         return false;
-      const liked = likes.find(like => like._id.equals(userId));
+      const liked = likes.find(like => like._id === userId);
       if(liked)
         return true;
       else
         return false;
     },
 
-    isAuthor: (postAuthorId: Types.ObjectId, userId: Types.ObjectId) => postAuthorId.equals(userId),
+    isAuthor: (postAuthorId: string, userId: string) => postAuthorId === userId,
 
-    isOwner: (currentUserId: string, profileUserId: Types.ObjectId) => new Types.ObjectId(profileUserId).equals(currentUserId),
+    isOwner: (currentUserId: string, profileUserId: string) => profileUserId === currentUserId,
 
     gravatarHash: (email: string) =>
     {
@@ -91,7 +89,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.listen(process.env.PORT, () => { console.log(`Server running at http://localhost:${process.env.PORT}/`) })
+AppDataSource.initialize();
+app.listen(process.env.PORT, () => { console.log(`Server running at http://localhost:${process.env.PORT}/`) });
 
 app.use('/', WebRouter);
 

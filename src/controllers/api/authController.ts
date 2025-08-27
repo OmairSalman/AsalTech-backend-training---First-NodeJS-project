@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { Types } from "mongoose";
 import AuthService from "../../services/authService";
 import jwt from 'jsonwebtoken';
 
@@ -24,9 +23,10 @@ export default class AuthController
         else
         {
             const payload = {
-                _id: user._id as Types.ObjectId,
+                _id: user._id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                avatarURL: user.avatarURL
             };
 
             
@@ -51,7 +51,8 @@ export default class AuthController
         const payload = {
             _id: newUser._id,
             name: newUser.name,
-            email: newUser.email
+            email: newUser.email,
+            avatarURL: newUser.avatarURL
         };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '1h' });

@@ -5,13 +5,11 @@
       <div class="comment-bubble p-2 mb-1">
         <div class="comment-author fw-bold mb-1">
           <a href="/profile/{{comment.author._id}}">
-            <img src="https://www.gravatar.com/avatar/{{gravatarHash comment.author.email}}?d=initials&s=200"
+            <img src="{{comment.author.avatarURL}}"
               alt="{{comment.author.name}}'s avatar"
               class="rounded-circle me-2"
               width="24"
-              height="24">
-          </a>
-          <a href="/profile/{{comment.author._id}}">{{comment.author.name}}</a>
+              height="24">{{comment.author.name}}</a>
         </div>
         <div class="comment-content">{{comment.content}}</div>
       </div>
@@ -58,7 +56,7 @@
           class="like-count small"
           id="like-count-{{comment._id}}"
           data-comment-id="{{comment._id}}"
-          data-likes='[{{#each comment.likes}}{"_id": "{{this._id}}", "name": "{{this.name}}", "email": "{{this.email}}"}{{#unless @last}},{{/unless}}{{/each}}]'>
+          data-likes='[{{#each comment.likes}}{"_id": "{{this._id}}", "name": "{{this.name}}", "avatarURL": "{{this.avatarURL}}"}{{#unless @last}},{{/unless}}{{/each}}]'>
           {{comment.likes.length}}
         </span>
       </form>

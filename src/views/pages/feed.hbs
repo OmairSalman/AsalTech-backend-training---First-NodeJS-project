@@ -1,15 +1,23 @@
-{{#if (gt 2 page)}}
-<h1 class="text-center my-4">Welcome to your feed, {{user.name}}</h1>
+{{#if posts.length}}
+  {{#if (gt 2 page)}}
+    <h1 class="text-center my-4">Welcome to your feed, {{user.name}}</h1>
+  {{/if}}
 {{/if}}
 
 <div class="feed-container" id="feed-container"
   data-page="{{page}}" 
   data-limit="{{limit}}" 
   data-total-pages="{{totalPages}}">
-  {{!-- Loop over posts --}}
-  {{#each posts}}
-    {{> postCard post=this currentUserId=../currentUserId}}
-  {{/each}}
+  {{#if posts.length}}
+    {{#each posts}}
+      {{> postCard post=this currentUserId=../user._id}}
+    {{/each}}
+  {{else}}
+    <div class="feed-empty-message d-flex flex-column justify-content-center align-items-center" style="min-height: 60vh;">
+      <span class="display-4 fw-bold mb-3">No posts yet.</span>
+      <span class="h4 text-muted">Be the first to post!</span>
+    </div>
+  {{/if}}
 </div>
 
 <!-- pagination UI (server can render numbers; JS will hook to them) -->

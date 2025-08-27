@@ -1,14 +1,14 @@
 <div class="profile-card">
   <div class="profile-avatar">
     <img 
-      src="https://www.gravatar.com/avatar/{{gravatarHash user.email}}?s=200&d=initials" 
+      src="{{user.avatarURL}}"
       alt="{{user.name}}'s avatar"
     >
     {{#if (isOwner currentUserId user._id)}}
       <a href="https://gravatar.com" target="_blank" class="avatar-overlay">
         Change your avatar on Gravatar.com!
       </a>
-      {{#unless user.hasCustomAvatar}}
+      {{#unless hasCustomAvatar}}
         <a href="https://gravatar.com" target="_blank" class="avatar-badge">Set Avatar</a>
       {{/unless}}
     {{/if}}

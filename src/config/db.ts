@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import "../models/commentModel";
 
 const connectDB = async () =>
 {

@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import { Comment } from "../interfaces/comment";
-import { CommentModel } from "../models/commentModel";
+import { Comment } from "../models/commentEntity";
+import { Post } from "../models/postEntity";
+import { User } from "../models/userEntity";
 
 export default class CommentService
 {
@@ -8,12 +8,17 @@ export default class CommentService
     {
         try
         {
-            const comment = new CommentModel({...newComment, author: userId, post: postId});
+            const comment = new Comment();
+            comment.content = newComment.content;
+            const post = await Post.findOneBy({ _id: postId });
+            if (!post) return null;
+            comment.post = post;
+            const author = await User.findOneBy({_id: userId});
+            if(!author) return null;
+            comment.author = author;
             await comment.save();
-            const populatedComment = await CommentModel.findById(comment._id).populate('author');
-            if(populatedComment)
-                return populatedComment.toObject()
-            return null;
+            await comment.reload();
+            return comment;
         }
         catch(error)
         {
@@ -25,7 +30,7 @@ export default class CommentService
 
     async countUserCommentsLikes(userId: string)
     {
-        const comments = await CommentModel.find({author: userId});
+        const comments = await Comment.find({where: {author: {_id: userId}}});
         if(comments)
         {
             let commentsLikes = 0;
@@ -40,8 +45,9 @@ export default class CommentService
     {
         try
         {
-            const comment = await CommentModel.findByIdAndUpdate(commentId, updatedComment, { new: true });
-            return comment?.toObject() ?? null;
+            await Comment.update({_id: commentId}, updatedComment);
+            const comment = await Comment.findOneBy({_id: commentId});
+            return comment ?? null;
         }
         catch(error)
         {
@@ -55,8 +61,10 @@ export default class CommentService
     {
         try
         {
-            const comment = await CommentModel.findByIdAndDelete(commentId);
-            return comment?.toObject() ?? null;
+            const comment = await Comment.findOneBy({_id: commentId});
+            if(!comment) return null;
+            await comment.remove();
+            return comment;
         }
         catch (error)
         {
@@ -70,17 +78,29 @@ export default class CommentService
     {
         try
         {
-            const comment = await CommentModel.findByIdAndUpdate(
-                commentId,
-                { $addToSet: { likes: new mongoose.Types.ObjectId(userId) } },
-                { new: true }
-            ).populate('likes', 'name');;
-            return comment?.toObject() ?? null;
+            const comment = await Comment.findOne(
+                {
+                    where: { _id: commentId },
+                    relations: ["likes"],
+                });
+            if (!comment) return null;
+
+            const user = await User.findOneBy({_id: userId});
+            if (!user) return null;
+
+            if (!comment.likes.some(u => u._id === userId))
+            {
+                comment.likes.push(user);
+                await comment.save();
+            }
+
+            await comment.reload();
+            return comment;
         }
         catch (error)
         {
             const errorDate = new Date();
-            console.error(`[${errorDate.toLocaleDateString()} @ ${errorDate.toLocaleTimeString()}] Error liking comment:`, error);
+            console.error(`[${errorDate.toLocaleDateString()} @ ${errorDate.toLocaleTimeString()}] Error liking post:`, error);
             return null;
         }
     }
@@ -89,17 +109,24 @@ export default class CommentService
     {
         try
         {
-            const comment = await CommentModel.findByIdAndUpdate(
-                commentId,
-                { $pull: { likes: new mongoose.Types.ObjectId(userId) } },
-                { new: true }
-            ).populate('likes', 'name');;
-            return comment?.toObject() ?? null;
+                const comment = await Comment.findOne(
+                {
+                    where: { _id: commentId },
+                    relations: ["likes"],
+                });
+            if (!comment) return null;
+
+            comment.likes = comment.likes.filter(u => u._id !== userId);
+            await comment.save();
+
+            await comment.reload();
+
+            return comment;
         }
         catch (error)
         {
             const errorDate = new Date();
-            console.error(`[${errorDate.toLocaleDateString()} @ ${errorDate.toLocaleTimeString()}] Error unliking comment:`, error);
+            console.error(`[${errorDate.toLocaleDateString()} @ ${errorDate.toLocaleTimeString()}] Error unliking post:`, error);
             return null;
         }
     }

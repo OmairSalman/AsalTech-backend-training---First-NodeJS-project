@@ -24,7 +24,10 @@
     "express-validator": "^7.2.1",
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.17.0"
+    "mongoose": "^8.17.0",
+    "mysql2": "^3.14.3",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.26"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

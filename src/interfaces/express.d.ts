@@ -2,10 +2,10 @@ import * as express from 'express';
 import { Types } from 'mongoose';
 
 export default interface UserPayload {
-  _id: Types.ObjectId;
+  _id: string;
   name: string;
   email: string;
-  hasCustomAvatar?: boolean;
+  avatarURL: string;
 }
 
 declare global {

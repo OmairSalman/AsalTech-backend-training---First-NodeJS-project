@@ -39,7 +39,7 @@ function showLikePopup(likes)
       li.className = 'like-popup-user';
       li.innerHTML =
       `<li class="like-popup-user">
-        <a href="/profile/${like._id}">${like.name}</a>
+        <a href="/profile/${like._id}"><img src="${like.avatarURL}" alt="${like.name}'s avatar" class="rounded-circle me-2" width="20" height="20">${like.name}</a>
       </li>`;
       list.appendChild(li);
     });

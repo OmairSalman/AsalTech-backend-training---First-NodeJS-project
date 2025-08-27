@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import PostService from "../../services/postService";
+import { Post } from "../../models/postEntity";
 import CommentService from "../../services/commentService";
 import UserService from "../../services/userService";
-import { PostModel } from "../../models/postModel";
 import jwt from 'jsonwebtoken';
 import UserPayload from "../../interfaces/express";
 import crypto from 'crypto';
@@ -38,8 +38,7 @@ export default class WebController
         {
             const page = parseInt(request.query.page as string) || 1;
             const posts = await postService.getPosts(page, 10);
-            const totalPosts = await PostModel.countDocuments();
-            const totalPages = Math.ceil(totalPosts/10);
+            const totalPages = Math.ceil(posts.length/10);
             response.render('pages/feed', {user: request.user, currentUserId: request.user._id, posts: posts, page: page, limit: 10, totalPages: totalPages });
         }
     }
@@ -68,17 +67,15 @@ export default class WebController
             const email = user.email.trim().toLowerCase();
             const hash =  crypto.createHash('sha256').update(email).digest('hex');
             const res = await fetch(`https://www.gravatar.com/avatar/${hash}?s=200&d=404`);
-            user.hasCustomAvatar =  res.status !== 404;
 
             const page = parseInt(request.query.postsPage as string) || 1;
             posts = await postService.getPostsByUserId(user._id.toString(), page, 10);
             if(posts)
             {
-                const totalUserPosts = await PostModel.countDocuments({author: user._id});
-                const totalPages = Math.ceil(totalUserPosts/10);
+                const totalPages = Math.ceil(posts.length/10);
                 const postsLikes = await postService.countUserPostsLikes(user._id.toString());
-                const commentsLikes = await commentService.countUserCommentsLikes(user._id.toString());
-                response.render('pages/profile', {user: user, currentUserId: request.user?._id,posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
+                //const commentsLikes = await commentService.countUserCommentsLikes(user._id.toString());
+                response.render('pages/profile', {user: user, currentUserId: request.user?._id, hasCustomAvatar: res.status !== 404, posts: posts, postsLikes: postsLikes, /*commentsLikes: commentsLikes,*/ postsPage: page, limit: 10, totalPages: totalPages });
             }
         }
     }
@@ -93,16 +90,15 @@ export default class WebController
             const email = user.email.trim().toLowerCase();
             const hash =  crypto.createHash('sha256').update(email).digest('hex');
             const res = await fetch(`https://www.gravatar.com/avatar/${hash}?s=200&d=404`);
-            user.hasCustomAvatar =  res.status !== 404;
+            //user.hasCustomAvatar =  ;
             
             const posts = await postService.getPostsByUserId(userId.toString(), page, 10);
             if(posts)
             {
-                const totalUserPosts = await PostModel.countDocuments({author: userId});
-                const totalPages = Math.ceil(totalUserPosts/10);
+                const totalPages = Math.ceil(posts.length/10);
                 const postsLikes = await postService.countUserPostsLikes(userId.toString());
                 const commentsLikes = await commentService.countUserCommentsLikes(userId.toString());
-                response.render('pages/profile', {user: user, currentUserId: request.user?._id, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
+                response.render('pages/profile', {user: user, currentUserId: request.user?._id, hasCustomAvatar: res.status !== 404, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
             }
         }
     }

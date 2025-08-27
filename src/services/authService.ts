@@ -1,8 +1,7 @@
 import UserService from "../services/userService";
-import { UserModel } from "../models/userModel";
-import { User } from "../interfaces/user";
+import { User } from "../models/userEntity";
 import bcrypt from 'bcrypt';
-const userService = new UserService();
+import crypto from 'crypto';
 
 export default class AuthService
 {
@@ -10,11 +9,11 @@ export default class AuthService
     {
         try
         {
-            const user = await UserModel.findOne({ email: credentials.email });
+            const user = await User.findOneByOrFail({email: credentials.email});
             if (!user) return 'DNE';
             const match = await bcrypt.compare(credentials.password, user?.password);
             if(match)
-                return user.toObject();
+                return user;
             else
                 return 'ICR';
         }
@@ -30,8 +29,14 @@ export default class AuthService
 
     async registerUser(newUser: User): Promise<User | null>
     {
-        const user = new UserModel(newUser);
+        const user = new User();
+        user.name = newUser.name;
+        user.email = newUser.email;
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newUser.password, salt);
+        const hash = crypto.createHash('sha256').update(user.email.trim()).digest('hex');
+        user.avatarURL = `https://gravatar.com/avatar/${hash}?s=256&d=initials`;
         await user.save();
-        return user.toObject();
+        return user;
     }
 }

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { Post } from "../interfaces/post";
-import { PostModel } from "../models/postModel";
+import { Post } from "../models/postEntity";
+import { User } from "../models/userEntity";
 
 export default class PostService
 {
@@ -9,33 +9,18 @@ export default class PostService
         try
         {
             const skip = (page - 1) * limit;
-            return await PostModel.find()
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(limit)
-                .populate({
-                    path: 'author',
-                    select: 'name email'
-                })
-                .populate({
-                    path: 'likes',
-                    select: 'name email'
-                })
-                .populate({
-                    path: 'comments',
-                    populate: { path: 'author', select: 'name email' }
-                })
-                .populate({
-                    path: 'comments',
-                    options: { sort: { createdAt: -1 } },
-                    populate: { path: 'likes', select: 'name email' }
-                })
-                .lean();
+            return await Post.find(
+                {
+                    order: {createdAt: "DESC"},
+                    skip: skip,
+                    take: limit
+                }
+            );
         }
         catch (error)
         {
             const errorDate = new Date();
-            console.error(`[${errorDate.toLocaleDateString()} @ ${errorDate.toLocaleTimeString()}] Error fetching posts:`, error);
+            console.error(`[${errorDate.toLocaleDateString()} @ ${errorDate.toLocaleTimeString()}] Error fetching posts:\n`, error);
             return [];
         }
     }
@@ -44,25 +29,7 @@ export default class PostService
     {
         try
         {
-            const post = await PostModel.findById(postId)
-                .populate({
-                    path: 'author',
-                    select: 'name email'
-                })
-                .populate({
-                    path: 'likes',
-                    select: 'name email'
-                })
-                .populate({
-                    path: 'comments',
-                    populate: { path: 'author', select: 'name email' }
-                })
-                .populate({
-                    path: 'comments',
-                    options: { sort: { createdAt: -1 } },
-                    populate: { path: 'likes', select: 'name email' }
-                })
-                .lean()
+            const post = await Post.findOneBy({ _id: postId });
             return post ?? null;
         }
         catch
@@ -78,9 +45,14 @@ export default class PostService
     {
         try
         {
-            const post = new PostModel({...newPost, author: userId});
+            const post = new Post();
+            post.title = newPost.title;
+            post.content = newPost.content;
+            const author = await User.findOneBy({_id: userId});
+            if(!author) return null;
+            post.author = author;
             await post.save();
-            return post.toObject();
+            return post;
         }
         catch (error)
         {
@@ -94,8 +66,9 @@ export default class PostService
     {
         try
         {
-            const post = await PostModel.findByIdAndUpdate(postId, updatedPost, { new: true });
-            return post?.toObject() ?? null;
+            await Post.update({ _id: postId }, updatedPost);
+            const post = await Post.findOneBy({ _id: postId });
+            return post ?? null;
         }
         catch (error)
         {
@@ -109,8 +82,10 @@ export default class PostService
     {
         try
         {
-            const postDoc = await PostModel.findByIdAndDelete(postId);
-            return postDoc?.toObject() ?? null;
+            const post = await Post.findOneBy({ _id: postId });
+            if(!post) return null;
+            await post.remove();
+            return post;
         }
         catch (error)
         {
@@ -125,28 +100,14 @@ export default class PostService
         try
         {
             const skip = (page - 1) * limit;
-            const posts = await PostModel.find({ author: userId })
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(limit)
-                .populate({
-                    path: 'author',
-                    select: 'name email'
-                })
-                .populate({
-                    path: 'likes',
-                    select: 'name email'
-                })
-                .populate({
-                    path: 'comments',
-                    populate: { path: 'author', select: 'name email' }
-                })
-                .populate({
-                    path: 'comments',
-                    options: { sort: { createdAt: -1 } },
-                    populate: { path: 'likes', select: 'name email' }
-                })
-                .lean();
+            const posts =  await Post.find(
+                {
+                    where: { author: { _id: userId } },
+                    order: {createdAt: "DESC"},
+                    skip: skip,
+                    take: limit
+                }
+            );
             return posts ?? null;
         }
         catch (error)
@@ -159,7 +120,11 @@ export default class PostService
 
     async countUserPostsLikes(userId: string)
     {
-        const posts = await PostModel.find({author: userId});
+        const posts = await Post.find(
+            {
+                where: { author: { _id: userId } },
+            }
+        );
         if(posts)
         {
             let postsLikes = 0;
@@ -174,15 +139,24 @@ export default class PostService
     {
         try
         {
-            const post = await PostModel.findByIdAndUpdate(
-                postId,
-                { $addToSet: { likes: new mongoose.Types.ObjectId(userId) } },
-                { new: true }
-            ).populate({
-                    path: 'likes',
-                    select: 'name email'
-                })
-            return post?.toObject() ?? null;
+            const post = await Post.findOne(
+                {
+                    where: { _id: postId },
+                    relations: ["likes"],
+                });
+            if (!post) return null;
+
+            const user = await User.findOneBy({_id: userId});
+            if (!user) return null;
+
+            if (!post.likes.some(u => u._id === userId))
+            {
+                post.likes.push(user);
+                await post.save();
+            }
+
+            await post.reload();
+            return post;
         }
         catch (error)
         {
@@ -196,15 +170,19 @@ export default class PostService
     {
         try
         {
-            const post = await PostModel.findByIdAndUpdate(
-                postId,
-                { $pull: { likes: new mongoose.Types.ObjectId(userId) } },
-                { new: true }
-            ).populate({
-                    path: 'likes',
-                    select: 'name email'
-                })
-            return post?.toObject() ?? null;
+             const post = await Post.findOne(
+                {
+                    where: { _id: postId },
+                    relations: ["likes"],
+                });
+            if (!post) return null;
+
+            post.likes = post.likes.filter(u => u._id !== userId);
+            await post.save();
+
+            await post.reload();
+
+            return post;
         }
         catch (error)
         {

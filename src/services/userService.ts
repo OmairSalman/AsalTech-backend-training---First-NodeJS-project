@@ -1,5 +1,5 @@
-import { User } from '../interfaces/user';
-import { UserModel } from '../models/userModel';
+import { User } from "../models/userEntity";
+import crypto from 'crypto';
 
 export default class UserService
 {
@@ -7,7 +7,7 @@ export default class UserService
     {
         try
         {
-            return await UserModel.find({});
+            return await User.find();
         }
         catch(error)
         {
@@ -21,28 +21,30 @@ export default class UserService
 
     async getUserById(userId: string): Promise<User | null>
     {
-        const userDoc = await UserModel.findById(userId);
-        const user = userDoc?.toObject();
+        const user = await User.findOneBy({ _id: userId });
         if (!user) return null;
         else return user;
     }
 
     async updateUser(userId: string, updatedUser: User): Promise<User | null>
     {
-        await UserModel.findByIdAndUpdate(userId, updatedUser);
-        const user = await UserModel.findById(userId);
+        await User.update({ _id: userId }, updatedUser);
+        const user = await User.findOneBy({ _id: userId });
         if (!user)
         {
             return null;
         }
-        return user.toObject();
+        const hash = crypto.createHash('sha256').update(user.email.trim()).digest('hex');
+        user.avatarURL = `https://gravatar.com/avatar/${hash}?s=256&d=initials`;
+        await user.save();
+        return user;
     }
 
     async deleteUser(userId: string): Promise<User | null>
     {
-        const userDoc = await UserModel.findByIdAndDelete(userId);
-        const user = userDoc?.toObject();
+        const user = await User.findOneBy({ _id: userId });
         if(!user) return null;
+        await user.remove();
         return user;
     }
 
