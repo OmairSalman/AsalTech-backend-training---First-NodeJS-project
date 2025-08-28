@@ -69,7 +69,7 @@ export default class WebController
             const res = await fetch(`https://www.gravatar.com/avatar/${hash}?s=200&d=404`);
 
             const page = parseInt(request.query.postsPage as string) || 1;
-            posts = await postService.getPostsByUserId(user._id.toString(), page, 10);
+            posts = await postService.getPostsByUserId(user._id, page, 10);
             if(posts)
             {
                 const totalPages = Math.ceil(posts.length/10);

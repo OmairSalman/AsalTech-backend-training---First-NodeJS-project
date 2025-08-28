@@ -5,7 +5,7 @@ export async function isPostAuthor(request: Request, response: Response, next: N
 {
     const userId = request.user?._id;
     const postId = request.params.postId;
-
+    
     const post = await Post.findOneBy({_id: postId});
     if(!post)
         return response.status(404).send("Post not found");

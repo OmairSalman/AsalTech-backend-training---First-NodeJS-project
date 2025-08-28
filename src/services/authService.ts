@@ -11,7 +11,7 @@ export default class AuthService
         {
             const user = await User.findOneBy({email: credentials.email});
             if (!user) return 'DNE';
-            const match = await bcrypt.compare(credentials.password, user?.password);
+            const match = await bcrypt.compare(credentials.password, user.password);
             if(match)
                 return user;
             else

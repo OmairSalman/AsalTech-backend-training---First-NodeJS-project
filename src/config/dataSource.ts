@@ -5,7 +5,7 @@ import { Comment } from "../models/commentEntity";
 import 'dotenv/config';
 
 const AppDataSource = new DataSource({
-    type: "mariadb",
+    type: "mysql",
     host: process.env.DATABASE_HOST,
     port: 3306,
     username: process.env.DATABASE_USERNAME,
@@ -15,13 +15,5 @@ const AppDataSource = new DataSource({
     synchronize: true,
     logging: false,
 });
-
-AppDataSource.initialize()
-    .then(() => {
-        console.log(`Data Source has been initialized! Connected successfully to mysql DB: ${process.env.DATABASE_NAME}`);
-    })
-    .catch((error) => {
-        console.error("Error during Data Source initialization:\n", error);
-    });
 
 export default AppDataSource;

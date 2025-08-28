@@ -18,6 +18,6 @@ UserRouter.put('/:id', isAuthenticated, usersController.updateUser);
 
 UserRouter.delete('/:id', isAuthenticated, usersController.deleteUser);
 
-UserRouter.get('/posts/:userId', isAuthenticated, usersController.getUserPosts)
+UserRouter.get('/:userId/posts', isAuthenticated, usersController.getUserPosts)
 
 export default UserRouter;

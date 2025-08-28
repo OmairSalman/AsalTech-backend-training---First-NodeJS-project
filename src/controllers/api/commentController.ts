@@ -11,6 +11,7 @@ export default class CommentController
         const comment = request.body;
         const author = request.user!._id.toString();
         const savedComment = await commentService.saveComment(postId, comment, author);
+        console.log(new Date(), savedComment?.createdAt);
         response.render('partials/commentCard', { comment: savedComment, user: request.user, currentUserId: request.user!._id, layout: false }, (err, html) => {
             if (err)
             {
@@ -19,7 +20,6 @@ export default class CommentController
             }
             response.send({ html });
         });
-        //return response.status(200).json(savedComment);
     }
 
     async updateComment(request: Request, response: Response)

@@ -1,8 +1,9 @@
 import express from 'express';
 import path from 'path';
+
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-;
+
 import { engine } from 'express-handlebars';
 import cookieParser from "cookie-parser";
 
@@ -11,12 +12,12 @@ import UserRouter from './routers/api/userRouter';
 import AuthRouter from './routers/api/authRouter';
 import PostRouter from './routers/api/postRouter';
 import CommentRouter from './routers/api/commentRouter';
-import dotenv from 'dotenv';
-import crypto from 'crypto';
-
-dotenv.config();
 
 import AppDataSource from './config/dataSource';
+
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 dayjs.extend(relativeTime);
 
@@ -48,7 +49,7 @@ app.engine('hbs', engine({
     formatDate: (date: Date) => dayjs(date).format("MMM D, YYYY h:mm A"),
 
     // relative time (need dayjs/plugin/relativeTime)
-    fromNow: (date: string) => dayjs(date).fromNow(),
+    fromNow: (date: string) => {console.log(dayjs(date).fromNow()); return dayjs(date).fromNow()},
 
     // pluralize likes or comments
     pluralize: (count: number, singular: string, plural: string) => {
@@ -82,8 +83,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-AppDataSource.initialize();
-app.listen(process.env.PORT, () => { console.log(`Server running at http://localhost:${process.env.PORT}/`) });
+AppDataSource.initialize()
+  .then(() => {
+      console.log(`Data Source has been initialized! Connected successfully to mysql DB: ${process.env.DATABASE_NAME}`);
+  })
+  .catch((error) => {
+      console.error("Error during Data Source initialization:\n", error);
+  });
+
+app.listen(process.env.PORT, async () => { console.log(`Server running at http://localhost:${process.env.PORT}/`) });
 
 app.use('/', WebRouter);
 
@@ -93,4 +101,4 @@ app.use('/auth', AuthRouter);
 
 app.use('/posts', PostRouter);
 
-app.use('/comments', CommentRouter)
+app.use('/comments', CommentRouter);

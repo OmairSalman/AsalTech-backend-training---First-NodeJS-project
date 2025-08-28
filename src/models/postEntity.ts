@@ -11,7 +11,7 @@ export class Post extends BaseEntity
   @Column()
   title!: string;
 
-  @Column()
+  @Column("text")
   content!: string;
 
   @ManyToOne(() => User, (user) => user.posts, { eager: true, onDelete: "CASCADE" })

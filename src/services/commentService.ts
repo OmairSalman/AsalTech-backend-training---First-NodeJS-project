@@ -1,3 +1,4 @@
+import redisClient from "../config/redis";
 import { Comment } from "../models/commentEntity";
 import { Post } from "../models/postEntity";
 import { User } from "../models/userEntity";
@@ -10,14 +11,22 @@ export default class CommentService
         {
             const comment = new Comment();
             comment.content = newComment.content;
+
             const post = await Post.findOneBy({ _id: postId });
             if (!post) return null;
             comment.post = post;
+
             const author = await User.findOneBy({_id: userId});
             if(!author) return null;
             comment.author = author;
+
             await comment.save();
             await comment.reload();
+
+            const keys = await redisClient.keys(`user:${post.author._id}:posts:page:*`);
+            if (keys.length) await redisClient.del(keys);
+            await redisClient.del('feed:page:1');
+
             return comment;
         }
         catch(error)
@@ -30,13 +39,23 @@ export default class CommentService
 
     async countUserCommentsLikes(userId: string)
     {
-        const comments = await Comment.find({where: {author: {_id: userId}}});
+        const cacheKey = `user:${userId}:comments:likes:count`;
+        const cached = await redisClient.get(cacheKey);
+        if (cached)
+        {
+            return JSON.parse(cached);
+        }
+        const comments = await Comment.find(
+            {
+                where: {author: {_id: userId}}
+            });
         if(comments)
         {
             let commentsLikes = 0;
             comments.forEach(comment =>{
                 commentsLikes += comment.likes.length;
             });
+            await redisClient.setex(cacheKey, 300, JSON.stringify(commentsLikes));
             return commentsLikes;
         }
     }
@@ -47,6 +66,12 @@ export default class CommentService
         {
             await Comment.update({_id: commentId}, updatedComment);
             const comment = await Comment.findOneBy({_id: commentId});
+            if(!comment) return null;
+
+            const keys = await redisClient.keys(`user:${comment.post.author._id}:posts:page:*`);
+            if (keys.length) await redisClient.del(keys);
+            await redisClient.del('feed:page:1');
+
             return comment ?? null;
         }
         catch(error)
@@ -64,6 +89,12 @@ export default class CommentService
             const comment = await Comment.findOneBy({_id: commentId});
             if(!comment) return null;
             await comment.remove();
+
+            const keys = await redisClient.keys(`user:${comment.post.author._id}:posts:page:*`);
+            if (keys.length) await redisClient.del(keys);
+            await redisClient.del('feed:page:1');
+            await redisClient.del(`user:${comment.author._id}:comments:likes:count`);
+
             return comment;
         }
         catch (error)
@@ -81,7 +112,7 @@ export default class CommentService
             const comment = await Comment.findOne(
                 {
                     where: { _id: commentId },
-                    relations: ["likes"],
+                    relations: ["post"]
                 });
             if (!comment) return null;
 
@@ -94,13 +125,16 @@ export default class CommentService
                 await comment.save();
             }
 
-            await comment.reload();
+            const keys = await redisClient.keys(`user:${comment.post.author._id}:posts:page:*`);
+            if (keys.length) await redisClient.del(keys);
+            await redisClient.del('feed:page:1');
+            await redisClient.del(`user:${comment.author._id}:comments:likes:count`);
             return comment;
         }
         catch (error)
         {
             const errorDate = new Date();
-            console.error(`[${errorDate.toLocaleDateString()} @ ${errorDate.toLocaleTimeString()}] Error liking post:`, error);
+            console.error(`[${errorDate.toLocaleDateString()} @ ${errorDate.toLocaleTimeString()}] Error liking comment:`, error);
             return null;
         }
     }
@@ -112,15 +146,16 @@ export default class CommentService
                 const comment = await Comment.findOne(
                 {
                     where: { _id: commentId },
-                    relations: ["likes"],
                 });
             if (!comment) return null;
 
             comment.likes = comment.likes.filter(u => u._id !== userId);
             await comment.save();
 
-            await comment.reload();
-
+            const keys = await redisClient.keys(`user:${comment.post.author._id}:posts:page:*`);
+            if (keys.length) await redisClient.del(keys);
+            await redisClient.del('feed:page:1');
+            await redisClient.del(`user:${comment.author._id}:comments:likes:count`);
             return comment;
         }
         catch (error)
