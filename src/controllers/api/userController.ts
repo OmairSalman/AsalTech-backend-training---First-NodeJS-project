@@ -30,7 +30,6 @@ export default class UserController
     {
         const userId = request.params.id;
         const updatedUser = request.body;
-        const user = await userService.updateUser(userId, updatedUser);
 
         if (updatedUser.newPassword || updatedUser.confirmPassword) {
             if (!updatedUser.newPassword || !updatedUser.confirmPassword) {
@@ -40,6 +39,8 @@ export default class UserController
                 return response.status(400).send('Passwords do not match.');
             }
         }
+
+        const user = await userService.updateUser(userId, updatedUser);
 
         if(!user) response.status(404).send('User not found')
         else
