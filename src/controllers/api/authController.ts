@@ -28,15 +28,22 @@ export default class AuthController
                 email: user.email,
                 avatarURL: user.avatarURL
             };
+            
+            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
+            const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
 
-            
-            const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '1h' });
-            
-            response.cookie("token", token, {
+            response.cookie("accessToken", accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
-                maxAge: 1000 * 60 * 60
+                maxAge: 1000 * 60 * 15
+            });
+
+            response.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: 1000 * 60 * 60 * 24 * 30
             });
 
             response.redirect('/feed?page=1');
@@ -55,13 +62,21 @@ export default class AuthController
             avatarURL: newUser.avatarURL
         };
 
-        const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '1h' });
-        
-        response.cookie("token", token, {
+        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
+        const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
+
+        response.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 1000 * 60 * 60
+            maxAge: 1000 * 60 * 15
+        });
+
+        response.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60 * 24 * 30
         });
 
         response.redirect('/feed?page=1');
@@ -69,12 +84,28 @@ export default class AuthController
 
     async logoutUser(request: Request, response: Response)
     {
-        response.clearCookie("token", {
+        response.clearCookie("accessToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+        });
+
+        response.clearCookie("refreshToken", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
             path: "/",
         });
         response.redirect('/');
+    }
+
+    async verifyPassword(request: Request, response: Response)
+    {
+        const userId = request.user!._id;
+        const password = request.body.password;
+        const user = await authService.verifyPassword(userId, password);
+        if(!user) return response.status(401).json({message: "Couldn't verify password", success: false});
+        return response.status(200).json({message: "Password verified", success: true});
     }
 }

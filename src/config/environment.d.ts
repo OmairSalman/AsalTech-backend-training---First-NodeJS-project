@@ -6,7 +6,7 @@ declare namespace NodeJS {
     DATABASE_NAME: string;
     DATABASE_URL: string;
     ACCESS_TOKEN_SECRET: string;
-    REFRESH_TOKEN_SECRET: String;
+    REFRESH_TOKEN_SECRET: string;
     GRAVATAR_API_KEY: string;
     REDIS_HOST: string;
     REDIS_PASSWORD: string;

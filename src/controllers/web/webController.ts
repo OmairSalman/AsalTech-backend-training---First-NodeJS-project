@@ -44,12 +44,24 @@ export default class WebController
 
     login(request: Request, response: Response)
     {
-        response.render('pages/login');
+        const accessToken = request.cookies.accessToken;
+        if (!accessToken)
+        {
+            return response.render('pages/login');
+        }
+    
+        return response.redirect('/feed');
     }
 
     register(request: Request, response: Response)
     {
-        response.render('pages/register');
+        const accessToken = request.cookies.accessToken;
+        if (!accessToken)
+        {
+            return response.render('pages/register');
+        }
+    
+        return response.redirect('/feed');
     }
 
     create(request: Request, response: Response)
@@ -99,5 +111,11 @@ export default class WebController
                 response.render('pages/profile', {user: user, currentUserId: request.user?._id, hasCustomAvatar: res.status !== 404, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
             }
         }
+    }
+
+    editProfile(request: Request, response: Response)
+    {
+        const user = request.user;
+        return response.render('pages/editProfile', {user: user});
     }
 }

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import UserService from "../../services/userService";
 import PostService from "../../services/postService";
+import jwt from 'jsonwebtoken';
 
 const userService = new UserService();
 const postService = new PostService();
@@ -30,9 +31,49 @@ export default class UserController
         const userId = request.params.id;
         const updatedUser = request.body;
         const user = await userService.updateUser(userId, updatedUser);
+
+        if (updatedUser.newPassword || updatedUser.confirmPassword) {
+            if (!updatedUser.newPassword || !updatedUser.confirmPassword) {
+                return response.status(400).send('Both password fields are required.');
+            }
+            if (updatedUser.newPassword !== updatedUser.confirmPassword) {
+                return response.status(400).send('Passwords do not match.');
+            }
+        }
+
         if(!user) response.status(404).send('User not found')
         else
         {
+            response.clearCookie("accessToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+            });
+
+            response.clearCookie("refreshToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+            });
+
+            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
+            const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
+
+            response.cookie("accessToken", accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: 1000 * 60 * 15
+            });
+
+            response.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: 1000 * 60 * 60 * 24 * 30
+            });
             response.status(200).json(user);
         }
     }

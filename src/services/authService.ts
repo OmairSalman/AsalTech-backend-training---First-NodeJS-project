@@ -1,4 +1,3 @@
-import UserService from "../services/userService";
 import { User } from "../models/userEntity";
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
@@ -45,5 +44,16 @@ export default class AuthService
         await user.save();
         const safeUser = userToPublic(user);
         return safeUser;
+    }
+
+    async verifyPassword(userId: string, password: string): Promise<PublicUser | null>
+    {
+        const user = await User.findOneBy({ _id: userId });
+        if(!user) return null;
+
+        const match = await bcrypt.compare(password, user.password);
+        if(match)
+            return user;
+        return null;
     }
 }

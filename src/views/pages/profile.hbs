@@ -19,9 +19,9 @@
     <p>{{user.email}}</p>
 
     {{#if (isOwner currentUserId user._id)}}
-      <button class="btn btn-outline-primary edit-profile-btn">
-        <i class="fa-solid fa-pen"></i> Edit profile (coming soon)
-      </button>
+      <a href="/profile/edit" class="btn btn-outline-primary edit-profile-btn">
+        <i class="fa-solid fa-pen"></i> Edit profile
+      </a>
     {{/if}}
 
     <div class="profile-stats">
