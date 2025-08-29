@@ -30,13 +30,13 @@ export default class AuthController
             };
 
             
-            const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '1h' });
+            const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '1h' });
             
             response.cookie("token", token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production", // only HTTPS in prod
+                secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
-                maxAge: 1000 * 60 * 60 // 1 hour
+                maxAge: 1000 * 60 * 60
             });
 
             response.redirect('/feed?page=1');
@@ -55,13 +55,13 @@ export default class AuthController
             avatarURL: newUser.avatarURL
         };
 
-        const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '1h' });
+        const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '1h' });
         
         response.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // only HTTPS in prod
+            secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 1000 * 60 * 60 // 1 hour
+            maxAge: 1000 * 60 * 60
         });
 
         response.redirect('/feed?page=1');
@@ -73,7 +73,7 @@ export default class AuthController
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            path: "/", // must match the path used when setting the cookie
+            path: "/",
         });
         response.redirect('/');
     }

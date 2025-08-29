@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import PostService from "../../services/postService";
-import { Post } from "../../models/postEntity";
 import CommentService from "../../services/commentService";
 import UserService from "../../services/userService";
 import jwt from 'jsonwebtoken';
-import UserPayload from "../../interfaces/express";
+import UserPayload from "../../config/express";
 import crypto from 'crypto';
 
 const postService = new PostService();
@@ -18,7 +17,7 @@ export default class WebController
         const token = request.cookies.token;
         try
         {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as UserPayload;
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as UserPayload;
         
             request.user = decoded;
 

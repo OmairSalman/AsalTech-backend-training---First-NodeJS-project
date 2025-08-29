@@ -1,11 +1,12 @@
 import { Post } from "../models/postEntity";
 import { User } from "../models/userEntity";
 import redisClient from "../config/redis";
-import { userToPublic } from "../utils/publicUser";
+import { postToPublic } from "../utils/publicDTOs";
+import { PublicPost } from "../utils/publicTypes";
 
 export default class PostService
 {
-    async getPosts(page: number, limit: number): Promise<Post[]>
+    async getPosts(page: number, limit: number): Promise<PublicPost[]>
     {
         try
         {
@@ -26,8 +27,9 @@ export default class PostService
                     take: limit
                 }
             );
-            if(page === 1) await redisClient.setex(cacheKey, 600, JSON.stringify(posts));
-            return posts;
+            const safePosts = posts.map(postToPublic);
+            if(page === 1) await redisClient.setex(cacheKey, 600, JSON.stringify(safePosts));
+            return safePosts;
         }
         catch (error)
         {
@@ -37,7 +39,7 @@ export default class PostService
         }
     }
 
-    async getPostById(postId: string): Promise<Post | null>
+    async getPostById(postId: string): Promise<PublicPost | null>
     {
         try
         {
@@ -45,7 +47,9 @@ export default class PostService
                 {
                     where: { _id: postId },
                 });
-            return post ?? null;
+            if(!post) return null;
+            const safePost = postToPublic(post);
+            return safePost;
         }
         catch
         (error)
@@ -56,7 +60,7 @@ export default class PostService
         }
     }
 
-    async savePost(newPost: Post, userId: string): Promise<Post | null>
+    async savePost(newPost: Post, userId: string): Promise<PublicPost | null>
     {
         try
         {
@@ -69,7 +73,9 @@ export default class PostService
             if (keys.length) await redisClient.del(keys);
             await redisClient.del('feed:page:1');
 
-            return await Post.findOneBy({author: {_id: userId}});
+            const post = await Post.findOneBy({author: {_id: userId}});
+            const safePost = postToPublic(post!);
+            return safePost;
         }
         catch (error)
         {
@@ -79,7 +85,7 @@ export default class PostService
         }
     }
 
-    async updatePost(postId: string, updatedPost: Post): Promise<Post | null>
+    async updatePost(postId: string, updatedPost: Post): Promise<PublicPost | null>
     {
         try
         {
@@ -90,9 +96,9 @@ export default class PostService
             const keys = await redisClient.keys(`user:${post.author._id}:posts:page:*`);
             if (keys.length) await redisClient.del(keys);
             const res = await redisClient.del('feed:page:1');
-            console.log(res);
 
-            return post ?? null;
+            const safePost = postToPublic(post);
+            return safePost;
         }
         catch (error)
         {
@@ -102,7 +108,7 @@ export default class PostService
         }
     }
 
-    async deletePost(postId: string): Promise<Post | null>
+    async deletePost(postId: string): Promise<PublicPost | null>
     {
         try
         {
@@ -118,7 +124,8 @@ export default class PostService
             await redisClient.del('feed:page:1');
             await redisClient.del(`user:${post.author._id}:comments:likes:count`);
 
-            return post;
+            const safePost = postToPublic(post);
+            return safePost;
         }
         catch (error)
         {
@@ -128,7 +135,7 @@ export default class PostService
         }
     }
 
-    async getPostsByUserId(userId: string, page: number, limit: number): Promise<Post[] | null>
+    async getPostsByUserId(userId: string, page: number, limit: number): Promise<PublicPost[] | null>
     {
         const cacheKey = `user:${userId}:posts:page:${page}:limit:${limit}`;
         try
@@ -147,8 +154,10 @@ export default class PostService
                     take: limit
                 }
             );
-            await redisClient.setex(cacheKey, 3600, JSON.stringify(posts));
-            return posts ?? null;
+            if(!posts) return null;
+            const safePosts = posts.map(postToPublic);
+            await redisClient.setex(cacheKey, 3600, JSON.stringify(safePosts));
+            return safePosts;
         }
         catch (error)
         {
@@ -182,7 +191,7 @@ export default class PostService
         }
     }
 
-    async like(postId: string, userId: string): Promise<Post | null>
+    async like(postId: string, userId: string): Promise<PublicPost | null>
     {
         try
         {
@@ -204,7 +213,8 @@ export default class PostService
             const keys = await redisClient.keys(`user:${post.author._id}:posts:*`);
             if (keys.length) await redisClient.del(keys);
             await redisClient.del('feed:page:1');
-            return post;
+            const safePost = postToPublic(post);
+            return safePost;
         }
         catch (error)
         {
@@ -214,7 +224,7 @@ export default class PostService
         }
     }
 
-    async unlike(postId: string, userId: string): Promise<Post | null>
+    async unlike(postId: string, userId: string): Promise<PublicPost | null>
     {
         try
         {
@@ -231,7 +241,8 @@ export default class PostService
             if (keys.length) await redisClient.del(keys);
 
             await redisClient.del('feed:page:1');
-            return post;
+            const safePost = postToPublic(post);
+            return safePost;
         }
         catch (error)
         {

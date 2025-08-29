@@ -49,7 +49,13 @@ app.engine('hbs', engine({
     formatDate: (date: Date) => dayjs(date).format("MMM D, YYYY h:mm A"),
 
     // relative time (need dayjs/plugin/relativeTime)
-    fromNow: (date: string) => {console.log(dayjs(date).fromNow()); return dayjs(date).fromNow()},
+    fromNow: (date: string) =>
+    {
+      const now = dayjs();
+      const d = dayjs(date);
+      // If the date is in the future, treat it as now
+      return d.isAfter(now) ? "just now" : d.fromNow();
+    },
 
     // pluralize likes or comments
     pluralize: (count: number, singular: string, plural: string) => {

@@ -1,13 +1,17 @@
 import { User } from "../models/userEntity";
 import crypto from 'crypto';
+import { PublicUser } from "../utils/publicTypes";
+import { userToPublic } from "../utils/publicDTOs";
 
 export default class UserService
 {
-    async readUsers(): Promise<User[]>
+    async readUsers(): Promise<PublicUser[]>
     {
         try
         {
-            return await User.find();
+            const users = await User.find();
+            const safeUsers = users.map(userToPublic);
+            return safeUsers;
         }
         catch(error)
         {
@@ -19,14 +23,15 @@ export default class UserService
         }
     }
 
-    async getUserById(userId: string): Promise<User | null>
+    async getUserById(userId: string): Promise<PublicUser | null>
     {
         const user = await User.findOneBy({ _id: userId });
         if (!user) return null;
-        else return user;
+        const safeUser = userToPublic(user);
+        return safeUser;
     }
 
-    async updateUser(userId: string, updatedUser: User): Promise<User | null>
+    async updateUser(userId: string, updatedUser: User): Promise<PublicUser | null>
     {
         await User.update({ _id: userId }, updatedUser);
         const user = await User.findOneBy({ _id: userId });
@@ -37,7 +42,8 @@ export default class UserService
         const hash = crypto.createHash('sha256').update(user.email.trim()).digest('hex');
         user.avatarURL = `https://gravatar.com/avatar/${hash}?s=256&d=initials`;
         await user.save();
-        return user;
+        const safeUser = userToPublic(user);
+        return safeUser;
     }
 
     async deleteUser(userId: string): Promise<User | null>
@@ -48,7 +54,7 @@ export default class UserService
         return user;
     }
 
-    async searchUsers(searchTerm: string): Promise<User[]>
+    async searchUsers(searchTerm: string): Promise<PublicUser[]>
     {
         const users = await this.readUsers();
         const filteredUsers = users.filter(u =>
@@ -56,5 +62,4 @@ export default class UserService
             (u.email.toLowerCase().includes(searchTerm.toLowerCase())));
         return filteredUsers;
     }
-
 }

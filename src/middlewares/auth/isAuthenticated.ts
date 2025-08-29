@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import UserPayload from '../../interfaces/express';
+import UserPayload from '../../config/express';
 
 export function isAuthenticated(request: Request, response: Response, next: NextFunction)
 {
@@ -13,7 +13,7 @@ export function isAuthenticated(request: Request, response: Response, next: Next
 
   try
   {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as UserPayload;
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as UserPayload;
 
     request.user = decoded;
 

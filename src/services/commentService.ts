@@ -2,10 +2,12 @@ import redisClient from "../config/redis";
 import { Comment } from "../models/commentEntity";
 import { Post } from "../models/postEntity";
 import { User } from "../models/userEntity";
+import { commentToPublic } from "../utils/publicDTOs";
+import { PublicComment } from "../utils/publicTypes";
 
 export default class CommentService
 {
-    async saveComment(postId: string, newComment: Comment, userId: string): Promise<Comment | null>
+    async saveComment(postId: string, newComment: Comment, userId: string): Promise<PublicComment | null>
     {
         try
         {
@@ -27,7 +29,8 @@ export default class CommentService
             if (keys.length) await redisClient.del(keys);
             await redisClient.del('feed:page:1');
 
-            return comment;
+            const safeComment = commentToPublic(comment);
+            return safeComment;
         }
         catch(error)
         {
@@ -60,19 +63,24 @@ export default class CommentService
         }
     }
 
-    async updateComment(commentId: string, updatedComment: Comment): Promise<Comment | null>
+    async updateComment(commentId: string, updatedComment: Comment): Promise<PublicComment | null>
     {
         try
         {
             await Comment.update({_id: commentId}, updatedComment);
-            const comment = await Comment.findOneBy({_id: commentId});
+            const comment = await Comment.findOne(
+                {
+                    where: {_id: commentId},
+                    relations: ["post"]
+                });
             if(!comment) return null;
 
             const keys = await redisClient.keys(`user:${comment.post.author._id}:posts:page:*`);
             if (keys.length) await redisClient.del(keys);
             await redisClient.del('feed:page:1');
 
-            return comment ?? null;
+            const safeComment = commentToPublic(comment);
+            return safeComment;
         }
         catch(error)
         {
@@ -82,11 +90,15 @@ export default class CommentService
         }
     }
 
-    async deleteComment(commentId: string): Promise<Comment | null>
+    async deleteComment(commentId: string): Promise<PublicComment | null>
     {
         try
         {
-            const comment = await Comment.findOneBy({_id: commentId});
+            const comment = await Comment.findOne(
+                {
+                    where: {_id: commentId},
+                    relations: ["post"]
+                });
             if(!comment) return null;
             await comment.remove();
 
@@ -95,7 +107,8 @@ export default class CommentService
             await redisClient.del('feed:page:1');
             await redisClient.del(`user:${comment.author._id}:comments:likes:count`);
 
-            return comment;
+            const safeComment = commentToPublic(comment);
+            return safeComment;
         }
         catch (error)
         {
@@ -105,7 +118,7 @@ export default class CommentService
         }
     }
 
-    async like(commentId: string, userId: string): Promise<Comment | null>
+    async like(commentId: string, userId: string): Promise<PublicComment | null>
     {
         try
         {
@@ -129,7 +142,8 @@ export default class CommentService
             if (keys.length) await redisClient.del(keys);
             await redisClient.del('feed:page:1');
             await redisClient.del(`user:${comment.author._id}:comments:likes:count`);
-            return comment;
+            const safeComment = commentToPublic(comment);
+            return safeComment;
         }
         catch (error)
         {
@@ -139,13 +153,14 @@ export default class CommentService
         }
     }
 
-    async unlike(commentId: string, userId: string): Promise<Comment | null>
+    async unlike(commentId: string, userId: string): Promise<PublicComment | null>
     {
         try
         {
                 const comment = await Comment.findOne(
                 {
                     where: { _id: commentId },
+                    relations: ["post"]
                 });
             if (!comment) return null;
 
@@ -156,12 +171,13 @@ export default class CommentService
             if (keys.length) await redisClient.del(keys);
             await redisClient.del('feed:page:1');
             await redisClient.del(`user:${comment.author._id}:comments:likes:count`);
-            return comment;
+            const safeComment = commentToPublic(comment);
+            return safeComment;
         }
         catch (error)
         {
             const errorDate = new Date();
-            console.error(`[${errorDate.toLocaleDateString()} @ ${errorDate.toLocaleTimeString()}] Error unliking post:`, error);
+            console.error(`[${errorDate.toLocaleDateString()} @ ${errorDate.toLocaleTimeString()}] Error unliking comment:`, error);
             return null;
         }
     }

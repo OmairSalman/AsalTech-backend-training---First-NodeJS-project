@@ -21,8 +21,7 @@ export default class UserController
         if(!user) response.status(404).send('User not found')
         else
         {
-            const { password, ...userWithoutPassword } = user;
-            response.status(200).json(userWithoutPassword);
+            response.status(200).json(user);
         }
     }
 
@@ -34,8 +33,7 @@ export default class UserController
         if(!user) response.status(404).send('User not found')
         else
         {
-            const { password, ...userWithoutPassword } = user;
-            response.status(200).json(userWithoutPassword);
+            response.status(200).json(user);
         }
     }
 
