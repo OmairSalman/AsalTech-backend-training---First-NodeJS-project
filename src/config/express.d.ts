@@ -4,6 +4,7 @@ export default interface UserPayload {
   name: string;
   email: string;
   avatarURL: string;
+  isAdmin: boolean;
 }
 
 declare global {

@@ -118,6 +118,7 @@ export default class PostService
             for (const comment of post.comments) {
                 await redisClient.del(`user:${comment.author._id}:comments:likes:count`);
             }
+            
             const keys = await redisClient.keys(`user:${post.author._id}:posts:*`);
             if (keys.length) await redisClient.del(keys);
 

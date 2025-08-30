@@ -28,9 +28,12 @@ export class User extends BaseEntity
   @OneToMany(() => Comment, (comment) => comment.author, { cascade: true })
   comments!: Comment[]
 
+  @Column({ default: false })
+  isAdmin!: boolean
+
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt!: Date
 
   @UpdateDateColumn()
-  updatedAt!: Date;
+  updatedAt!: Date
 }

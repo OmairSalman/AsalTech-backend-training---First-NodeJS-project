@@ -41,8 +41,13 @@ export default class UserController
         }
 
         const user = await userService.updateUser(userId, updatedUser);
+        if(typeof user === 'string')
+            {
+                if(request.xhr)
+                    response.json({message: user});
 
-        if(!user) response.status(404).send('User not found')
+                else response.status(400).json({message: user});
+            }
         else
         {
             response.clearCookie("accessToken", {
@@ -75,7 +80,7 @@ export default class UserController
                 sameSite: "lax",
                 maxAge: 1000 * 60 * 60 * 24 * 30
             });
-            response.status(200).json(user);
+            response.status(200).json({success: true, user: user});
         }
     }
 

@@ -14,10 +14,10 @@ export default class WebController
 {
     home(request: Request, response: Response)
     {
-        const token = request.cookies.token;
+        const accessToken = request.cookies.accessToken;
         try
         {
-            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as UserPayload;
+            const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!) as UserPayload;
         
             request.user = decoded;
 
@@ -38,7 +38,7 @@ export default class WebController
             const page = parseInt(request.query.page as string) || 1;
             const posts = await postService.getPosts(page, 10);
             const totalPages = Math.ceil(posts.length/10);
-            response.render('pages/feed', {user: request.user, currentUserId: request.user._id, posts: posts, page: page, limit: 10, totalPages: totalPages });
+            response.render('pages/feed', {currentUser: request.user, currentUserId: request.user._id, posts: posts, page: page, limit: 10, totalPages: totalPages });
         }
     }
 
@@ -66,7 +66,7 @@ export default class WebController
 
     create(request: Request, response: Response)
     {
-        response.render('pages/createPost', {user: request.user});
+        response.render('pages/createPost', {currentUser: request.user});
     }
 
     async profile(request: Request, response: Response)
@@ -86,13 +86,14 @@ export default class WebController
                 const totalPages = Math.ceil(posts.length/10);
                 const postsLikes = await postService.countUserPostsLikes(user._id.toString());
                 const commentsLikes = await commentService.countUserCommentsLikes(user._id.toString());
-                response.render('pages/profile', {user: user, currentUserId: request.user?._id, hasCustomAvatar: res.status !== 404, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
+                response.render('pages/profile', {user: user, currentUser: user, hasCustomAvatar: res.status !== 404, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
             }
         }
     }
 
     async showUserProfile(request: Request, response: Response)
     {
+        const currentUser = request.user;
         const userId = request.params.userId;
         const page = parseInt(request.query.postsPage as string) || 1;
         const user = await userService.getUserById(userId);
@@ -108,7 +109,7 @@ export default class WebController
                 const totalPages = Math.ceil(posts.length/10);
                 const postsLikes = await postService.countUserPostsLikes(userId.toString());
                 const commentsLikes = await commentService.countUserCommentsLikes(userId.toString());
-                response.render('pages/profile', {user: user, currentUserId: request.user?._id, hasCustomAvatar: res.status !== 404, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
+                response.render('pages/profile', {user: user, currentUser: currentUser, hasCustomAvatar: res.status !== 404, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
             }
         }
     }
@@ -116,6 +117,13 @@ export default class WebController
     editProfile(request: Request, response: Response)
     {
         const user = request.user;
-        return response.render('pages/editProfile', {user: user});
+        return response.render('pages/editProfile', {currentUser: user});
+    }
+
+    async adminUsersPanel(request: Request, response: Response)
+    {
+        const user = request.user;
+        const users = await userService.readUsers();
+        return response.render('pages/users', {currentUser: user, users: users});
     }
 }

@@ -4,7 +4,7 @@
       src="{{user.avatarURL}}"
       alt="{{user.name}}'s avatar"
     >
-    {{#if (isOwner currentUserId user._id)}}
+    {{#if (isOwner currentUser._id user._id)}}
       <a href="https://gravatar.com" target="_blank" class="avatar-overlay">
         Change your avatar on Gravatar.com!
       </a>
@@ -18,7 +18,7 @@
     <h1>{{user.name}}</h1>
     <p>{{user.email}}</p>
 
-    {{#if (isOwner currentUserId user._id)}}
+    {{#if (isOwner currentUser._id user._id)}}
       <a href="/profile/edit" class="btn btn-outline-primary edit-profile-btn">
         <i class="fa-solid fa-pen"></i> Edit profile
       </a>
@@ -43,10 +43,15 @@
   data-total-pages="{{totalPages}}">
   {{#if (gt posts.length 0)}}
     {{#each posts}}
-      {{> postCard post=this currentUserId=../currentUserId}}
+      {{> postCard post=this currentUser=../currentUser}}
     {{/each}}
   {{else}}
-    <p>You didn't make any posts yet, how about you <a href="/create">create a new one?</a></p>
+    {{#unless currentUser.isAdmin}}
+      <p>You didn't make any posts yet, how about you <a href="/create">create a new one?</a></p>
+    {{/unless}}
+    {{#if currentUser.isAdmin}}
+      <p>User has no posts.</p>
+    {{/if}}
   {{/if}}
 </div>
 

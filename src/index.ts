@@ -16,6 +16,7 @@ import CommentRouter from './routers/api/commentRouter';
 import AppDataSource from './config/dataSource';
 
 import dotenv from 'dotenv';
+import { PublicUser } from './utils/publicTypes';
 
 dotenv.config();
 
@@ -74,7 +75,12 @@ app.engine('hbs', engine({
         return false;
     },
 
-    isAuthor: (postAuthorId: string, userId: string) => postAuthorId === userId,
+    isAuthorized: (authorId: string, user: PublicUser) =>
+      {
+        if(authorId === user._id) return true;
+        if(user.isAdmin) return true;
+        return false;
+      },
 
     isOwner: (currentUserId: string, profileUserId: string) => profileUserId === currentUserId,
   }

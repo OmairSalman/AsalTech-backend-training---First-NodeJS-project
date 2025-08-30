@@ -58,7 +58,7 @@ body {
 }
 
 .btn-primary {
-  margin-top: 10px;
+  /*margin-top: 10px;*/
   background: var(--brand-gradient);
   border: none;
   color: #fff;
@@ -67,7 +67,7 @@ body {
   filter: brightness(0.9);
 }
 .btn-outline-primary {
-  margin-top: 10px;
+  /*margin-top: 10px;*/
   color: var(--brand-start);
   border-color: var(--brand-start);
 }
@@ -1110,4 +1110,33 @@ footer a:hover {
 .text-success {
   color: #198754;
   font-weight: 500;
+}
+
+.user-list .list-group-item {
+  transition: background 0.15s;
+}
+.user-list .list-group-item:hover {
+  background: #f8f9fa;
+}
+.user-avatar {
+  border: 2px solid #eee;
+  background: #fff;
+}
+
+@media (max-width: 576px) {
+  .user-list .list-group-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem;
+    padding-top: 1.25rem; /* Add space at the top */
+    padding-bottom: 1rem;
+  }
+  .user-list .user-info {
+    margin-bottom: 0.5rem;
+    padding-top: 0.25rem;
+  }
+  .user-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
 }

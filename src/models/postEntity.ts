@@ -6,27 +6,27 @@ import { Comment } from "./commentEntity";
 export class Post extends BaseEntity
 {
   @PrimaryGeneratedColumn("uuid")
-  _id!: string;
+  _id!: string
 
   @Column()
-  title!: string;
+  title!: string
 
   @Column("text")
-  content!: string;
+  content!: string
 
   @ManyToOne(() => User, (user) => user.posts, { eager: true, onDelete: "CASCADE" })
-  author!: User;
+  author!: User
 
   @OneToMany(() => Comment, comment => comment.post, { cascade: true, eager: true })
-  comments!: Comment[];
+  comments!: Comment[]
 
   @ManyToMany(() => User, { eager: true })
   @JoinTable()
-  likes!: User[];
+  likes!: User[]
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt!: Date
 
   @UpdateDateColumn()
-  updatedAt!: Date;
+  updatedAt!: Date
 }

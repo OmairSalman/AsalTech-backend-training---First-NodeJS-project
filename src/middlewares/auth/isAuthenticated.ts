@@ -35,7 +35,8 @@ export function isAuthenticated(request: Request, response: Response, next: Next
         _id: decodedRefresh._id,
         name: decodedRefresh.name,
         email: decodedRefresh.email,
-        avatarURL: decodedRefresh.avatarURL
+        avatarURL: decodedRefresh.avatarURL,
+        isAdmin: decodedRefresh.isAdmin
       },
       process.env.ACCESS_TOKEN_SECRET!,
       { expiresIn: '15m' }

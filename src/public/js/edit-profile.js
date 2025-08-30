@@ -75,10 +75,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         const result = await res.json();
 
-        if (result) {
+        if (result.success) {
           window.location.href = '/profile';
-        } else {
-          alert(result.message || 'Failed to update profile.');
+        } else
+        {
+          if(result.message === 'Email is already in use.')
+          {
+            const emailMsg = document.getElementById('email-msg');
+            emailMsg.textContent = result.message;
+            emailMsg.classList.remove('text-muted');
+            emailMsg.classList.add('text-danger');
+          }
+          else alert(result.message || 'Failed to update profile.');
         }
       } catch (err) {
         alert('Error updating profile.');

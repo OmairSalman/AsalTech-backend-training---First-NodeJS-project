@@ -36,6 +36,7 @@ export default class AuthService
         const user = new User();
         user.name = newUser.name;
         user.email = newUser.email;
+        user.isAdmin = false;
 
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(newUser.password, salt);

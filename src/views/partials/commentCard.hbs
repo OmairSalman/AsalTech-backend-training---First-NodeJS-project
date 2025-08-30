@@ -29,7 +29,7 @@
         <span class="comment-date text-muted">{{fromNow comment.createdAt}}</span>
 
         <!-- Edit & delete labels right -->
-        {{#if (isAuthor comment.author._id currentUserId)}}
+        {{#if (isAuthorized comment.author._id currentUser)}}
         <div class="comment-actions d-flex align-items-center">
           <button class="btn btn-link text-decoration-none me-2 edit-comment-btn">
             <i class="fa-solid fa-pen"></i>
@@ -47,8 +47,8 @@
     <!-- Like button + count vertically centered with bubble -->
     <div class="d-flex align-items-center ms-2">
       <form action="/comments/{{comment._id}}/like" method="POST" data-comment-id="{{comment._id}}" class="d-flex align-items-center">
-        <button class="icon-btn like-btn me-1 {{#if (isLiked comment.likes currentUserId)}}liked{{/if}}"
-                data-liked="{{isLiked comment.likes currentUserId}}"
+        <button class="icon-btn like-btn me-1 {{#if (isLiked comment.likes currentUser._id)}}liked{{/if}}"
+                data-liked="{{isLiked comment.likes currentUser._id}}"
                 title="Like/Unlike">
           <i class="fa-solid fa-thumbs-up"></i>
         </button>

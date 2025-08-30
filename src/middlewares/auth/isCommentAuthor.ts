@@ -3,13 +3,13 @@ import { Comment } from '../../models/commentEntity';
 
 export async function isCommentAuthor(request: Request, response: Response, next: NextFunction)
 {
-    const userId = request.user?._id;
+    const user = request.user!;
     const commentId = request.params.commentId;
 
     const comment = await Comment.findOneBy({_id: commentId});
     if(!comment)
         return response.status(404).send("Comment not found");
-    if(comment.author._id !== userId)
+    if(comment.author._id !== user._id && !user.isAdmin)
         return response.status(403).send("You're not allowed to perform this action on this comment");
     next();
 }

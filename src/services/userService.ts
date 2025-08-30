@@ -33,30 +33,39 @@ export default class UserService
         return safeUser;
     }
 
-    async updateUser(userId: string, updatedUser: {name: string, email: string, newPassword: string, confirmPassword: string}): Promise<PublicUser | null>
+    async updateUser(userId: string, updatedUser: {name: string, email: string, newPassword: string, confirmPassword: string}): Promise<PublicUser | string>
     {
         const updateData: any = {
             name: updatedUser.name,
             email: updatedUser.email
         };
         
-        // Only update password if provided
         if (updatedUser.newPassword && updatedUser.newPassword.trim() !== "") {
             const salt = await bcrypt.genSalt(10);
             updateData.password = await bcrypt.hash(updatedUser.newPassword, salt);
+        }
+
+        if (updatedUser.email) {
+            const existing = await User.findOneBy({ email: updatedUser.email });
+            if (existing && existing._id !== userId)
+            {
+                return "Email is already in use.";
+            }
+            const hash = crypto.createHash('sha256').update(updatedUser.email.trim()).digest('hex');
+            updateData.avatarURL = `https://gravatar.com/avatar/${hash}?s=256&d=initials`;
         }
 
         await User.update({ _id: userId }, updateData);
         const user = await User.findOneBy({ _id: userId });
         if (!user)
         {
-            return null;
+            return "User not found";
         }
-        const hash = crypto.createHash('sha256').update(user.email.trim()).digest('hex');
-        user.avatarURL = `https://gravatar.com/avatar/${hash}?s=256&d=initials`;
-        await user.save();
+        
         const keys = await redisClient.keys(`user:${user._id}:posts:*`);
         if (keys.length) await redisClient.del(keys);
+        await redisClient.del('feed:page:1');
+
         const safeUser = userToPublic(user);
         return safeUser;
     }
@@ -66,6 +75,7 @@ export default class UserService
         const user = await User.findOneBy({ _id: userId });
         if(!user) return null;
         await user.remove();
+        await redisClient.del('feed:page:1');
         return user;
     }
 

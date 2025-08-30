@@ -10,22 +10,29 @@
 
     <!-- Navbar items -->
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav align-items-center ms-auto">
+        <li class="nav-item d-flex">
+          <a class="nav-link d-flex align-items-center" href="/profile?postsPage=1">
+            <img src="{{currentUser.avatarURL}}" alt="Avatar" class="navbar-avatar me-2" style="width:32px; height:32px; border-radius:50%;">
+            <span class="navbar-username">{{currentUser.name}}</span>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="/feed?page=1">Feed</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/profile?postsPage=1">Profile</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="/create">Create Post</a>
         </li>
+        {{#if currentUser.isAdmin}}
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/users">Admin Tools</a>
+          </li>
+        {{/if}}
         <li class="nav-item">
           <form action="/auth/logout" method="GET" class="d-inline">
             <button type="submit" class="btn btn-link nav-link">Logout</button>
           </form>
         </li>
-
       </ul>
     </div>
   </div>

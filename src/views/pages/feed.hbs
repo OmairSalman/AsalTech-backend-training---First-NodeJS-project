@@ -1,6 +1,6 @@
 {{#if posts.length}}
   {{#if (gt 2 page)}}
-    <h1 class="text-center my-4">Welcome to your feed, {{user.name}}</h1>
+    <h1 class="text-center my-4">Welcome to your feed, {{#if currentUser.isAdmin}}Admin {{/if}}{{currentUser.name}}</h1>
   {{/if}}
 {{/if}}
 
@@ -10,7 +10,7 @@
   data-total-pages="{{totalPages}}">
   {{#if posts.length}}
     {{#each posts}}
-      {{> postCard post=this currentUserId=../user._id}}
+      {{> postCard post=this currentUser=../currentUser}}
     {{/each}}
   {{else}}
     <div class="feed-empty-message d-flex flex-column justify-content-center align-items-center" style="min-height: 60vh;">

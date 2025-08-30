@@ -26,7 +26,8 @@ export default class AuthController
                 _id: user._id,
                 name: user.name,
                 email: user.email,
-                avatarURL: user.avatarURL
+                avatarURL: user.avatarURL,
+                isAdmin: user.isAdmin
             };
             
             const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
@@ -59,7 +60,8 @@ export default class AuthController
             _id: newUser._id,
             name: newUser.name,
             email: newUser.email,
-            avatarURL: newUser.avatarURL
+            avatarURL: newUser.avatarURL,
+            isAdmin: false
         };
 
         const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });

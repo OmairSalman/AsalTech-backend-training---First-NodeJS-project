@@ -12,24 +12,24 @@ import { Post } from "./postEntity";
 export class Comment extends BaseEntity
 {
   @PrimaryGeneratedColumn("uuid")
-  _id!: string;
+  _id!: string
 
   @Column("text")
-  content!: string;
+  content!: string
 
   @ManyToOne(() => User, (user) => user.comments, { eager: true, onDelete: "CASCADE" })
-  author!: User;
+  author!: User
 
   @ManyToOne(() => Post, post => post.comments, { onDelete: "CASCADE" })
-  post!: Post;
+  post!: Post
 
   @ManyToMany(() => User, { eager: true })
   @JoinTable()
-  likes!: User[];
+  likes!: User[]
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt!: Date
 
   @UpdateDateColumn()
-  updatedAt!: Date;
+  updatedAt!: Date
 }

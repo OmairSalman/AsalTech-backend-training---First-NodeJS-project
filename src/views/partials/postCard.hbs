@@ -26,7 +26,7 @@
 
       <!-- RIGHT rail -->
       <div class="post-actions-rail">
-        {{#if (isAuthor post.author._id currentUserId)}}
+        {{#if (isAuthorized post.author._id currentUser)}}
           <button type="button" class="icon-btn edit-post-btn" title="Edit" data-post-id="{{post._id}}">
               <i class="fa-solid fa-pen"></i>
           </button>
@@ -38,7 +38,7 @@
         {{/if}}
 
         <form action="/posts/{{post._id}}/like" method="POST" data-post-id="{{post._id}}" class="m-0">
-          <button class="icon-btn like-btn {{#if (isLiked post.likes currentUserId)}}liked{{/if}}" data-liked="{{isLiked post.likes currentUserId}}" title="Like/Unlike">
+          <button class="icon-btn like-btn {{#if (isLiked post.likes currentUser._id)}}liked{{/if}}" data-liked="{{isLiked post.likes currentUser._id}}" title="Like/Unlike">
             <i class="fa-solid fa-thumbs-up"></i>
           </button>
         </form>
@@ -66,7 +66,7 @@
     <!-- Comments list -->
     <div class="comments-section" id="comments-{{post._id}}">
       {{#each post.comments}}
-        {{> commentCard comment=this currentUserId=../currentUserId}}
+        {{> commentCard comment=this currentUser=../currentUser}}
       {{/each}}
     </div>
   </div>

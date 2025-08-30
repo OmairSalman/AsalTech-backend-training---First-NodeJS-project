@@ -1,11 +1,11 @@
 <div class="edit-profile-card">
   <h1>Edit Profile</h1>
-  <form id="edit-profile-form" method="POST" action="/users/{{user._id}}" autocomplete="off" data-userid="{{user._id}}">
+  <form id="edit-profile-form" method="POST" action="/users/{{currentUser._id}}" autocomplete="off" data-userid="{{currentUser._id}}">
     <!-- Avatar and Gravatar link -->
     <div class="form-group d-flex align-items-center mb-3">
       <img 
-        src="{{user.avatarURL}}" 
-        alt="{{user.name}}'s avatar" 
+        src="{{currentUser.avatarURL}}" 
+        alt="{{currentUser.name}}'s avatar" 
         class="edit-avatar-img me-2"
         style="width: 64px; height: 64px; border-radius: 50%;"
       >
@@ -15,7 +15,7 @@
     <!-- Name -->
     <div class="form-group mb-3">
       <label for="edit-name">Name</label>
-      <input type="text" id="edit-name" name="name" value="{{user.name}}" class="form-control" required>
+      <input type="text" id="edit-name" name="name" value="{{currentUser.name}}" class="form-control" required>
     </div>
 
     <!-- Section: Sensitive info (locked by password) -->
@@ -32,8 +32,8 @@
       <!-- Email -->
       <div class="form-group mb-3">
         <label for="edit-email">Email</label>
-        <input type="email" id="edit-email" name="email" value="{{user.email}}" class="form-control">
-        <small class="form-text text-muted">
+        <input type="email" id="edit-email" name="email" value="{{currentUser.email}}" class="form-control">
+        <small id="email-msg" class="form-text text-muted">
           Changing your email will update your avatar to the Gravatar for the new email, or a random image if not set.
         </small>
       </div>
