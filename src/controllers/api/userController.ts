@@ -50,36 +50,39 @@ export default class UserController
             }
         else
         {
-            response.clearCookie("accessToken", {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                path: "/",
-            });
+            if(request.user?._id === user._id)
+            {
+                response.clearCookie("accessToken", {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "lax",
+                    path: "/",
+                });
 
-            response.clearCookie("refreshToken", {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                path: "/",
-            });
+                response.clearCookie("refreshToken", {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "lax",
+                    path: "/",
+                });
 
-            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
-            const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
+                const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
+                const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
 
-            response.cookie("accessToken", accessToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                maxAge: 1000 * 60 * 15
-            });
+                response.cookie("accessToken", accessToken, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "lax",
+                    maxAge: 1000 * 60 * 15
+                });
 
-            response.cookie("refreshToken", refreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                maxAge: 1000 * 60 * 60 * 24 * 30
-            });
+                response.cookie("refreshToken", refreshToken, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "lax",
+                    maxAge: 1000 * 60 * 60 * 24 * 30
+                });
+            }
             response.status(200).json({success: true, user: user});
         }
     }

@@ -15,15 +15,11 @@ export default class WebController
     home(request: Request, response: Response)
     {
         const accessToken = request.cookies.accessToken;
-        try
+        if(accessToken)
         {
-            const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!) as UserPayload;
-        
-            request.user = decoded;
-
             response.redirect('/feed');
         }
-        catch (error)
+        else
         {
             response.render('pages/home');
         }
@@ -125,5 +121,17 @@ export default class WebController
         const user = request.user;
         const users = await userService.readUsers();
         return response.render('pages/users', {currentUser: user, users: users});
+    }
+
+    async editUser(request: Request, response: Response)
+    {
+        const currentUser = request.user;
+        const userId = request.params.userId;
+        if(currentUser?._id === userId)
+        {
+            return response.redirect('/profile/edit');
+        }
+        const user = await userService.getUserById(userId);
+        return response.render('pages/adminEditUser', { user: user, currentUser: currentUser });
     }
 }

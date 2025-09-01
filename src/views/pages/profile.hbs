@@ -46,10 +46,9 @@
       {{> postCard post=this currentUser=../currentUser}}
     {{/each}}
   {{else}}
-    {{#unless currentUser.isAdmin}}
+    {{#if (isOwner currentUser._id user._id)}}
       <p>You didn't make any posts yet, how about you <a href="/create">create a new one?</a></p>
-    {{/unless}}
-    {{#if currentUser.isAdmin}}
+    {{else}}
       <p>User has no posts.</p>
     {{/if}}
   {{/if}}

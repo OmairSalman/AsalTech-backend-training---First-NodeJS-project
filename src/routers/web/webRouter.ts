@@ -25,4 +25,6 @@ WebRouter.get('/profile/:userId', isAuthenticated, webController.showUserProfile
 
 WebRouter.get('/admin/users', isAuthenticated, isAdmin, webController.adminUsersPanel);
 
+WebRouter.get('/admin/edit/:userId', isAuthenticated, isAdmin, webController.editUser);
+
 export default WebRouter;
