@@ -134,4 +134,81 @@ export default class WebController
         const user = await userService.getUserById(userId);
         return response.render('pages/adminEditUser', { user: user, currentUser: currentUser });
     }
+
+    about(request: Request, response: Response)
+    {
+        const currentUser = getUserInfoFromToken(request, response);
+        response.render('pages/about', {currentUser: currentUser});
+    }
+
+    privacy(request: Request, response: Response)
+    {
+        const currentUser = getUserInfoFromToken(request, response);
+        response.render('pages/privacy', {currentUser: currentUser});
+    }
+
+    terms(request: Request, response: Response)
+    {
+        const currentUser = getUserInfoFromToken(request, response);
+        response.render('pages/terms', {currentUser: currentUser});
+    }
+
+    contact(request: Request, response: Response)
+    {
+        const currentUser = getUserInfoFromToken(request, response);
+        response.render('pages/contact', {currentUser: currentUser});
+    }
+}
+
+function getUserInfoFromToken(request: Request, response: Response)
+{
+    const accessToken = request.cookies.accessToken;
+    const refreshToken = request.cookies.refreshToken;
+
+    if (!accessToken && ! refreshToken)
+    {
+        return null;
+    }
+
+    try
+    {
+        const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!) as UserPayload;
+        return decoded;
+    }
+    catch (error)
+    {
+        if (!refreshToken)
+            return null;
+    }
+
+    try
+    {
+        const decodedRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as UserPayload;
+        
+        const newAccessToken = jwt.sign(
+            {
+                _id: decodedRefresh._id,
+                name: decodedRefresh.name,
+                email: decodedRefresh.email,
+                avatarURL: decodedRefresh.avatarURL,
+                isAdmin: decodedRefresh.isAdmin
+            },
+            process.env.ACCESS_TOKEN_SECRET!,
+            { expiresIn: '15m' }
+        );
+        
+        response.cookie("accessToken", newAccessToken,
+        {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 15
+        });
+        return decodedRefresh;
+    }
+    catch (refreshErr)
+    {
+        return null;
+    }
+
 }

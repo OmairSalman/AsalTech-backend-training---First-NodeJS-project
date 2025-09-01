@@ -13,11 +13,25 @@
             {{/if}}
           </div>
         </div>
-        <div class="d-flex align-items-center">
-          <a href="/profile/{{this._id}}" class="btn btn-sm btn-outline-primary me-2">View Profile</a>
-          <a href="/admin/edit/{{this._id}}" class="btn btn-sm btn-outline-secondary">Edit</a>
+        <div class="d-flex user-actions gap-2">
+          <div class="d-flex flex-row">
+            <a href="/profile/{{this._id}}" class="btn btn-sm btn-outline-primary">View Profile</a>
+            <a href="/admin/edit/{{this._id}}" class="btn btn-sm btn-outline-secondary">Edit</a>
+          </div>
+          {{#unless (isOwner ../currentUser._id this._id)}}
+            <div class="d-flex flex-column flex-sm-row gap-2">
+              {{#if this.isAdmin}}
+                <button class="btn btn-sm btn-warning toggle-admin-btn admin-toggle-btn-wide" data-userid="{{this._id}}">Remove Admin</button>
+              {{else}}
+                <button class="btn btn-sm btn-success toggle-admin-btn admin-toggle-btn-wide" data-userid="{{this._id}}">Make Admin</button>
+              {{/if}}
+              <button class="btn btn-sm btn-danger delete-user-btn" data-userid="{{this._id}}">Delete</button>
+            </div>
+          {{/unless}}
         </div>
       </li>
     {{/each}}
   </ul>
 </div>
+
+<script src="/js/admin-users.js"></script>

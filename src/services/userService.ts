@@ -70,13 +70,15 @@ export default class UserService
         return safeUser;
     }
 
-    async deleteUser(userId: string): Promise<User | null>
+    async deleteUser(userId: string): Promise<PublicUser | null>
     {
         const user = await User.findOneBy({ _id: userId });
         if(!user) return null;
         await user.remove();
         await redisClient.del('feed:page:1');
-        return user;
+
+        const safeUser = userToPublic(user);
+        return safeUser;
     }
 
     async searchUsers(searchTerm: string): Promise<PublicUser[]>
@@ -86,5 +88,15 @@ export default class UserService
             (u.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
             (u.email.toLowerCase().includes(searchTerm.toLowerCase())));
         return filteredUsers;
+    }
+
+    async toggleAdmin(userId: string): Promise<PublicUser | null>
+    {
+        const user = await User.findOneBy({_id: userId});
+        if(!user) return null;
+        user.isAdmin = !user.isAdmin;
+        await user.save();
+        const safeUser = userToPublic(user);
+        return safeUser;
     }
 }

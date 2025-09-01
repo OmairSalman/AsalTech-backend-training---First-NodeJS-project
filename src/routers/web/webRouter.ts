@@ -27,4 +27,12 @@ WebRouter.get('/admin/users', isAuthenticated, isAdmin, webController.adminUsers
 
 WebRouter.get('/admin/edit/:userId', isAuthenticated, isAdmin, webController.editUser);
 
+WebRouter.get('/about', webController.about);
+
+WebRouter.get('/privacy', webController.privacy);
+
+WebRouter.get('/terms', webController.terms);
+
+WebRouter.get('/contact', webController.contact);
+
 export default WebRouter;

@@ -48,12 +48,15 @@ document.addEventListener('DOMContentLoaded', function() {
       const data = {};
       formData.forEach((value, key) => { data[key] = value; });
 
-      // Exclude currentPassword from the update request
-      delete data.currentPassword;
-
       // Password match check
       const warning = document.getElementById('password-warning');
       if (warning) warning.textContent = ""; // Clear previous warning
+
+      if(data.newPassword.length < 6 || data.confirmPassword.length < 6)
+      {
+        if (warning) warning.textContent = 'Password must be at least 6 characters long.';
+          return;
+      }
 
       if (data.newPassword || data.confirmPassword) {
         if (!data.newPassword || !data.confirmPassword) {

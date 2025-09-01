@@ -1139,4 +1139,27 @@ footer a:hover {
     width: 100%;
     justify-content: flex-start;
   }
+  .user-actions {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .user-actions > div {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 0 !important;
+  }
+  .user-actions .btn,
+  .user-actions .admin-toggle-btn-wide {
+    width: 100%;
+    min-width: 0;
+  }
+  .user-actions .mb-2 {
+    margin-bottom: 0.5rem !important;
+  }
+}
+
+.admin-toggle-btn-wide {
+  min-width: 150px;
 }
