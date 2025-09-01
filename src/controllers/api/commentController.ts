@@ -9,7 +9,7 @@ export default class CommentController
     {
         const postId = request.params.postId;
         const comment = request.body;
-        const author = request.user!._id.toString();
+        const author = request.user!;
         const savedComment = await commentService.saveComment(postId, comment, author);
         
         response.render('partials/commentCard', { comment: savedComment, currentUser: request.user, currentUserId: request.user!._id, layout: false }, (err, html) => {
@@ -42,18 +42,18 @@ export default class CommentController
     async like(request: Request, response: Response)
     {
         let commentId = request.params.commentId;
-        let userId = request.user!._id.toString();
-        const likedComment = await commentService.like(commentId, userId);
+        let user = request.user!;
+        const likedComment = await commentService.like(commentId, user);
         if(!likedComment) return response.status(404).send("Comment not found");
-        return response.status(200).json({message: `Liked comment ${commentId} by ${userId} successfully.`, liked: true, likeCount: likedComment.likes.length, likes: likedComment.likes});
+        return response.status(200).json({message: `Liked comment ${commentId} by ${user._id} successfully.`, liked: true, likeCount: likedComment.likes.length, likes: likedComment.likes});
     }
 
     async unlike(request: Request, response: Response)
     {
         let commentId = request.params.commentId;
-        let userId = request.user!._id.toString();
-        const unlikedComment = await commentService.unlike(commentId, userId);
+        let user = request.user!;
+        const unlikedComment = await commentService.unlike(commentId, user);
         if(!unlikedComment) return response.status(404).send("Comment not found");
-        return response.status(200).json({message: `Unliked comment ${commentId} by ${userId} successfully.`, liked: false, likeCount: unlikedComment.likes.length, likes: unlikedComment.likes});
+        return response.status(200).json({message: `Unliked comment ${commentId} by ${user._id} successfully.`, liked: false, likeCount: unlikedComment.likes.length, likes: unlikedComment.likes});
     }
 }

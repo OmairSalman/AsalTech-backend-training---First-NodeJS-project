@@ -1,8 +1,9 @@
 import { Post } from "../models/postEntity";
 import { User } from "../models/userEntity";
 import redisClient from "../config/redis";
-import { postToPublic } from "../utils/publicDTOs";
-import { PublicPost } from "../utils/publicTypes";
+import { postToPublic, userToPublic } from "../utils/publicDTOs";
+import { PublicPost, PublicUser } from "../utils/publicTypes";
+import UserPayload from "../config/express";
 
 export default class PostService
 {
@@ -60,20 +61,20 @@ export default class PostService
         }
     }
 
-    async savePost(newPost: Post, userId: string): Promise<PublicPost | null>
+    async savePost(newPost: Post, author: UserPayload): Promise<PublicPost | null>
     {
         try
         {
-            await Post.insert({
+            const insertResult = await Post.insert({
                 title: newPost.title,
                 content: newPost.content,
-                author: (await User.findOneBy({_id: userId}))!,
+                author: author
             });
-            const keys = await redisClient.keys(`user:${userId}:posts:page:*`);
+            const keys = await redisClient.keys(`user:${author._id}:posts:page:*`);
             if (keys.length) await redisClient.del(keys);
             await redisClient.del('feed:page:1');
 
-            const post = await Post.findOneBy({author: {_id: userId}});
+            const post = await Post.findOneBy({_id: insertResult.identifiers[0]._id});
             const safePost = postToPublic(post!);
             return safePost;
         }
@@ -192,7 +193,7 @@ export default class PostService
         }
     }
 
-    async like(postId: string, userId: string): Promise<PublicPost | null>
+    async like(postId: string, user: UserPayload): Promise<PublicPost | null>
     {
         try
         {
@@ -202,12 +203,9 @@ export default class PostService
                 });
             if (!post) return null;
 
-            const user = await User.findOneBy({_id: userId});
-            if (!user) return null;
-
-            if (!post.likes.some(u => u._id === userId))
+            if (!post.likes.some(u => u._id === user._id))
             {
-                post.likes.push(user);
+                post.likes.push(user as User);
                 await post.save();
             }
 
@@ -225,7 +223,7 @@ export default class PostService
         }
     }
 
-    async unlike(postId: string, userId: string): Promise<PublicPost | null>
+    async unlike(postId: string, user: UserPayload): Promise<PublicPost | null>
     {
         try
         {
@@ -235,7 +233,7 @@ export default class PostService
             });
             if (!post) return null;
 
-            post.likes = post.likes.filter(u => u._id !== userId);
+            post.likes = post.likes.filter(u => u._id !== user._id);
             await post.save();
 
             const keys = await redisClient.keys(`user:${post.author._id}:posts:*`);

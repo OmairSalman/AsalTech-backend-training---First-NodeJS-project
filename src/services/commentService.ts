@@ -1,3 +1,4 @@
+import UserPayload from "../config/express";
 import redisClient from "../config/redis";
 import { Comment } from "../models/commentEntity";
 import { Post } from "../models/postEntity";
@@ -7,25 +8,23 @@ import { PublicComment } from "../utils/publicTypes";
 
 export default class CommentService
 {
-    async saveComment(postId: string, newComment: Comment, userId: string): Promise<PublicComment | null>
+    async saveComment(postId: string, newComment: Comment, author: UserPayload): Promise<PublicComment | null>
     {
         try
         {
-            const comment = new Comment();
-            comment.content = newComment.content;
+            const insertResult = await Comment.insert({
+                content: newComment.content,
+                post: (await Post.findOneBy({ _id: postId }))!,
+                author: author
+            });
+            const comment = await Comment.findOne(
+                {
+                    where: {_id: insertResult.identifiers[0]._id},
+                    relations: ["post"]
+                });
+            if(!comment) return null;
 
-            const post = await Post.findOneBy({ _id: postId });
-            if (!post) return null;
-            comment.post = post;
-
-            const author = await User.findOneBy({_id: userId});
-            if(!author) return null;
-            comment.author = author;
-
-            await comment.save();
-            await comment.reload();
-
-            const keys = await redisClient.keys(`user:${post.author._id}:posts:page:*`);
+            const keys = await redisClient.keys(`user:${comment.post.author._id}:posts:page:*`);
             if (keys.length) await redisClient.del(keys);
             await redisClient.del('feed:page:1');
 
@@ -118,7 +117,7 @@ export default class CommentService
         }
     }
 
-    async like(commentId: string, userId: string): Promise<PublicComment | null>
+    async like(commentId: string, user: UserPayload): Promise<PublicComment | null>
     {
         try
         {
@@ -129,12 +128,9 @@ export default class CommentService
                 });
             if (!comment) return null;
 
-            const user = await User.findOneBy({_id: userId});
-            if (!user) return null;
-
-            if (!comment.likes.some(u => u._id === userId))
+            if (!comment.likes.some(u => u._id === user._id))
             {
-                comment.likes.push(user);
+                comment.likes.push(user as User);
                 await comment.save();
             }
 
@@ -153,7 +149,7 @@ export default class CommentService
         }
     }
 
-    async unlike(commentId: string, userId: string): Promise<PublicComment | null>
+    async unlike(commentId: string, user: UserPayload): Promise<PublicComment | null>
     {
         try
         {
@@ -164,7 +160,7 @@ export default class CommentService
                 });
             if (!comment) return null;
 
-            comment.likes = comment.likes.filter(u => u._id !== userId);
+            comment.likes = comment.likes.filter(u => u._id !== user._id);
             await comment.save();
 
             const keys = await redisClient.keys(`user:${comment.post.author._id}:posts:page:*`);
