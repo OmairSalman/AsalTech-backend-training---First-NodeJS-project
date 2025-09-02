@@ -137,30 +137,30 @@ export default class WebController
 
     about(request: Request, response: Response)
     {
-        const currentUser = getUserInfoFromToken(request, response);
+        const currentUser = getUserFromToken(request, response);
         response.render('pages/about', {currentUser: currentUser});
     }
 
     privacy(request: Request, response: Response)
     {
-        const currentUser = getUserInfoFromToken(request, response);
+        const currentUser = getUserFromToken(request, response);
         response.render('pages/privacy', {currentUser: currentUser});
     }
 
     terms(request: Request, response: Response)
     {
-        const currentUser = getUserInfoFromToken(request, response);
+        const currentUser = getUserFromToken(request, response);
         response.render('pages/terms', {currentUser: currentUser});
     }
 
     contact(request: Request, response: Response)
     {
-        const currentUser = getUserInfoFromToken(request, response);
+        const currentUser = getUserFromToken(request, response);
         response.render('pages/contact', {currentUser: currentUser});
     }
 }
 
-function getUserInfoFromToken(request: Request, response: Response)
+function getUserFromToken(request: Request, response: Response)
 {
     const accessToken = request.cookies.accessToken;
     const refreshToken = request.cookies.refreshToken;
