@@ -15,7 +15,8 @@ export default class WebController
     home(request: Request, response: Response)
     {
         const accessToken = request.cookies.accessToken;
-        if(accessToken)
+        const refreshToken = request.cookies.refreshToken;
+        if(accessToken || refreshToken)
         {
             response.redirect('/feed');
         }
@@ -135,32 +136,32 @@ export default class WebController
         return response.render('pages/adminEditUser', { user: user, currentUser: currentUser });
     }
 
-    about(request: Request, response: Response)
+    async about(request: Request, response: Response)
     {
-        const currentUser = getUserFromToken(request, response);
+        const currentUser = await getUserFromToken(request, response);
         response.render('pages/about', {currentUser: currentUser});
     }
 
-    privacy(request: Request, response: Response)
+    async privacy(request: Request, response: Response)
     {
-        const currentUser = getUserFromToken(request, response);
+        const currentUser = await getUserFromToken(request, response);
         response.render('pages/privacy', {currentUser: currentUser});
     }
 
-    terms(request: Request, response: Response)
+    async terms(request: Request, response: Response)
     {
-        const currentUser = getUserFromToken(request, response);
+        const currentUser = await getUserFromToken(request, response);
         response.render('pages/terms', {currentUser: currentUser});
     }
 
-    contact(request: Request, response: Response)
+    async contact(request: Request, response: Response)
     {
-        const currentUser = getUserFromToken(request, response);
+        const currentUser = await getUserFromToken(request, response);
         response.render('pages/contact', {currentUser: currentUser});
     }
 }
 
-function getUserFromToken(request: Request, response: Response)
+async function getUserFromToken(request: Request, response: Response)
 {
     const accessToken = request.cookies.accessToken;
     const refreshToken = request.cookies.refreshToken;
@@ -183,19 +184,21 @@ function getUserFromToken(request: Request, response: Response)
 
     try
     {
-        const decodedRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as UserPayload;
+        const decodedRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as string;
         
-        const newAccessToken = jwt.sign(
-            {
-                _id: decodedRefresh._id,
-                name: decodedRefresh.name,
-                email: decodedRefresh.email,
-                avatarURL: decodedRefresh.avatarURL,
-                isAdmin: decodedRefresh.isAdmin
-            },
-            process.env.ACCESS_TOKEN_SECRET!,
-            { expiresIn: '15m' }
-        );
+        const user = await userService.getUserById(decodedRefresh);
+
+        if(!user) return response.status(404).json({message: "User not found."});
+
+        const payload = {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            avatarURL: user.avatarURL,
+            isAdmin: user.isAdmin
+        };
+
+        const newAccessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
         
         response.cookie("accessToken", newAccessToken,
         {

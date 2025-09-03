@@ -22,16 +22,20 @@ export default class AuthController
                 response.status(401).json({ error: "Invalid email or password" });
         else
         {
-            const payload = {
+            const accessPayload = {
                 _id: user._id,
                 name: user.name,
                 email: user.email,
                 avatarURL: user.avatarURL,
                 isAdmin: user.isAdmin
             };
+
+            const refreshPayload = {
+                _id: user._id
+            };
             
-            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
-            const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
+            const accessToken = jwt.sign(accessPayload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
+            const refreshToken = jwt.sign(refreshPayload, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
 
             response.cookie("accessToken", accessToken, {
                 httpOnly: true,
@@ -56,7 +60,7 @@ export default class AuthController
         let newUser = request.body;
         newUser = await authService.registerUser(newUser);
         
-        const payload = {
+        const accessPayload = {
             _id: newUser._id,
             name: newUser.name,
             email: newUser.email,
@@ -64,8 +68,12 @@ export default class AuthController
             isAdmin: false
         };
 
-        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
-        const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
+        const refreshPayload = {
+            _id: newUser._id
+        };
+
+        const accessToken = jwt.sign(accessPayload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
+        const refreshToken = jwt.sign(refreshPayload, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
 
         response.cookie("accessToken", accessToken, {
             httpOnly: true,

@@ -71,8 +71,20 @@ export default class UserController
                     path: "/",
                 });
 
-                const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
-                const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
+                const accessPayload = {
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    avatarURL: user.avatarURL,
+                    isAdmin: user.isAdmin
+                };
+
+                const refreshPayload = {
+                    _id: user._id
+                };
+
+                const accessToken = jwt.sign(accessPayload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
+                const refreshToken = jwt.sign(refreshPayload, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
 
                 response.cookie("accessToken", accessToken, {
                     httpOnly: true,

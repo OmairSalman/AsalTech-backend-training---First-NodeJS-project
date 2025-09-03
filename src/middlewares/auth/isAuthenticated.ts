@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import UserPayload from '../../config/express';
+import UserService from '../../services/userService';
 
-export function isAuthenticated(request: Request, response: Response, next: NextFunction)
+const userService = new UserService();
+
+export async function isAuthenticated(request: Request, response: Response, next: NextFunction)
 {
   const accessToken = request.cookies.accessToken;
   const refreshToken = request.cookies.refreshToken;
@@ -28,19 +31,21 @@ export function isAuthenticated(request: Request, response: Response, next: Next
 
   try
   {
-    const decodedRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as UserPayload;
+    const decodedRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as string;
 
-    const newAccessToken = jwt.sign(
-      {
-        _id: decodedRefresh._id,
-        name: decodedRefresh.name,
-        email: decodedRefresh.email,
-        avatarURL: decodedRefresh.avatarURL,
-        isAdmin: decodedRefresh.isAdmin
-      },
-      process.env.ACCESS_TOKEN_SECRET!,
-      { expiresIn: '15m' }
-    );
+    const user = await userService.getUserById(decodedRefresh);
+
+    if(!user) return response.status(404).json({message: "User not found."});
+
+    const payload = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatarURL: user.avatarURL,
+      isAdmin: user.isAdmin
+    };
+
+    const newAccessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
 
     response.cookie("accessToken", newAccessToken, {
       httpOnly: true,
@@ -49,7 +54,7 @@ export function isAuthenticated(request: Request, response: Response, next: Next
       maxAge: 1000 * 60 * 15
     });
 
-    request.user = decodedRefresh;
+    request.user = payload;
     return next();
   }
   catch (refreshErr)
