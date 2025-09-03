@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import PostService from "../../services/postService";
 import CommentService from "../../services/commentService";
 import UserService from "../../services/userService";
+import RefreshPayload from '../../config/express';
 import jwt from 'jsonwebtoken';
 import UserPayload from "../../config/express";
 import crypto from 'crypto';
@@ -184,9 +185,9 @@ async function getUserFromToken(request: Request, response: Response)
 
     try
     {
-        const decodedRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as string;
+        const decodedRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as RefreshPayload;
         
-        const user = await userService.getUserById(decodedRefresh);
+        const user = await userService.getUserById(decodedRefresh._id);
 
         if(!user) return response.status(404).json({message: "User not found."});
 

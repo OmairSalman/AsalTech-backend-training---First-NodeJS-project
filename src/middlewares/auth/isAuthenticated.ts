@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import UserPayload from '../../config/express';
+import RefreshPayload from '../../config/express';
 import UserService from '../../services/userService';
 
 const userService = new UserService();
@@ -31,9 +32,9 @@ export async function isAuthenticated(request: Request, response: Response, next
 
   try
   {
-    const decodedRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as string;
+    const decodedRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as RefreshPayload;
 
-    const user = await userService.getUserById(decodedRefresh);
+    const user = await userService.getUserById(decodedRefresh._id);
 
     if(!user) return response.status(404).json({message: "User not found."});
 

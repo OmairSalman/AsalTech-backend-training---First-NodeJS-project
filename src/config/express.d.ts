@@ -7,6 +7,10 @@ export default interface UserPayload {
   isAdmin: boolean;
 }
 
+export default interface RefreshPayload{
+  _id: string
+}
+
 declare global {
   namespace Express {
     interface Request {
