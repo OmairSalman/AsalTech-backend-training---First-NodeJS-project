@@ -43,9 +43,10 @@ export default class WebController
     login(request: Request, response: Response)
     {
         const accessToken = request.cookies.accessToken;
+        const refreshToken = request.cookies.refreshToken;
         if (!accessToken)
         {
-            return response.render('pages/login');
+            if(!refreshToken) return response.render('pages/register');
         }
     
         return response.redirect('/feed');
@@ -54,9 +55,10 @@ export default class WebController
     register(request: Request, response: Response)
     {
         const accessToken = request.cookies.accessToken;
+        const refreshToken = request.cookies.refreshToken;
         if (!accessToken)
         {
-            return response.render('pages/register');
+            if(!refreshToken) return response.render('pages/register');
         }
     
         return response.redirect('/feed');
