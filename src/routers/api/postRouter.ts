@@ -8,18 +8,20 @@ const postController = new PostController();
 
 const PostRouter = Router();
 
-PostRouter.get('/', isAuthenticated, postController.getAllPosts);
+PostRouter.use('/', isAuthenticated);
 
-PostRouter.get('/:postId', isAuthenticated, postController.getPost);
+PostRouter.get('/', postController.getAllPosts);
 
-PostRouter.post('/', isAuthenticated, PostValidator, postController.savePost);
+PostRouter.get('/:postId', postController.getPost);
 
-PostRouter.put('/:postId', isAuthenticated, isPostAuthor, PostValidator, postController.updatePost);
+PostRouter.post('/', PostValidator, postController.savePost);
 
-PostRouter.delete('/:postId', isAuthenticated, isPostAuthor, postController.deletePost);
+PostRouter.put('/:postId', isPostAuthor, PostValidator, postController.updatePost);
 
-PostRouter.post('/:postId/like', isAuthenticated, postController.like)
+PostRouter.delete('/:postId', isPostAuthor, postController.deletePost);
 
-PostRouter.delete('/:postId/like', isAuthenticated, postController.unlike);
+PostRouter.post('/:postId/like', postController.like)
+
+PostRouter.delete('/:postId/like', postController.unlike);
 
 export default PostRouter;

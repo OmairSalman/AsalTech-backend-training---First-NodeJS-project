@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import PostService from "../../services/postService";
 import CommentService from "../../services/commentService";
 import UserService from "../../services/userService";
-import RefreshPayload from '../../config/express';
 import jwt from 'jsonwebtoken';
-import UserPayload from "../../config/express";
+import { UserPayload, RefreshPayload } from "../../config/express";
 import crypto from 'crypto';
 import { Post } from "../../models/postEntity";
 
@@ -85,7 +84,8 @@ export default class WebController
             posts = await postService.getPostsByUserId(user._id, page, 10);
             if(posts)
             {
-                const totalPages = Math.ceil(posts.length/10);
+                const postsCount = await Post.countBy({ author_id: user._id });
+                const totalPages = Math.ceil(postsCount/10);
                 const postsLikes = await postService.countUserPostsLikes(user._id.toString());
                 const commentsLikes = await commentService.countUserCommentsLikes(user._id.toString());
                 response.render('pages/profile', {user: user, currentUser: user, hasCustomAvatar: res.status !== 404, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
@@ -108,7 +108,8 @@ export default class WebController
             const posts = await postService.getPostsByUserId(userId.toString(), page, 10);
             if(posts)
             {
-                const totalPages = Math.ceil(posts.length/10);
+                const postsCount = await Post.countBy({ author_id: user._id });
+                const totalPages = Math.ceil(postsCount/10);
                 const postsLikes = await postService.countUserPostsLikes(userId.toString());
                 const commentsLikes = await commentService.countUserCommentsLikes(userId.toString());
                 response.render('pages/profile', {user: user, currentUser: currentUser, hasCustomAvatar: res.status !== 404, posts: posts, postsLikes: postsLikes, commentsLikes: commentsLikes, postsPage: page, limit: 10, totalPages: totalPages });
@@ -195,7 +196,7 @@ async function getUserFromToken(request: Request, response: Response)
 
         if(!user) return response.status(404).json({message: "User not found."});
 
-        const payload = {
+        const payload: UserPayload = {
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -212,7 +213,7 @@ async function getUserFromToken(request: Request, response: Response)
             sameSite: "lax",
             maxAge: 1000 * 60 * 15
         });
-        return decodedRefresh;
+        return payload;
     }
     catch (refreshErr)
     {

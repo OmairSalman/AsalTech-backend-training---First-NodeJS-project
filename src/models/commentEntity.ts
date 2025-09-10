@@ -3,6 +3,7 @@ import {
   OneToOne,
   ManyToMany,
   JoinTable,
+  JoinColumn,
   BaseEntity,
 } from "typeorm";
 import { User } from "./userEntity";
@@ -17,10 +18,20 @@ export class Comment extends BaseEntity
   @Column("text")
   content!: string
 
+  // Foreign key column for author
+  @Column()
+  author_id!: string
+
   @ManyToOne(() => User, (user) => user.comments, { eager: true, onDelete: "CASCADE" })
+  @JoinColumn({ name: "author_id" })
   author!: User
 
+  // Foreign key column for post
+  @Column()
+  post_id!: string
+
   @ManyToOne(() => Post, post => post.comments, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "post_id" })
   post!: Post
 
   @ManyToMany(() => User, { eager: true })

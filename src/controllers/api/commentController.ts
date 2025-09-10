@@ -9,8 +9,7 @@ export default class CommentController
     {
         const postId = request.params.postId;
         const comment = request.body;
-        const author = request.user!;
-        const savedComment = await commentService.saveComment(postId, comment, author);
+        const savedComment = await commentService.saveComment(postId, comment, request.user!._id);
         
         response.render('partials/commentCard', { comment: savedComment, currentUser: request.user, currentUserId: request.user!._id, layout: false }, (err, html) => {
             if (err)

@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import UserPayload from '../../config/express';
-import RefreshPayload from '../../config/express';
+import { UserPayload, RefreshPayload } from '../../config/express';
 import UserService from '../../services/userService';
 
 const userService = new UserService();
@@ -38,7 +37,7 @@ export async function isAuthenticated(request: Request, response: Response, next
 
     if(!user) return response.status(404).json({message: "User not found."});
 
-    const payload = {
+    const payload: UserPayload = {
       _id: user._id,
       name: user.name,
       email: user.email,

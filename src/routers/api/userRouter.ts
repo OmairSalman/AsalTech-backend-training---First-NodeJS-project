@@ -7,18 +7,20 @@ const usersController = new UserController();
 
 const UserRouter = Router();
 
-UserRouter.get('/', isAuthenticated, isAdmin, usersController.getUsers);
+UserRouter.use('/', isAuthenticated);
 
-UserRouter.get('/search', isAuthenticated, usersController.searchUsers);
+UserRouter.get('/', isAdmin, usersController.getUsers);
 
-UserRouter.get('/:id', isAuthenticated, isAdmin, usersController.getUserById);
+UserRouter.get('/search', usersController.searchUsers);
 
-UserRouter.put('/:id', isAuthenticated, usersController.updateUser);
+UserRouter.get('/:id', isAdmin, usersController.getUserById);
 
-UserRouter.delete('/:id', isAuthenticated, usersController.deleteUser);
+UserRouter.put('/:id', usersController.updateUser);
 
-UserRouter.get('/:userId/posts', isAuthenticated, usersController.getUserPosts)
+UserRouter.delete('/:id', usersController.deleteUser);
 
-UserRouter.put('/:userId/toggle-admin', isAuthenticated, isAdmin, usersController.toggleAdmin);
+UserRouter.get('/:userId/posts', usersController.getUserPosts)
+
+UserRouter.put('/:userId/toggle-admin', isAdmin, usersController.toggleAdmin);
 
 export default UserRouter;

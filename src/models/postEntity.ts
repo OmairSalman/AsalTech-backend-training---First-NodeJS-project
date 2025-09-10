@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, JoinColumn, BaseEntity } from "typeorm";
 import { User } from "./userEntity";
 import { Comment } from "./commentEntity";
 
@@ -14,7 +14,12 @@ export class Post extends BaseEntity
   @Column("text")
   content!: string
 
+  // Foreign key column for author
+  @Column()
+  author_id!: string
+
   @ManyToOne(() => User, (user) => user.posts, { eager: true, onDelete: "CASCADE" })
+  @JoinColumn({ name: "author_id" })
   author!: User
 
   @OneToMany(() => Comment, comment => comment.post, { cascade: true, eager: true })

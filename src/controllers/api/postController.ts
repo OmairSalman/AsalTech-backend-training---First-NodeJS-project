@@ -25,8 +25,7 @@ export default class PostController
     async savePost(request: Request, response: Response)
     {
         let newPost = request.body;
-        const author = request.user!;
-        newPost = await postService.savePost(newPost, author);
+        newPost = await postService.savePost(newPost, request.user!._id);
         response.status(201).json({message: "Post saved successfully", post: newPost});
     }
 

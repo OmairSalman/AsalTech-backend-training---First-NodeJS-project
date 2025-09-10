@@ -1,9 +1,9 @@
 import { Post } from "../models/postEntity";
 import { User } from "../models/userEntity";
 import redisClient from "../config/redis";
-import { postToPublic, userToPublic } from "../utils/publicDTOs";
-import { PublicPost, PublicUser } from "../utils/publicTypes";
-import UserPayload from "../config/express";
+import { postToPublic } from "../utils/publicDTOs";
+import { PublicPost } from "../utils/publicTypes";
+import { UserPayload } from "../config/express";
 
 export default class PostService
 {
@@ -61,16 +61,16 @@ export default class PostService
         }
     }
 
-    async savePost(newPost: Post, author: UserPayload): Promise<PublicPost | null>
+    async savePost(newPost: Post, authorId: string): Promise<PublicPost | null>
     {
         try
         {
             const insertResult = await Post.insert({
                 title: newPost.title,
                 content: newPost.content,
-                author: author
+                author_id: authorId
             });
-            const keys = await redisClient.keys(`user:${author._id}:posts:page:*`);
+            const keys = await redisClient.keys(`user:${authorId}:posts:page:*`);
             if (keys.length) await redisClient.del(keys);
             await redisClient.del('feed:page:1');
 

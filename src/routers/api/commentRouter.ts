@@ -8,14 +8,16 @@ const commentController = new CommentController();
 
 const CommentRouter = Router();
 
-CommentRouter.post('/:postId', isAuthenticated, CommentValidator, commentController.saveComment);
+CommentRouter.use('/', isAuthenticated);
 
-CommentRouter.put('/:commentId', isAuthenticated, isCommentAuthor, CommentValidator, commentController.updateComment)
+CommentRouter.post('/:postId', CommentValidator, commentController.saveComment);
 
-CommentRouter.delete('/:commentId', isAuthenticated, isCommentAuthor, commentController.deleteComment);
+CommentRouter.put('/:commentId', isCommentAuthor, CommentValidator, commentController.updateComment)
 
-CommentRouter.post('/:commentId/like', isAuthenticated, commentController.like)
+CommentRouter.delete('/:commentId', isCommentAuthor, commentController.deleteComment);
 
-CommentRouter.delete('/:commentId/like', isAuthenticated, commentController.unlike);
+CommentRouter.post('/:commentId/like', commentController.like)
+
+CommentRouter.delete('/:commentId/like', commentController.unlike);
 
 export default CommentRouter;

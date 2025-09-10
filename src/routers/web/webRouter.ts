@@ -7,25 +7,29 @@ const webController = new WebController();
 
 const WebRouter = Router();
 
+WebRouter.use(['/feed', '/create', '/profile', '/admin'], isAuthenticated);
+
+WebRouter.use('/admin', isAdmin);
+
 WebRouter.get('/', webController.home);
 
-WebRouter.get('/feed', isAuthenticated, webController.feed);
+WebRouter.get('/feed', webController.feed);
 
 WebRouter.get('/login', webController.login);
 
 WebRouter.get('/register', webController.register);
 
-WebRouter.get('/create', isAuthenticated, webController.create);
+WebRouter.get('/create', webController.create);
 
-WebRouter.get('/profile', isAuthenticated, webController.profile);
+WebRouter.get('/profile', webController.profile);
 
-WebRouter.get('/profile/edit', isAuthenticated, webController.editProfile);
+WebRouter.get('/profile/edit', webController.editProfile);
 
-WebRouter.get('/profile/:userId', isAuthenticated, webController.showUserProfile);
+WebRouter.get('/profile/:userId', webController.showUserProfile);
 
-WebRouter.get('/admin/users', isAuthenticated, isAdmin, webController.adminUsersPanel);
+WebRouter.get('/admin/users', webController.adminUsersPanel);
 
-WebRouter.get('/admin/edit/:userId', isAuthenticated, isAdmin, webController.editUser);
+WebRouter.get('/admin/edit/:userId', webController.editUser);
 
 WebRouter.get('/about', webController.about);
 

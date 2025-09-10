@@ -1,4 +1,4 @@
-import UserPayload from "../config/express";
+import { UserPayload } from "../config/express";
 import redisClient from "../config/redis";
 import { Comment } from "../models/commentEntity";
 import { Post } from "../models/postEntity";
@@ -8,14 +8,14 @@ import { PublicComment } from "../utils/publicTypes";
 
 export default class CommentService
 {
-    async saveComment(postId: string, newComment: Comment, author: UserPayload): Promise<PublicComment | null>
+    async saveComment(postId: string, newComment: Comment, authorId: string): Promise<PublicComment | null>
     {
         try
         {
             const insertResult = await Comment.insert({
                 content: newComment.content,
-                post: (await Post.findOneBy({ _id: postId }))!,
-                author: author
+                post_id: postId,
+                author_id: authorId
             });
             const comment = await Comment.findOne(
                 {
