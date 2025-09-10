@@ -9,6 +9,8 @@
     "copy:views": "cpx \"src/views/**/*\" dist/views",
     "start": "node dist/index.js",
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "typeorm": "typeorm-ts-node-commonjs"
   },
   "author": "Omair Salman",

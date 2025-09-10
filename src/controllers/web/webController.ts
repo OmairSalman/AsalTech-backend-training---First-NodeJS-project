@@ -6,6 +6,7 @@ import RefreshPayload from '../../config/express';
 import jwt from 'jsonwebtoken';
 import UserPayload from "../../config/express";
 import crypto from 'crypto';
+import { Post } from "../../models/postEntity";
 
 const postService = new PostService();
 const commentService = new CommentService();
@@ -35,7 +36,8 @@ export default class WebController
         {
             const page = parseInt(request.query.page as string) || 1;
             const posts = await postService.getPosts(page, 10);
-            const totalPages = Math.ceil(posts.length/10);
+            const postsCount = await Post.count();
+            const totalPages = Math.ceil(postsCount/10);
             response.render('pages/feed', {currentUser: request.user, currentUserId: request.user._id, posts: posts, page: page, limit: 10, totalPages: totalPages });
         }
     }
