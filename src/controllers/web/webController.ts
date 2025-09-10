@@ -48,7 +48,7 @@ export default class WebController
         const refreshToken = request.cookies.refreshToken;
         if (!accessToken)
         {
-            if(!refreshToken) return response.render('pages/register');
+            if(!refreshToken) return response.render('pages/login');
         }
     
         return response.redirect('/feed');

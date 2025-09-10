@@ -52,13 +52,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const warning = document.getElementById('password-warning');
       if (warning) warning.textContent = ""; // Clear previous warning
 
-      if(data.newPassword.length < 6 || data.confirmPassword.length < 6)
+      if (data.newPassword || data.confirmPassword)
       {
-        if (warning) warning.textContent = 'Password must be at least 6 characters long.';
-          return;
-      }
-
-      if (data.newPassword || data.confirmPassword) {
+        if(data.newPassword.length < 6 || data.confirmPassword.length < 6)
+        {
+          if (warning) warning.textContent = 'Password must be at least 6 characters long.';
+            return;
+        }
+        
         if (!data.newPassword || !data.confirmPassword) {
           if (warning) warning.textContent = 'Please fill out both password fields.';
           return;
