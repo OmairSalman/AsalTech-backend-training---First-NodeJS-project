@@ -28,11 +28,9 @@
       {{#if (gt page 1)}}
         <li class="page-item"><a class="page-link" href="/feed?page={{subtract page 1}}">Previous</a></li>
       {{/if}}
-      {{#if (gt totalPages 2)}}
-        {{#each (range 1 totalPages)}}
-          <li class="page-item"><a class="page-link {{#if (eq ../page this)}}active{{/if}}" href="/feed?page={{this}}">{{this}}</a></li>
-        {{/each}}
-      {{/if}}
+      {{#each (range 1 totalPages)}}
+        <li class="page-item"><a class="page-link {{#if (eq ../page this)}}active{{/if}}" href="/feed?page={{this}}">{{this}}</a></li>
+      {{/each}}
       {{#if (lt page totalPages)}}
         <li class="page-item"><a class="page-link" href="/feed?page={{add page 1}}">Next</a></li>
       {{/if}}
