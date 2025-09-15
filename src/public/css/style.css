@@ -1111,8 +1111,6 @@ footer a:hover {
   bottom: 8px;
   right: 8px;
   background: var(--brand-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
   color: #fff;
   font-size: 0.75rem;
   font-weight: 600;
