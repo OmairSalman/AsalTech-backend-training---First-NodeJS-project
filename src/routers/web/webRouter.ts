@@ -19,7 +19,7 @@ WebRouter.get('/login', webController.login);
 
 WebRouter.get('/register', webController.register);
 
-WebRouter.get('/create', webController.create);
+//WebRouter.get('/create', webController.create);
 
 WebRouter.get('/profile', webController.profile);
 

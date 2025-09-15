@@ -18,19 +18,23 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/feed?page=1">Feed</a>
+          <a class="nav-link d-flex align-items-center" href="/feed">
+            <i class="fa-solid fa-house me-2"></i> Feed
+          </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/create">Create Post</a>
-        </li>
+        <!-- <li class="nav-item"> <a class="nav-link" href="/create">Create Post</a></li> -->
         {{#if currentUser.isAdmin}}
           <li class="nav-item">
-            <a class="nav-link" href="/admin/users">Admin Tools</a>
+            <a class="nav-link d-flex align-items-center" href="/admin/users">
+              <i class="fa-solid fa-user-shield me-2"></i> Admin Tools
+            </a>
           </li>
         {{/if}}
         <li class="nav-item">
           <form action="/auth/logout" method="GET" class="d-inline">
-            <button type="submit" class="btn btn-link nav-link">Logout</button>
+            <button type="submit" class="btn btn-link nav-link d-flex align-items-center">
+              <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+            </button>
           </form>
         </li>
       </ul>

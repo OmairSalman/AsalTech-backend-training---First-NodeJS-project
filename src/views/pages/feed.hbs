@@ -4,6 +4,36 @@
   {{/if}}
 {{/if}}
 
+<div class="create-post-container">
+  <form action="/posts" method="POST" class="create-post-form">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input 
+        type="text" 
+        id="title" 
+        name="title" 
+        class="form-input" 
+        placeholder="Enter your post title" 
+        required
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="content">Content</label>
+      <textarea 
+        id="content" 
+        name="content" 
+        rows="6" 
+        class="form-textarea" 
+        placeholder="Write your post here..."
+        required
+      ></textarea>
+    </div>
+
+  <button class="btn btn-primary" type="submit">Publish</button>
+  </form>
+</div>
+
 <div class="feed-container" id="feed-container"
   data-page="{{page}}" 
   data-limit="{{limit}}" 
