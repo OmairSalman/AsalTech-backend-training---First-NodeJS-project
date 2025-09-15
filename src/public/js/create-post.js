@@ -25,7 +25,7 @@
 
       if (res.ok) {
         // ✅ Redirect to feed after success
-        window.location.href = "/feed?page=1";
+        window.location.reload();
       } else {
         alert(data.error || "Failed to create post.");
         submitBtn.disabled = false;

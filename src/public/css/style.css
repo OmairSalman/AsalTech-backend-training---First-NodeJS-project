@@ -1,3 +1,18 @@
+/* Match create post form button to comment button */
+.create-post-form .btn-primary {
+  border-radius: 50px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background: var(--brand-gradient);
+  color: white;
+  border: none;
+  height: fit-content;
+  margin-top: 17.5px;
+  width: 100%;
+}
+.create-post-form .btn-primary:hover {
+  filter: brightness(0.9);
+}
 /* ============================
    GLOBAL THEME - UsersConnect
    ============================ */
@@ -38,6 +53,7 @@ body {
   font-size: 3rem;
   background: var(--brand-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 1rem;
 }
@@ -112,6 +128,7 @@ footer a:hover {
 .footer-brand {
   background: var(--brand-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 1.25rem;
 }
@@ -126,6 +143,7 @@ footer a:hover {
 .footer-link:hover {
   background: var(--brand-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -168,6 +186,7 @@ footer a:hover {
   font-weight: 700;
   background: var(--brand-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .profile-header p {
@@ -196,6 +215,7 @@ footer a:hover {
 .login-card h2 {
   background: var(--brand-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -225,6 +245,7 @@ footer a:hover {
   font-weight: 700;
   background: var(--brand-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 1.5rem;
 }
@@ -588,7 +609,8 @@ footer a:hover {
 
 /* Post creation page */
 .create-post-container {
-  max-width: 700px;
+  max-width: 600px;
+  max-height: 400px;
   margin: 2rem auto;
   background: #fff;
   padding: 2rem;
@@ -616,6 +638,7 @@ footer a:hover {
 .form-input,
 .form-textarea {
   width: 100%;
+  max-height: 75px;
   padding: 0.75rem 1rem;
   border: 1px solid #ccc;
   border-radius: 0.75rem;
@@ -915,6 +938,7 @@ footer a:hover {
   margin-bottom: 1rem;
   background: var(--brand-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -983,6 +1007,7 @@ footer a:hover {
   margin-bottom: 0.25rem;
   background: var(--brand-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -1031,6 +1056,7 @@ footer a:hover {
   margin-bottom: 0.25rem;
   background: var(--brand-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .profile-info p {
@@ -1063,6 +1089,7 @@ footer a:hover {
   font-weight: 700;
   background: var(--brand-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .stat-label {
@@ -1084,6 +1111,8 @@ footer a:hover {
   bottom: 8px;
   right: 8px;
   background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
   color: #fff;
   font-size: 0.75rem;
   font-weight: 600;
