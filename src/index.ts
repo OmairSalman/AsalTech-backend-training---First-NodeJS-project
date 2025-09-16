@@ -1,9 +1,6 @@
 import express from 'express';
 import path from 'path';
 
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-
 import { engine } from 'express-handlebars';
 import cookieParser from "cookie-parser";
 
@@ -16,12 +13,9 @@ import CommentRouter from './routers/api/commentRouter';
 import AppDataSource from './config/dataSource';
 
 import dotenv from 'dotenv';
-import { PublicUser } from './utils/publicTypes';
 import hbsHelpers from './views/helpers/hbsHelpers';
 
 dotenv.config();
-
-dayjs.extend(relativeTime);
 
 const app = express();
 

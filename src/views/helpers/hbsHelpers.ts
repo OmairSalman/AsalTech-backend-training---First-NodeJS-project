@@ -1,5 +1,8 @@
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { PublicUser } from '../../utils/publicTypes';
+
+dayjs.extend(relativeTime);
 
 const hbsHelpers =
 {
