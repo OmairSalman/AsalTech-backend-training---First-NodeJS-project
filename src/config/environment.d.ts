@@ -1,5 +1,6 @@
 declare namespace NodeJS {
   interface ProcessEnv {
+    NODE_ENV: string;
     DATABASE_HOST: string;
     DATABASE_USERNAME: string;
     DATABASE_PASSWORD: string;
